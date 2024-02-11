@@ -5,6 +5,7 @@
 @REM /|/
 @setlocal disableDelayedExpansion enableExtensions
 @IF "%PS_ECHO_ON%" NEQ "" (echo on) ELSE (echo off)
+SET MSBUILDDISABLENODEREUSE=1
 @GOTO :MAIN
 :HELP
 @ECHO.
