@@ -84,11 +84,9 @@ void ArrangeSettingsDialogImgui::render(float pos_x, float pos_y)
     }
 
     if (m_show_xl_combo_predicate() &&
-        settings.xl_align >= 0 &&
+        // settings.xl_align >= 0 &&
         m_imgui->combo(_L("Alignment"),
-                       {_u8L("Center"), _u8L("Rear left"), _u8L("Front left"),
-                        _u8L("Front right"), _u8L("Rear right"),
-                        _u8L("Random")},
+                       {_u8L("Center"), _u8L("Rear left"), _u8L("Front left"), _u8L("Front right"), _u8L("Rear right"), _u8L("Random")},
                        settings.xl_align)) {
         if (settings.xl_align >= 0 &&
             settings.xl_align < ArrangeSettingsView::xlpCount)
