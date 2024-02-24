@@ -266,7 +266,8 @@ private:
     std::string     preamble();
     std::string change_layer(
         coordf_t previous_layer_z,
-        coordf_t print_z
+        coordf_t print_z,
+        bool vase_mode
     );
     std::string     extrude_entity(const ExtrusionEntityReference &entity, const GCode::SmoothPathCache &smooth_path_cache, const std::string_view description, double speed = -1.);
     std::string     extrude_loop(const ExtrusionLoop &loop, const GCode::SmoothPathCache &smooth_path_cache, const std::string_view description, double speed = -1.);
@@ -424,9 +425,11 @@ private:
 #endif // ENABLE_GCODE_VIEWER_DATA_CHECKING
 
     std::optional<Vec3d>                m_previous_layer_last_position;
+    std::optional<Vec3d>                m_previous_layer_last_position_before_wipe;
     // This needs to be populated during the layer processing!
     std::optional<Vec3d>                m_current_layer_first_position;
     std::optional<unsigned>             m_layer_change_extruder_id;
+    bool                                m_already_unretracted{false};
     std::unique_ptr<CoolingBuffer>      m_cooling_buffer;
     std::unique_ptr<SpiralVase>         m_spiral_vase;
     std::unique_ptr<GCodeFindReplace>   m_find_replace;

@@ -32,6 +32,12 @@ void check_gcode(std::initializer_list<TestMesh> meshes, const DynamicPrintConfi
     Test::init_print({TestMesh::cube_20x20x20}, print, model, config, false, duplicate);
     std::string gcode = Test::gcode(print);
 
+    if constexpr(debug_files) {
+        static int count{0};
+        std::ofstream file{"check_gcode_" + std::to_string(count++) + ".gcode"};
+        file << gcode;
+    }
+
 	GCodeReader parser;
     parser.parse_buffer(gcode, [&] (Slic3r::GCodeReader &self, const Slic3r::GCodeReader::GCodeLine &line) {
         std::regex regex{"^T(\\d+)"};
@@ -177,7 +183,7 @@ TEST_CASE("Z moves", "[retraction]") {
         { "start_gcode", "" },  // To avoid dealing with the nozzle lift in start G-code
         { "retract_length", "0" },
         { "retract_layer_change", "0" },
-        { "retract_lift", "0.2" },
+        { "retract_lift", "0.2" }
     });
 
     bool retracted = false;
@@ -214,8 +220,8 @@ TEST_CASE("Z moves", "[retraction]") {
     CHECK(layer_changes_with_retraction == 0);
     INFO("no retractions");
     CHECK(retractions == 0);
-    INFO("no lift other than for the first move");
-    CHECK(z_restores == 1);
+    INFO("no lift");
+    CHECK(z_restores == 0);
 }
 
 TEST_CASE("Firmware retraction handling", "[retraction]") {
