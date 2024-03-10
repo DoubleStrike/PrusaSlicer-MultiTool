@@ -334,7 +334,7 @@ private:
         const std::string &comment
     );
 
-    std::string travel_to_first_position(const Vec3crd& point);
+    std::string travel_to_first_position(const Vec3crd& point, const double from_z);
 
     bool            needs_retraction(const Polyline &travel, ExtrusionRole role = ExtrusionRole::None);
 

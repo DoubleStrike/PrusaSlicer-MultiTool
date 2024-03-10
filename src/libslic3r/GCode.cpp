@@ -3064,7 +3064,7 @@ void GCodeGenerator::GCodeOutputStream::write_format(const char* format, ...)
     va_end(args);
 }
 
-std::string GCodeGenerator::travel_to_first_position(const Vec3crd& point) {
+std::string GCodeGenerator::travel_to_first_position(const Vec3crd& point, const double from_z) {
     std::string gcode;
 
     const Vec3d gcode_point = to_3d(this->point_to_gcode(point.head<2>()), unscaled(point.z()));
@@ -3082,7 +3082,7 @@ std::string GCodeGenerator::travel_to_first_position(const Vec3crd& point) {
     if (EXTRUDER_CONFIG(retract_length) > 0 && (!this->last_position || (!EXTRUDER_CONFIG(travel_ramping_lift)))) {
         if (!this->last_position || EXTRUDER_CONFIG(retract_before_travel) < (this->point_to_gcode(*this->last_position) - gcode_point.head<2>()).norm()) {
             gcode += this->writer().retract();
-            gcode += this->writer().get_travel_to_z_gcode(gcode_point.z() + lift, "lift");
+            gcode += this->writer().get_travel_to_z_gcode(from_z + lift, "lift");
         }
     }
     this->last_position = point.head<2>();
@@ -3121,7 +3121,7 @@ std::string GCodeGenerator::_extrude(
 
     if (!m_current_layer_first_position) {
         const Vec3crd point = to_3d(path.front().point, scaled(this->m_last_layer_z));
-        gcode += this->travel_to_first_position(point);
+        gcode += this->travel_to_first_position(point, unscaled(point.z()));
     } else {
         // go to first point of extrusion path
         if (!this->last_position) {
