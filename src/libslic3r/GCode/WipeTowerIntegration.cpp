@@ -58,13 +58,14 @@ std::string WipeTowerIntegration::append_tcr(GCodeGenerator &gcodegen, const Wip
                                          || will_go_down);       // don't dig into the print
     if (should_travel_to_tower) {
         const Point xy_point = wipe_tower_point_to_object_point(gcodegen, start_pos);
+        gcode += gcodegen.m_label_objects.maybe_stop_instance();
         gcode += gcodegen.retract_and_wipe();
-        gcodegen.m_avoid_crossing_perimeters.use_external_mp_once();
+        gcodegen.m_avoid_crossing_perimeters.use_external_mp_once = true;
         const std::string comment{"Travel to a Wipe Tower"};
         if (gcodegen.m_current_layer_first_position) {
             if (gcodegen.last_position) {
                 gcode += gcodegen.travel_to(
-                    *gcodegen.last_position, xy_point, ExtrusionRole::Mixed, comment
+                    *gcodegen.last_position, xy_point, ExtrusionRole::Mixed, comment, [](){return "";}
                 );
             } else {
                 gcode += gcodegen.writer().travel_to_xy(gcodegen.point_to_gcode(xy_point), comment);
@@ -72,7 +73,7 @@ std::string WipeTowerIntegration::append_tcr(GCodeGenerator &gcodegen, const Wip
             }
         } else {
             const Vec3crd point = to_3d(xy_point, scaled(z));
-            gcode += gcodegen.travel_to_first_position(point, current_z);
+            gcode += gcodegen.travel_to_first_position(point, current_z, ExtrusionRole::Mixed, [](){return "";});
         }
         gcode += gcodegen.unretract();
     } else {
@@ -110,7 +111,11 @@ std::string WipeTowerIntegration::append_tcr(GCodeGenerator &gcodegen, const Wip
     boost::replace_first(tcr_rotated_gcode, "[deretraction_from_wipe_tower_generator]", deretraction_str);
     std::string tcr_gcode;
     unescape_string_cstyle(tcr_rotated_gcode, tcr_gcode);
+
+    if (gcodegen.config().default_acceleration > 0)
+        gcode += gcodegen.writer().set_print_acceleration(fast_round_up<unsigned int>(gcodegen.config().wipe_tower_acceleration.value));
     gcode += tcr_gcode;
+    gcode += gcodegen.writer().set_print_acceleration(fast_round_up<unsigned int>(gcodegen.config().default_acceleration.value));
 
     // A phony move to the end position at the wipe tower.
     gcodegen.writer().travel_to_xy(end_pos.cast<double>());
@@ -135,7 +140,7 @@ std::string WipeTowerIntegration::append_tcr(GCodeGenerator &gcodegen, const Wip
     }
 
     // Let the planner know we are traveling between objects.
-    gcodegen.m_avoid_crossing_perimeters.use_external_mp_once();
+    gcodegen.m_avoid_crossing_perimeters.use_external_mp_once = true;
     return gcode;
 }
 
@@ -264,7 +269,7 @@ std::string WipeTowerIntegration::finalize(GCodeGenerator &gcodegen)
     if (std::abs(gcodegen.writer().get_position().z() - m_final_purge.print_z) > EPSILON)
         gcode += gcodegen.generate_travel_gcode(
             {{gcodegen.last_position->x(), gcodegen.last_position->y(), scaled(m_final_purge.print_z)}},
-            "move to safe place for purging"
+            "move to safe place for purging", [](){return "";}
         );
     gcode += append_tcr(gcodegen, m_final_purge, -1);
     return gcode;

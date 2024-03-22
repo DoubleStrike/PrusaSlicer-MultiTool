@@ -1093,6 +1093,21 @@ void PrintConfigDef::init_fff_params()
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloats { 0. });
 
+    def = this->add("filament_stamping_loading_speed", coFloats);
+    def->label = L("Stamping loading speed");
+    def->tooltip = L("Speed used for stamping.");
+    def->min = 0;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionFloats { 20. });
+
+    def = this->add("filament_stamping_distance", coFloats);
+    def->label = L("Stamping distance measured from the center of the cooling tube");
+    def->tooltip = L("If set to nonzero value, filament is moved toward the nozzle between the individual cooling moves (\"stamping\"). "
+                     "This option configures how long this movement should be before the filament is retracted again.");
+    def->min = 0;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionFloats { 0. });
+
     def = this->add("filament_cooling_moves", coInts);
     def->label = L("Number of cooling moves");
     def->tooltip = L("Filament is cooled by being moved back and forth in the "
@@ -1128,6 +1143,16 @@ void PrintConfigDef::init_fff_params()
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloats { 3.4 });
+
+    def = this->add("filament_purge_multiplier", coPercents);
+    def->label = L("Purge volume multiplier");
+    def->tooltip = L("Purging volume on the wipe tower is determined by 'multimaterial_purging' in Printer Settings. "
+                     "This option allows to modify the volume on filament level. "
+                     "Note that the project can override this by setting project-specific values.");
+    def->sidetext = L("%");
+    def->min = 0;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionPercents { 100 });
 
     def = this->add("filament_load_time", coFloats);
     def->label = L("Filament load time");
@@ -1541,6 +1566,15 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Top solid infill");
     def->tooltip = L("This is the acceleration your printer will use for top solid infill. Set zero to use "
                      "the value for solid infill.");
+    def->sidetext = L("mm/s²");
+    def->min = 0;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionFloat(0));
+
+    def = this->add("wipe_tower_acceleration", coFloat);
+    def->label = L("Wipe tower");
+    def->tooltip = L("This is the acceleration your printer will use for wipe tower. Set zero to disable "
+                     "acceleration control for the wipe tower.");
     def->sidetext = L("mm/s²");
     def->min = 0;
     def->mode = comExpert;
@@ -2111,6 +2145,14 @@ void PrintConfigDef::init_fff_params()
     def->sidetext = L("mm");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(-2.));
+
+    def = this->add("multimaterial_purging", coFloat);
+    def->label = L("Purging volume");
+    def->tooltip = L("Determines purging volume on the wipe tower. This can be modified in Filament Settings "
+                     "('filament_purge_multiplier') or overridden using project-specific settings.");
+    def->sidetext = L("mm³");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(140.));
 
     def = this->add("perimeter_acceleration", coFloat);
     def->label = L("Perimeters");
@@ -3261,13 +3303,6 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
 
-    def = this->add("wiping_volumes_extruders", coFloats);
-    def->label = L("Purging volumes - load/unload volumes");
-    def->tooltip = L("This vector saves required volumes to change from/to each tool used on the "
-                     "wipe tower. These values are used to simplify creation of the full purging "
-                     "volumes below.");
-    def->set_default_value(new ConfigOptionFloats { 70., 70., 70., 70., 70., 70., 70., 70., 70., 70.  });
-
     def = this->add("wiping_volumes_matrix", coFloats);
     def->label = L("Purging volumes - matrix");
     def->tooltip = L("This matrix describes volumes (in cubic milimetres) required to purge the"
@@ -3277,6 +3312,11 @@ void PrintConfigDef::init_fff_params()
                                                     140., 140.,   0., 140., 140.,
                                                     140., 140., 140.,   0., 140.,
                                                     140., 140., 140., 140.,   0. });
+
+    def = this->add("wiping_volumes_use_custom_matrix", coBool);
+    def->label = "";
+    def->tooltip = "";
+    def->set_default_value(new ConfigOptionBool{ false });
 
     def = this->add("wipe_tower_x", coFloat);
     def->label = L("Position X");
@@ -3327,6 +3367,16 @@ void PrintConfigDef::init_fff_params()
     def = this->add("wipe_tower_extra_spacing", coPercent);
     def->label = L("Wipe tower purge lines spacing");
     def->tooltip = L("Spacing of purge lines on the wipe tower.");
+    def->sidetext = L("%");
+    def->mode = comExpert;
+    def->min = 100.;
+    def->max = 300.;
+    def->set_default_value(new ConfigOptionPercent(100.));
+
+    def = this->add("wipe_tower_extra_flow", coPercent);
+    def->label = L("Extra flow for purging");
+    def->tooltip = L("Extra flow used for the purging lines on the wipe tower. This makes the purging lines thicker or narrower "
+                     "than they normally would be. The spacing is adjusted automatically.");
     def->sidetext = L("%");
     def->mode = comExpert;
     def->min = 100.;
@@ -4351,7 +4401,8 @@ static std::set<std::string> PrintConfigDef_ignore = {
     "ensure_vertical_shell_thickness",
     // Disabled in 2.6.0-alpha6, this option is problematic
     "infill_only_where_needed",
-    "gcode_binary" // Introduced in 2.7.0-alpha1, removed in 2.7.1 (replaced by binary_gcode).
+    "gcode_binary", // Introduced in 2.7.0-alpha1, removed in 2.7.1 (replaced by binary_gcode).
+    "wiping_volumes_extruders" // Removed in 2.7.3-alpha1.
 };
 
 void PrintConfigDef::handle_legacy(t_config_option_key &opt_key, std::string &value)
@@ -4482,6 +4533,26 @@ void PrintConfigDef::handle_legacy_composite(DynamicPrintConfig &config)
 
             config.set_key_value("thumbnails", new ConfigOptionString(thumbnails_str));
         }
+    }
+
+    if (config.has("wiping_volumes_matrix") && !config.has("wiping_volumes_use_custom_matrix")) {
+        // This is apparently some pre-2.7.3 config, where the wiping_volumes_matrix was always used.
+        // The 2.7.3 introduced an option to use defaults derived from config. In case the matrix
+        // contains only default values, switch it to default behaviour. The default values
+        // were zeros on the diagonal and 140 otherwise.
+        std::vector<double> matrix = config.opt<ConfigOptionFloats>("wiping_volumes_matrix")->values;
+        int num_of_extruders = int(std::sqrt(matrix.size()) + 0.5);
+        int i = -1;
+        bool custom = false;
+        for (int j = 0; j < int(matrix.size()); ++j) {
+            if (j % num_of_extruders == 0)
+                ++i;
+            if (i != j % num_of_extruders && !is_approx(matrix[j], 140.)) {
+                custom = true;
+                break;
+            }
+        }
+        config.set_key_value("wiping_volumes_use_custom_matrix", new ConfigOptionBool(custom));
     }
 }
 

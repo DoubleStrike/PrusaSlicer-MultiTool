@@ -110,7 +110,7 @@ struct PrintObjectInstance
     int                instance_idx = -1;
 
     bool operator==(const PrintObjectInstance &other) const {return print_object == other.print_object && instance_idx == other.instance_idx; }
-    bool operator!=(const PrintObjectInstance &other) const { return *this == other; }
+    bool operator!=(const PrintObjectInstance &other) const { return !(*this == other); }
 };
 
 } // namespace GCode
@@ -226,8 +226,16 @@ private:
     static ObjectsLayerToPrint         		                     collect_layers_to_print(const PrintObject &object);
     static std::vector<std::pair<coordf_t, ObjectsLayerToPrint>> collect_layers_to_print(const Print &print);
 
+    Polyline get_layer_change_xy_path(const Vec3d &from, const Vec3d &to);
+
+    std::string get_ramping_layer_change_gcode(const Vec3d &from, const Vec3d &to, const unsigned extruder_id);
+
     /** @brief Generates ramping travel gcode for layer change. */
-    std::string get_layer_change_gcode(const Vec3d& from, const Vec3d& to, const unsigned extruder_id);
+    std::string generate_ramping_layer_change_gcode(
+        const Polyline &xy_path,
+        const double initial_elevation,
+        const GCode::Impl::Travels::ElevatedTravelParams &elevation_params
+    ) const;
 
     LayerResult process_layer(
         const Print                     &print,
@@ -319,7 +327,8 @@ private:
     std::string     extrude_support(const ExtrusionEntityReferences &support_fills, const GCode::SmoothPathCache &smooth_path_cache);
     std::string generate_travel_gcode(
         const Points3& travel,
-        const std::string& comment
+        const std::string& comment,
+        const std::function<std::string()>& insert_gcode
     );
     Polyline generate_travel_xy_path(
         const Point& start,
@@ -331,14 +340,15 @@ private:
         const Point &start_point,
         const Point &end_point,
         ExtrusionRole role,
-        const std::string &comment
+        const std::string &comment,
+        const std::function<std::string()>& insert_gcode
     );
 
-    std::string travel_to_first_position(const Vec3crd& point, const double from_z);
+    std::string travel_to_first_position(const Vec3crd& point, const double from_z, const ExtrusionRole role, const std::function<std::string()>& insert_gcode);
 
     bool            needs_retraction(const Polyline &travel, ExtrusionRole role = ExtrusionRole::None);
 
-    std::string     retract_and_wipe(bool toolchange = false);
+    std::string     retract_and_wipe(bool toolchange = false, bool reset_e = true);
     std::string     unretract() { return m_writer.unretract(); }
     std::string     set_extruder(unsigned int extruder_id, double print_z);
     bool line_distancer_is_required(const std::vector<unsigned int>& extruder_ids);
@@ -429,6 +439,9 @@ private:
     // This needs to be populated during the layer processing!
     std::optional<Vec3d>                m_current_layer_first_position;
     std::optional<unsigned>             m_layer_change_extruder_id;
+    bool                                m_layer_change_used_external_mp{false};
+    const Layer*                        m_layer_change_layer{nullptr};
+    std::optional<Vec2d>                m_layer_change_origin;
     bool                                m_already_unretracted{false};
     std::unique_ptr<CoolingBuffer>      m_cooling_buffer;
     std::unique_ptr<SpiralVase>         m_spiral_vase;

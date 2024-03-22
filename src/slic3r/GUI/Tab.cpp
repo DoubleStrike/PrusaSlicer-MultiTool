@@ -1621,6 +1621,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("bridge_acceleration");
         optgroup->append_single_option_line("first_layer_acceleration");
         optgroup->append_single_option_line("first_layer_acceleration_over_raft");
+        optgroup->append_single_option_line("wipe_tower_acceleration");
         optgroup->append_single_option_line("travel_acceleration");
         optgroup->append_single_option_line("default_acceleration");
 
@@ -1655,6 +1656,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("wipe_tower_bridging");
         optgroup->append_single_option_line("wipe_tower_cone_angle");
         optgroup->append_single_option_line("wipe_tower_extra_spacing");
+        optgroup->append_single_option_line("wipe_tower_extra_flow");
         optgroup->append_single_option_line("wipe_tower_no_sparse_layers");
         optgroup->append_single_option_line("single_extruder_multi_material_priming");
 
@@ -2269,6 +2271,9 @@ void TabFilament::build()
         optgroup->append_single_option_line("filament_cooling_moves");
         optgroup->append_single_option_line("filament_cooling_initial_speed");
         optgroup->append_single_option_line("filament_cooling_final_speed");
+        optgroup->append_single_option_line("filament_stamping_loading_speed");
+        optgroup->append_single_option_line("filament_stamping_distance");
+        optgroup->append_single_option_line("filament_purge_multiplier");
 
         create_line_with_widget(optgroup.get(), "filament_ramming_parameters", "", [this](wxWindow* parent) {
             auto ramming_dialog_btn = new wxButton(parent, wxID_ANY, _(L("Ramming settings"))+dots, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
@@ -3375,6 +3380,7 @@ void TabPrinter::build_unregular_pages(bool from_initial_build/* = false*/)
         optgroup->append_single_option_line("cooling_tube_length");
         optgroup->append_single_option_line("parking_pos_retraction");
         optgroup->append_single_option_line("extra_loading_move");
+        optgroup->append_single_option_line("multimaterial_purging");
         optgroup->append_single_option_line("high_current_on_filament_swap");
         if (from_initial_build)
             page->clear();
