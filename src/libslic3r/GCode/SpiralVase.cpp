@@ -68,12 +68,13 @@ std::string SpiralVase::process_layer(const std::string &gcode, bool last_layer)
     // Remove layer height from initial Z.
     z -= layer_height;
 
-    // FIXME Tapering of the transition layer only works reliably with relative extruder distances.
+    // FIXME Tapering of the transition layer and smoothing only works reliably with relative extruder distances.
     // For absolute extruder distances it will be switched off.
     // Tapering the absolute extruder distances requires to process every extrusion value after the first transition
     // layer.
     const bool transition_in  = m_transition_layer && m_config.use_relative_e_distances.value;
     const bool transition_out = last_layer && m_config.use_relative_e_distances.value;
+    const bool smooth_spiral  = m_smooth_spiral && m_config.use_relative_e_distances.value;
 
     const AABBTreeLines::LinesDistancer previous_layer_distancer = get_layer_distancer(m_previous_layer);
     Vec2f                               last_point               = m_previous_layer.empty() ? Vec2f::Zero() : m_previous_layer.back();
@@ -81,7 +82,7 @@ std::string SpiralVase::process_layer(const std::string &gcode, bool last_layer)
 
     std::string        new_gcode, transition_gcode;
     std::vector<Vec2f> current_layer;
-    m_reader.parse_buffer(gcode, [z, total_layer_length, layer_height, transition_in, transition_out, smooth_spiral = m_smooth_spiral, max_xy_smoothing = m_max_xy_smoothing,
+    m_reader.parse_buffer(gcode, [z, total_layer_length, layer_height, transition_in, transition_out, smooth_spiral, max_xy_smoothing = m_max_xy_smoothing,
                                   &len, &last_point, &new_gcode, &transition_gcode, &current_layer, &previous_layer_distancer]
         (GCodeReader &reader, GCodeReader::GCodeLine line) {
         if (line.cmd_is("G1")) {
@@ -106,8 +107,11 @@ std::string SpiralVase::process_layer(const std::string &gcode, bool last_layer)
                         transition_line.set(reader, E, line.e() * (1.f - factor), 5);
                         transition_gcode += transition_line.raw() + '\n';
                     }
+
                     // This line is the core of Spiral Vase mode, ramp up the Z smoothly
                     line.set(reader, Z, z + factor * layer_height);
+
+                    bool emit_gcode_line = true;
                     if (smooth_spiral) {
                         // Now we also need to try to interpolate X and Y
                         Vec2f p(line.x(), line.y());   // Get current x/y coordinates
@@ -117,6 +121,10 @@ std::string SpiralVase::process_layer(const std::string &gcode, bool last_layer)
                         if (nearest_distance < max_xy_smoothing) {
                             // Interpolate between the point on this layer and the point on the previous layer
                             Vec2f target = nearest_pt.cast<float>() * (1.f - factor) + p * factor;
+
+                            // We will emit a new g-code line only when XYZ positions differ from the previous g-code line.
+                            emit_gcode_line = GCodeFormatter::quantize(last_point) != GCodeFormatter::quantize(target);
+
                             line.set(reader, X, target.x());
                             line.set(reader, Y, target.y());
                             // We need to figure out the distance of this new line!
@@ -128,7 +136,9 @@ std::string SpiralVase::process_layer(const std::string &gcode, bool last_layer)
                             last_point = p;
                         }
                     }
-                    new_gcode += line.raw() + '\n';
+
+                    if (emit_gcode_line)
+                        new_gcode += line.raw() + '\n';
                 }
                 return;
                 /*  Skip travel moves: the move to first perimeter point will

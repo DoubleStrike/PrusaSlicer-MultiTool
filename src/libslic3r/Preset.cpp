@@ -2235,6 +2235,14 @@ const std::string& ExtruderFilaments::get_preset_name_by_alias(const std::string
     return alias;
 }
 
+void ExtruderFilaments::select_filament(size_t idx) 
+{ 
+    assert(idx == size_t(-1) || idx < m_extr_filaments.size());
+    // Check idx befor saving it's value to m_idx_selected.
+    // Invalidate m_idx_selected, if idx is out of range m_extr_filaments
+    m_idx_selected = (idx == size_t(-1) || idx < m_extr_filaments.size()) ? idx : size_t(-1); 
+}
+
 bool ExtruderFilaments::select_filament(const std::string &name_w_suffix, bool force/*= false*/)
 {
     std::string name = Preset::remove_suffix_modified(name_w_suffix);

@@ -1096,6 +1096,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("filament_stamping_loading_speed", coFloats);
     def->label = L("Stamping loading speed");
     def->tooltip = L("Speed used for stamping.");
+    def->sidetext = L("mm/s");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloats { 20. });
@@ -1104,6 +1105,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Stamping distance measured from the center of the cooling tube");
     def->tooltip = L("If set to nonzero value, filament is moved toward the nozzle between the individual cooling moves (\"stamping\"). "
                      "This option configures how long this movement should be before the filament is retracted again.");
+    def->sidetext = L("mm");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloats { 0. });

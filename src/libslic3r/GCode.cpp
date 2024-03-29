@@ -1422,8 +1422,10 @@ void GCodeGenerator::_do_export(Print& print, GCodeOutputStream &file, Thumbnail
         m_processor.get_binary_data()
     );
 
-    if (!export_to_binary_gcode)
+    if (!export_to_binary_gcode) {
+        file.write_format("; objects_info = %s\n", m_label_objects.all_objects_header_singleline_json().c_str());
         file.write(filament_stats_string_out);
+    }
 
     if (export_to_binary_gcode) {
         bgcode::binarize::BinaryData& binary_data = m_processor.get_binary_data();
@@ -1445,8 +1447,6 @@ void GCodeGenerator::_do_export(Print& print, GCodeOutputStream &file, Thumbnail
         if (print.m_print_statistics.total_toolchanges > 0)
             file.write_format("; total toolchanges = %i\n", print.m_print_statistics.total_toolchanges);
         file.write_format(";%s\n", GCodeProcessor::reserved_tag(GCodeProcessor::ETags::Estimated_Printing_Time_Placeholder).c_str());
-
-        file.write_format("; objects_info = %s\n", m_label_objects.all_objects_header_singleline_json().c_str());
 
         // if exporting gcode in ascii format, config export is done here
         // Append full config, delimited by two 'phony' configuration keys prusaslicer_config = begin and prusaslicer_config = end.
@@ -3304,6 +3304,9 @@ std::string GCodeGenerator::_extrude(
     } else {
         this->m_already_unretracted = true;
         gcode += "FIRST_UNRETRACT" + this->unretract();
+
+        //First unretract may or may not be removed thus we must start from E0.
+        gcode += this->writer().reset_e();
     }
 
     if (m_writer.multiple_extruders && !has_active_instance) {

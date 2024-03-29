@@ -645,7 +645,7 @@ void GCodeProcessor::apply_config(const PrintConfig& config)
         m_extra_loading_move = float(config.extra_loading_move);
     }
 
-for (size_t i = 0; i < static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Count); ++i) {
+    for (size_t i = 0; i < static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Count); ++i) {
         float max_acceleration = get_option_value(m_time_processor.machine_limits.machine_max_acceleration_extruding, i);
         m_time_processor.machines[i].max_acceleration = max_acceleration;
         m_time_processor.machines[i].acceleration = (max_acceleration > 0.0f) ? max_acceleration : DEFAULT_ACCELERATION;
@@ -3815,7 +3815,13 @@ void GCodeProcessor::post_process()
         struct LineData
         {
             std::string line;
-            float time;
+            std::array<float, static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Count)> times{ 0.0f, 0.0f };
+        };
+
+        enum ETimeMode
+        {
+            Normal  = static_cast<int>(PrintEstimatedStatistics::ETimeMode::Normal),
+            Stealth = static_cast<int>(PrintEstimatedStatistics::ETimeMode::Stealth)
         };
 
 #ifndef NDEBUG
@@ -3845,10 +3851,10 @@ void GCodeProcessor::post_process()
 #endif // NDEBUG
 
         EWriteType m_write_type{ EWriteType::BySize };
-        // Time machine containing g1 times cache
-        TimeMachine& m_machine;
+        // Time machines containing g1 times cache
+        const std::array<TimeMachine, static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Count)>& m_machines;
         // Current time
-        float m_time{ 0.0f };
+        std::array<float, static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Count)> m_times{ 0.0f, 0.0f };
         // Current size in bytes
         size_t m_size{ 0 };
 
@@ -3865,11 +3871,12 @@ void GCodeProcessor::post_process()
         bgcode::binarize::Binarizer& m_binarizer;
 
     public:
-        ExportLines(bgcode::binarize::Binarizer& binarizer, EWriteType type, TimeMachine& machine)
+        ExportLines(bgcode::binarize::Binarizer& binarizer, EWriteType type,
+            const std::array<TimeMachine, static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Count)>& machines)
 #ifndef NDEBUG
-        : m_statistics(*this), m_binarizer(binarizer), m_write_type(type), m_machine(machine) {}
+        : m_statistics(*this), m_binarizer(binarizer), m_write_type(type), m_machines(machines) {}
 #else
-        : m_binarizer(binarizer), m_write_type(type), m_machine(machine) {}
+        : m_binarizer(binarizer), m_write_type(type), m_machines(machines) {}
 #endif // NDEBUG
 
         // return: number of internal G1 lines (from G2/G3 splitting) processed
@@ -3886,9 +3893,9 @@ void GCodeProcessor::post_process()
             else
                 return ret;
 
-            auto init_it = m_machine.g1_times_cache.begin() + m_times_cache_id;
+            auto init_it = m_machines[Normal].g1_times_cache.begin() + m_times_cache_id;
             auto it = init_it;
-            while (it != m_machine.g1_times_cache.end() && it->id < g1_lines_counter) {
+            while (it != m_machines[Normal].g1_times_cache.end() && it->id < g1_lines_counter) {
                 ++it;
                 ++m_times_cache_id;
             }
@@ -3898,7 +3905,7 @@ void GCodeProcessor::post_process()
 
             // search for internal G1 lines
             if (GCodeReader::GCodeLine::cmd_is(line, "G2") || GCodeReader::GCodeLine::cmd_is(line, "G3")) {
-                while (it != m_machine.g1_times_cache.end() && it->remaining_internal_g1_lines > 0) {
+                while (it != m_machines[Normal].g1_times_cache.end() && it->remaining_internal_g1_lines > 0) {
                     ++it;
                     ++m_times_cache_id;
                     ++g1_lines_counter;
@@ -3906,15 +3913,18 @@ void GCodeProcessor::post_process()
                 }
             }
 
-            if (it != m_machine.g1_times_cache.end() && it->id == g1_lines_counter)
-                m_time = it->elapsed_time;
+            if (it != m_machines[Normal].g1_times_cache.end() && it->id == g1_lines_counter) {
+                m_times[Normal] = it->elapsed_time;
+                if (!m_machines[Stealth].g1_times_cache.empty())
+                    m_times[Stealth] = (m_machines[Stealth].g1_times_cache.begin() + std::distance(m_machines[Normal].g1_times_cache.begin(), it))->elapsed_time;
+            }
 
             return ret;
         }
 
         // add the given gcode line to the cache
         void append_line(const std::string& line) {
-            m_lines.push_back({ line, m_time });
+            m_lines.push_back({ line, m_times });
 #ifndef NDEBUG
             m_statistics.add_line(line.length());
 #endif // NDEBUG
@@ -3925,7 +3935,8 @@ void GCodeProcessor::post_process()
         }
 
         // Insert the gcode lines required by the command cmd by backtracing into the cache
-        void insert_lines(const Backtrace& backtrace, const std::string& cmd, std::function<std::string(unsigned int, float, float)> line_inserter,
+        void insert_lines(const Backtrace& backtrace, const std::string& cmd,
+            std::function<std::string(unsigned int, const std::vector<float>&)> line_inserter,
             std::function<std::string(const std::string&)> line_replacer) {
             assert(!m_lines.empty());
             const float time_step = backtrace.time_step();
@@ -3933,13 +3944,13 @@ void GCodeProcessor::post_process()
             float last_time_insertion = 0.0f; // used to avoid inserting two lines at the same time
             for (unsigned int i = 0; i < backtrace.steps; ++i) {
                 const float backtrace_time_i = (i + 1) * time_step;
-                const float time_threshold_i = m_time - backtrace_time_i;
+                const float time_threshold_i = m_times[Normal] - backtrace_time_i;
                 auto rev_it = m_lines.rbegin() + rev_it_dist;
                 auto start_rev_it = rev_it;
 
                 std::string curr_cmd = GCodeReader::GCodeLine::extract_cmd(rev_it->line);
                 // backtrace into the cache to find the place where to insert the line
-                while (rev_it != m_lines.rend() && rev_it->time > time_threshold_i && curr_cmd != cmd && curr_cmd != "G28" && curr_cmd != "G29") {
+                while (rev_it != m_lines.rend() && rev_it->times[Normal] > time_threshold_i && curr_cmd != cmd && curr_cmd != "G28" && curr_cmd != "G29") {
                     rev_it->line = line_replacer(rev_it->line);
                     ++rev_it;
                     if (rev_it != m_lines.rend())
@@ -3951,11 +3962,15 @@ void GCodeProcessor::post_process()
                     break;
 
                 // insert the line for the current step
-                if (rev_it != m_lines.rend() && rev_it != start_rev_it && rev_it->time != last_time_insertion) {
-                    last_time_insertion = rev_it->time;
-                    const std::string out_line = line_inserter(i + 1, last_time_insertion, m_time - last_time_insertion);
+                if (rev_it != m_lines.rend() && rev_it != start_rev_it && rev_it->times[Normal] != last_time_insertion) {
+                    last_time_insertion = rev_it->times[Normal];
+                    std::vector<float> time_diffs;
+                    time_diffs.push_back(m_times[Normal] - last_time_insertion);
+                    if (!m_machines[Stealth].g1_times_cache.empty())
+                        time_diffs.push_back(m_times[Stealth] - rev_it->times[Stealth]);
+                    const std::string out_line = line_inserter(i + 1, time_diffs);
                     rev_it_dist = std::distance(m_lines.rbegin(), rev_it) + 1;
-                    m_lines.insert(rev_it.base(), { out_line, rev_it->time });
+                    m_lines.insert(rev_it.base(), { out_line, rev_it->times });
 #ifndef NDEBUG
                     m_statistics.add_line(out_line.length());
 #endif // NDEBUG
@@ -3981,7 +3996,7 @@ void GCodeProcessor::post_process()
             std::string out_string;
             if (!m_lines.empty()) {
                 if (m_write_type == EWriteType::ByTime) {
-                    while (m_lines.front().time < m_time - backtrace_time) {
+                    while (m_lines.front().times[Normal] < m_times[Normal] - backtrace_time) {
                         const LineData& data = m_lines.front();
                         out_string += data.line;
                         m_size -= data.line.length();
@@ -4066,7 +4081,8 @@ void GCodeProcessor::post_process()
         }
     };
 
-    ExportLines export_lines(m_binarizer, m_result.backtrace_enabled ? ExportLines::EWriteType::ByTime : ExportLines::EWriteType::BySize, m_time_processor.machines[0]);
+    ExportLines export_lines(m_binarizer, m_result.backtrace_enabled ? ExportLines::EWriteType::ByTime : ExportLines::EWriteType::BySize,
+        m_time_processor.machines);
 
     // replace placeholder lines with the proper final value
     // gcode_line is in/out parameter, to reduce expensive memory allocation
@@ -4269,9 +4285,14 @@ void GCodeProcessor::post_process()
             }
             export_lines.insert_lines(backtrace, cmd,
                 // line inserter
-                [tool_number, this](unsigned int id, float time, float time_diff) {
-                    int temperature = int( m_layer_id != 1 ? m_extruder_temps_config[tool_number] : m_extruder_temps_first_layer_config[tool_number]);
-                    const std::string out = "M104 T" + std::to_string(tool_number) + " P" + std::to_string(int(std::round(time_diff))) + " S" + std::to_string(temperature) + "\n";
+                [tool_number, this](unsigned int id, const std::vector<float>& time_diffs) {
+                    const int temperature = int(m_layer_id != 1 ? m_extruder_temps_config[tool_number] : m_extruder_temps_first_layer_config[tool_number]);
+                    std::string out = "M104.1 T" + std::to_string(tool_number);
+                    if (time_diffs.size() > 0)
+                        out += " P" + std::to_string(int(std::round(time_diffs[0])));
+                    if (time_diffs.size() > 1)
+                        out += " Q" + std::to_string(int(std::round(time_diffs[1])));
+                    out += " S" + std::to_string(temperature) + "\n";
                     return out;
                 },
                 // line replacer

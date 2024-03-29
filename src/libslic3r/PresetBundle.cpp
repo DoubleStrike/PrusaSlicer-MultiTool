@@ -1211,6 +1211,8 @@ ConfigSubstitutions PresetBundle::load_config_file_config_bundle(
     load_one(this->printers,      tmp_bundle.printers,      tmp_bundle.printers     .get_selected_preset_name(), true);
 
     this->extruders_filaments.clear();
+    this->extruders_filaments.emplace_back(ExtruderFilaments(&filaments));
+
     this->update_multi_material_filament_presets();
     for (size_t i = 1; i < std::min(tmp_bundle.extruders_filaments.size(), this->extruders_filaments.size()); ++i)
         this->extruders_filaments[i].select_filament(load_one(this->filaments, tmp_bundle.filaments, tmp_bundle.extruders_filaments[i].get_selected_preset_name(), false));
@@ -1700,6 +1702,8 @@ std::pair<PresetsConfigSubstitutions, size_t> PresetBundle::load_configbundle(
 
         // Extruder_filaments have to be recreated with new loaded filaments
         this->extruders_filaments.clear();
+        this->extruders_filaments.emplace_back(ExtruderFilaments(&filaments));
+
         this->update_multi_material_filament_presets();
         for (size_t i = 0; i < std::min(this->extruders_filaments.size(), active_filaments.size()); ++ i)
             this->extruders_filaments[i].select_filament(filaments.find_preset(active_filaments[i], true)->name);

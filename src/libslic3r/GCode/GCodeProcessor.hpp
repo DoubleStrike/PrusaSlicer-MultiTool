@@ -24,7 +24,7 @@
 
 namespace Slic3r {
 
-  class Print;
+    class Print;
 
     enum class EMoveType : unsigned char
     {
