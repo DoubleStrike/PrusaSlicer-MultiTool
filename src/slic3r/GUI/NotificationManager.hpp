@@ -126,7 +126,7 @@ enum class NotificationType
 	ExportOngoing,
 	// Progressbar of download from prusaslicer:// url
 	URLDownload,
-	// MacOS and Linux flatpack (SLIC3R_DESKTOP_INTEGRATION = 0) specific - PS comes forward even when downloader is not allowed
+	// MacOS specific - PS comes forward even when downloader is not allowed
 	URLNotRegistered,
 	// Config file was detected during startup, open wifi config dialog via hypertext
 	WifiConfigFileDetected

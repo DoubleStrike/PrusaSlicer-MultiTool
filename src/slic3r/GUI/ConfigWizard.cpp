@@ -1473,11 +1473,12 @@ PageDownloader::PageDownloader(ConfigWizard* parent)
     boldfont.SetWeight(wxFONTWEIGHT_BOLD);
 
     append_spacer(VERTICAL_SPACING);
+
     auto* box_allow_downloads = new wxCheckBox(this, wxID_ANY, _L("Allow built-in downloader"));
     // TODO: Do we want it like this? The downloader is allowed for very first time the wizard is run. 
     bool box_allow_value = (app_config->has("downloader_url_registered") ? app_config->get_bool("downloader_url_registered") : true);
     box_allow_downloads->SetValue(box_allow_value);
-    append(box_allow_downloads); 
+    append(box_allow_downloads);
 
     // append info line with link on printables.com
     {
@@ -1523,7 +1524,7 @@ PageDownloader::PageDownloader(ConfigWizard* parent)
     )));
 #endif //(__linux__) && defined(SLIC3R_DESKTOP_INTEGRATION)
 
-    box_allow_downloads->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& event) {  this->m_downloader->allow(event.IsChecked()); });
+    box_allow_downloads->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& event) { this->m_downloader->allow(event.IsChecked()); });
 
     m_downloader = new DownloaderUtils::Worker(this);
     append(m_downloader);
@@ -2407,9 +2408,7 @@ void ConfigWizard::priv::load_pages()
     btn_finish->Enable(any_fff_selected || any_sla_selected || custom_printer_selected || custom_printer_in_bundle);
 
     index->add_page(page_update);
-#if !defined(__linux__) || (defined(__linux__) && defined(SLIC3R_DESKTOP_INTEGRATION))
     index->add_page(page_downloader);
-#endif
     index->add_page(page_reload_from_disk);
 #ifdef _WIN32
     index->add_page(page_files_association);
@@ -2776,12 +2775,12 @@ void ConfigWizard::priv::on_3rdparty_install(const VendorProfile *vendor, bool i
 bool ConfigWizard::priv::on_bnt_finish()
 {
     wxBusyCursor wait;
-#if !defined(__linux__) || (defined(__linux__) && defined(SLIC3R_DESKTOP_INTEGRATION))
+
     if (!page_downloader->on_finish_downloader()) {
         index->go_to(page_downloader);
         return false;
     }
-#endif
+
     /* If some printers were added/deleted, but related MaterialPage wasn't activated,
      * than last changes wouldn't be updated for filaments/materials.
      * SO, do that before check_and_install_missing_materials()
@@ -3405,9 +3404,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
 
     
     p->add_page(p->page_update   = new PageUpdate(this));
-#if !defined(__linux__) || (defined(__linux__) && defined(SLIC3R_DESKTOP_INTEGRATION))
     p->add_page(p->page_downloader = new PageDownloader(this));
-#endif
     p->add_page(p->page_reload_from_disk = new PageReloadFromDisk(this));
 #ifdef _WIN32
     p->add_page(p->page_files_association = new PageFilesAssociation(this));

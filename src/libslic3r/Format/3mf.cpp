@@ -1971,7 +1971,15 @@ namespace Slic3r {
 
         m_curr_object.geometry.custom_supports.push_back(get_attribute_value_string(attributes, num_attributes, CUSTOM_SUPPORTS_ATTR));
         m_curr_object.geometry.custom_seam.push_back(get_attribute_value_string(attributes, num_attributes, CUSTOM_SEAM_ATTR));
-        m_curr_object.geometry.mm_segmentation.push_back(get_attribute_value_string(attributes, num_attributes, MM_SEGMENTATION_ATTR));
+
+        // Now load MM segmentation data. Unfortunately, BambuStudio has changed the attribute name after they forked us,
+        // leading to https://github.com/prusa3d/PrusaSlicer/issues/12502. Let's try to load both keys if the usual
+        // one that PrusaSlicer uses is not present.
+        std::string mm_segmentation_serialized = get_attribute_value_string(attributes, num_attributes, MM_SEGMENTATION_ATTR);
+        if (mm_segmentation_serialized.empty())
+            mm_segmentation_serialized = get_attribute_value_string(attributes, num_attributes, "paint_color");
+        m_curr_object.geometry.mm_segmentation.push_back(mm_segmentation_serialized);
+
         return true;
     }
 
