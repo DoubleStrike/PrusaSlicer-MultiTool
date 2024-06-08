@@ -97,8 +97,11 @@ void OptionsSearcher::append_options(DynamicPrintConfig* config, Preset::Type ty
 
         wxString suffix;
         wxString suffix_local;
-        if (gc.category == "Machine limits") {
-            suffix = id == 1 ? L("Stealth") : L("Normal");
+        if (gc.category == "Machine limits" || gc.category == "Material printing profile") {
+            if (gc.category == "Machine limits")
+                suffix = id == 1 ? L("Stealth") : L("Normal");
+            else 
+                suffix = id == 1 ? L("Above") : L("Below");
             suffix_local = " " + _(suffix);
             suffix = " " + suffix;
         }
@@ -122,7 +125,7 @@ void OptionsSearcher::append_options(DynamicPrintConfig* config, Preset::Type ty
 
         int cnt = 0;
 
-        if ( type != Preset::TYPE_FILAMENT && type != Preset::TYPE_SLA_MATERIAL && !PresetCollection::is_independent_from_extruder_number_option(opt_key) )
+        if ( type != Preset::TYPE_FILAMENT && !PresetCollection::is_independent_from_extruder_number_option(opt_key))
             switch (config->option(opt_key)->type())
             {
             case coInts:	change_opt_key<ConfigOptionInts		>(opt_key, config, cnt);	break;
@@ -132,6 +135,8 @@ void OptionsSearcher::append_options(DynamicPrintConfig* config, Preset::Type ty
             case coPercents:change_opt_key<ConfigOptionPercents	>(opt_key, config, cnt);	break;
             case coPoints:	change_opt_key<ConfigOptionPoints	>(opt_key, config, cnt);	break;
             case coFloatsOrPercents:	change_opt_key<ConfigOptionFloatsOrPercents	>(opt_key, config, cnt);	break;
+            case coEnums:	change_opt_key<ConfigOptionEnumsGeneric>(opt_key, config, cnt);	break;
+
             default:		break;
             }
 

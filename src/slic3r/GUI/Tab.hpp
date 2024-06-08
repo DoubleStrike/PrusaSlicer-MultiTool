@@ -380,6 +380,7 @@ public:
     void            update_mode();
     void            update_mode_markers();
     void            update_visibility();
+    virtual void    update_sla_prusa_specific_visibility() {}
     virtual void    msw_rescale();
     virtual void	sys_color_changed();
 	Field*			get_field(const t_config_option_key& opt_key, int opt_index = -1) const;
@@ -409,11 +410,11 @@ public:
 	static bool validate_custom_gcode(const wxString& title, const std::string& gcode);
 	bool        validate_custom_gcodes();
     bool        validate_custom_gcodes_was_shown{ false };
+    bool        is_prusa_printer() const;
 
     void						edit_custom_gcode(const t_config_option_key& opt_key);
     virtual const std::string&	get_custom_gcode(const t_config_option_key& opt_key);
     virtual void				set_custom_gcode(const t_config_option_key& opt_key, const std::string& value);
-
 protected:
 	void			create_line_with_widget(ConfigOptionsGroup* optgroup, const std::string& opt_key, const std::string& path, widget_t widget);
 	wxSizer*		compatible_widget_create(wxWindow* parent, PresetDependencies &deps);
@@ -562,6 +563,7 @@ public:
 	wxSizer*	create_bed_shape_widget(wxWindow* parent);
 	void		cache_extruder_cnt(const DynamicPrintConfig* config = nullptr);
 	bool		apply_extruder_cnt_from_cache();
+	void		update_sla_prusa_specific_visibility() override;
 };
 
 class TabSLAMaterial : public Tab
@@ -578,9 +580,15 @@ public:
     ~TabSLAMaterial() {}
 
 	void		build() override;
+	void		build_tilt_group(Slic3r::GUI::PageShp page);
+	void		toggle_tilt_options(bool is_above);
 	void		toggle_options() override;
 	void		update() override;
+	void		clear_pages() override;
+	void        msw_rescale() override;
+	void		sys_color_changed() override;
 	bool 		supports_printer_technology(const PrinterTechnology tech) const override { return tech == ptSLA; }
+	void		update_sla_prusa_specific_visibility() override;
 };
 
 class TabSLAPrint : public Tab

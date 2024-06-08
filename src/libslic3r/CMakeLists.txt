@@ -509,6 +509,8 @@ set(SLIC3R_SOURCES
     Arachne/WallToolPaths.hpp
     Arachne/WallToolPaths.cpp
     StaticMap.hpp
+    Utils/JsonUtils.hpp
+    Utils/JsonUtils.cpp
 )
 
 add_library(libslic3r STATIC ${SLIC3R_SOURCES})

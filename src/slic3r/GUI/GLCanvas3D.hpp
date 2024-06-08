@@ -504,6 +504,7 @@ private:
     ClippingPlane m_camera_clipping_plane;
     bool m_use_clipping_planes;
     std::array<SlaCap, 2> m_sla_caps;
+    int m_layer_slider_index = -1;
     std::string m_sidebar_field;
     // when true renders an extra frame by not resetting m_dirty to false
     // see request_extra_frame()
@@ -756,6 +757,8 @@ public:
     GLGizmosManager& get_gizmos_manager() { return m_gizmos; }
 
     void bed_shape_changed();
+
+    void set_layer_slider_index(int i) { m_layer_slider_index = i; }
 
     void set_clipping_plane(unsigned int id, const ClippingPlane& plane) {
         if (id < 2) {

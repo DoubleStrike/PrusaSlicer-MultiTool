@@ -1199,6 +1199,14 @@ static wxString get_string_value(std::string opt_key, const DynamicPrintConfig& 
         auto opt = config.option_def(opt_key)->enum_def->enum_to_label(config.option(opt_key)->getInt());
         return opt.has_value() ? _(from_u8(*opt)) : _L("Undef");
     }
+    case coEnums: {
+        auto values = config.option(opt_key)->getInts();
+        if (opt_idx < values.size()) {
+            auto opt = config.option_def(opt_key)->enum_def->enum_to_label(values[opt_idx]);
+            return opt.has_value() ? _(from_u8(*opt)) : _L("Undef");
+        }
+        return _L("Undef");
+    }
     case coPoints: {
         if (opt_key == "bed_shape") {
             BedShape shape(*config.option<ConfigOptionPoints>(opt_key));
@@ -1289,7 +1297,7 @@ void UnsavedChangesDialog::update_tree(Preset::Type type, PresetCollection* pres
         m_tree->model->AddPreset(type, from_u8(presets->get_edited_preset().name), old_pt, from_u8(new_selected_preset));
 
         // Collect dirty options.
-        const bool deep_compare = type != Preset::TYPE_FILAMENT && type != Preset::TYPE_SLA_MATERIAL;
+        const bool deep_compare = type != Preset::TYPE_FILAMENT;
         auto dirty_options = presets->current_dirty_options(deep_compare);
 
         // process changes of extruders count

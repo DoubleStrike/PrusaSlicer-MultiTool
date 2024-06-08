@@ -6522,6 +6522,41 @@ void GLCanvas3D::_render_camera_target()
 }
 #endif // ENABLE_SHOW_CAMERA_TARGET
 
+
+
+static void render_sla_layer_legend(const SLAPrint& print, int layer_idx, int cnv_width, int cnv_top)
+{
+    const std::vector<double>& areas = print.print_statistics().layers_areas;
+    const std::vector<double>& times = print.print_statistics().layers_times_running_total;
+    const double display_area        = print.printer_config().display_height * print.printer_config().display_width;
+    if (layer_idx >= 0 && layer_idx < int(areas.size())) {
+        const double area = areas[layer_idx];
+        const double time = times[layer_idx] - (layer_idx == 0 ? 0. : times[layer_idx-1]);
+        const double time_until_layer = times[layer_idx];
+            
+        ImGuiWrapper& imgui = *wxGetApp().imgui();
+        imgui.set_next_window_pos(float(cnv_width) - imgui.get_style_scaling() * 5.f, cnv_top + 5.f, ImGuiCond_Always, 1.0f, 0.0f);
+        ImGui::SetNextWindowBgAlpha(0.6f);
+
+        imgui.begin(_u8L("Layer statistics"), ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoFocusOnAppearing);
+        ImGui::Text("%s", GUI::format(_u8L("Layer area: %1% mm²"), int(0.1 + std::round(area))).c_str());
+
+        int area_percent_int = int(std::round(100. * area/display_area));
+        ImGui::Text("%s", GUI::format(_u8L("Area fill: %1% %%"), area_percent_int == 0 ? "<1" : std::to_string(area_percent_int)).c_str());
+        ImGui::Separator();
+        ImGui::Text("%s", GUI::format(_u8L("Layer time: %1%"), get_time_dhms(time)).c_str());
+        std::string buffer_str = _u8L("Time since start: %1%"); 
+        ImGui::Text("%s", GUI::format(buffer_str, get_time_dhms(time_until_layer)).c_str());
+
+        // The dummy control below uses the assumption that the total time string will be the longest
+        // and forces the width of the window large enough so it does not resize depending on the current value.
+        ImGui::Dummy(ImVec2(ImGui::CalcTextSize(GUI::format(buffer_str, get_time_dhms(82799)).c_str()).x, 0.));
+        imgui.end();
+    }
+}
+
+
+
 void GLCanvas3D::_render_sla_slices()
 {
     if (!m_use_clipping_planes || current_printer_technology() != ptSLA)
@@ -6532,6 +6567,12 @@ void GLCanvas3D::_render_sla_slices()
     if (print_objects.empty())
         // nothing to render, return
         return;
+
+    if (print->finished()) {
+        GLToolbar& collapse_toolbar = wxGetApp().plater()->get_collapse_toolbar();
+        const int cnv_top = collapse_toolbar.is_enabled() ? collapse_toolbar.get_height() : 0.f;
+        render_sla_layer_legend(*print, m_layer_slider_index, get_canvas_size().get_width(), cnv_top);
+    }
 
     double clip_min_z = -m_clipping_planes[0].get_data()[3];
     double clip_max_z = m_clipping_planes[1].get_data()[3];

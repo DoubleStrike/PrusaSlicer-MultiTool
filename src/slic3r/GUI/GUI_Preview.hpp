@@ -147,6 +147,7 @@ public:
     void move_layers_slider(wxKeyEvent& evt);
     void edit_layers_slider(wxKeyEvent& evt);
 
+
     bool is_loaded() const { return m_loaded; }
 
     void update_moves_slider();

@@ -687,7 +687,7 @@ void Tab::init_options_list()
     m_options_list.clear();
 
     for (const std::string& opt_key : m_config->keys())
-        emplace_option(opt_key, m_type != Preset::TYPE_FILAMENT && m_type != Preset::TYPE_SLA_MATERIAL && !PresetCollection::is_independent_from_extruder_number_option(opt_key));
+        emplace_option(opt_key, m_type != Preset::TYPE_FILAMENT && !PresetCollection::is_independent_from_extruder_number_option(opt_key));
 }
 
 template<class T>
@@ -710,6 +710,7 @@ void Tab::emplace_option(const std::string& opt_key, bool respect_vec_values/* =
         case coPercents:add_correct_opts_to_options_list<ConfigOptionPercents	>(opt_key, m_options_list, this, m_opt_status_value);	break;
         case coPoints:	add_correct_opts_to_options_list<ConfigOptionPoints		>(opt_key, m_options_list, this, m_opt_status_value);	break;
         case coFloatsOrPercents:	add_correct_opts_to_options_list<ConfigOptionFloatsOrPercents		>(opt_key, m_options_list, this, m_opt_status_value);	break;
+        case coEnums:	add_correct_opts_to_options_list<ConfigOptionEnumsGeneric>(opt_key, m_options_list, this, m_opt_status_value);	break;
         default:		m_options_list.emplace(opt_key, m_opt_status_value);		break;
         }
     }
@@ -928,6 +929,7 @@ void Tab::update_mode()
         m_mode_sizer->SetMode(m_mode);
 
     update_visibility();
+    update_sla_prusa_specific_visibility();
 
     update_changed_tree_ui();
 }
@@ -2953,7 +2955,7 @@ void TabPrinter::build_sla()
     line.append_option(optgroup->get_option("slow_tilt_time"));
     line.append_option(optgroup->get_option("high_viscosity_tilt_time"));
     optgroup->append_line(line);
-    optgroup->append_single_option_line("area_fill");
+//    optgroup->append_single_option_line("area_fill");
 
     optgroup = page->new_optgroup(L("Corrections"));
     line = Line{ m_config->def()->get("relative_correction")->full_label, "" };
@@ -3038,6 +3040,29 @@ void TabPrinter::append_option_line(ConfigOptionsGroupShp optgroup, const std::s
     optgroup->append_line(line);
 }
 
+// Legend for OptionsGroups                                     column's   name         tooltip
+static void create_legend(Slic3r::GUI::PageShp page, const std::vector<std::pair<std::string, std::string>>& columns, ConfigOptionMode mode, bool is_wider = false)
+{
+    auto optgroup = page->new_optgroup("");
+    auto line = Line{ "", "" };
+
+    ConfigOptionDef def;
+    def.type = coString;
+    def.width = is_wider ? Field::def_width_wider() : Field::def_width();
+    def.gui_type = ConfigOptionDef::GUIType::legend;
+    def.mode = mode;
+
+    for (auto& [name, tooltip] : columns) {
+        def.tooltip = tooltip;
+        def.set_default_value(new ConfigOptionString{ into_u8(_(name)) });
+
+        auto option = Option(def, name + "_legend");
+        line.append_option(option);
+    }
+
+    optgroup->append_line(line);
+}
+
 PageShp TabPrinter::build_kinematics_page()
 {
     auto page = add_options_page(L("Machine limits"), "cog", true);
@@ -3075,27 +3100,12 @@ PageShp TabPrinter::build_kinematics_page()
     };
 
     if (m_use_silent_mode) {
-        // Legend for OptionsGroups
-        auto optgroup = page->new_optgroup("");
-        auto line = Line{ "", "" };
+        std::vector<std::pair<std::string, std::string>> legend_columns = {
+            {L("Normal"), L("Values in this column are for Normal mode")},
+            {L("Stealth"), L("Values in this column are for Stealth mode")}
+        };
 
-        ConfigOptionDef def;
-        def.type = coString;
-        def.width = Field::def_width();
-        def.gui_type = ConfigOptionDef::GUIType::legend;
-        def.mode = comAdvanced;
-        def.tooltip = L("Values in this column are for Normal mode");
-        def.set_default_value(new ConfigOptionString{ _(L("Normal")).ToUTF8().data() });
-
-        auto option = Option(def, "full_power_legend");
-        line.append_option(option);
-
-        def.tooltip = L("Values in this column are for Stealth mode");
-        def.set_default_value(new ConfigOptionString{ _(L("Stealth")).ToUTF8().data() });
-        option = Option(def, "silent_legend");
-        line.append_option(option);
-
-        optgroup->append_line(line);
+        create_legend(page, legend_columns, comAdvanced);
     }
 
     const std::vector<std::string> axes{ "x", "y", "z", "e" };
@@ -3622,8 +3632,15 @@ void TabPrinter::update_fff()
     toggle_options();
 }
 
+bool Tab::is_prusa_printer() const
+{
+    std::string printer_model = m_preset_bundle->printers.get_edited_preset().config.opt_string("printer_model");
+    return printer_model == "SL1" || printer_model == "SL1S" || printer_model == "M1";
+}
+
 void TabPrinter::update_sla()
-{ ; }
+{
+}
 
 void Tab::update_ui_items_related_on_parent_preset(const Preset* selected_preset_parent)
 {
@@ -3735,6 +3752,7 @@ void Tab::load_current_preset()
         m_opt_status_value = (m_presets->get_selected_preset_parent() ? osSystemValue : 0) | osInitValue;
         init_options_list();
         update_visibility();
+        update_sla_prusa_specific_visibility();
         update_changed_ui();
     }
 #if 0
@@ -4089,6 +4107,7 @@ void Tab::activate_selected_page(std::function<void()> throw_if_canceled)
             this->compatible_widget_reload(m_compatible_prints);
     }
 
+    update_sla_prusa_specific_visibility();
     update_changed_ui();
     update_description_lines();
     toggle_options();
@@ -5002,6 +5021,17 @@ bool TabPrinter::apply_extruder_cnt_from_cache()
     return false;
 }
 
+void TabPrinter::update_sla_prusa_specific_visibility()
+{
+    if (m_active_page && m_active_page->title() == "General") {
+        auto og_it = std::find_if(m_active_page->m_optgroups.begin(), m_active_page->m_optgroups.end(), [](const ConfigOptionsGroupShp og) { return og->title == "Tilt"; });
+        if (og_it != m_active_page->m_optgroups.end()) {            
+            og_it->get()->Show(m_mode == comExpert && !is_prusa_printer());
+            Layout();
+        }
+    }
+}
+
 bool Tab::validate_custom_gcodes()
 {
     if (m_type != Preset::TYPE_FILAMENT &&
@@ -5389,17 +5419,101 @@ void TabSLAMaterial::build()
     build_preset_description_line(optgroup.get());
 
     page = add_options_page(L("Material printing profile"), "note");
+
+#if 1
+    optgroup = page->new_optgroup(L("Material printing profile"));
+    optgroup->append_single_option_line("material_print_speed");
+
+    optgroup = page->new_optgroup(L("Tilt"));
+    optgroup->append_single_option_line("area_fill");
+
+#else
     optgroup = page->new_optgroup(L("Material printing profile"));
     option = optgroup->get_option("material_print_speed");
     optgroup->append_single_option_line(option);
+
+    optgroup->append_single_option_line("area_fill");
+#endif
+
+    build_tilt_group(page);
+}
+
+static void append_tilt_options_line(ConfigOptionsGroupShp optgroup, const std::string opt_key)
+{
+    auto option = optgroup->get_option(opt_key, 0);
+    auto line = Line{ option.opt.full_label, "" };
+    option.opt.width = Field::def_width/*_wider*/();
+    line.append_option(option);
+
+    option = optgroup->get_option(opt_key, 1);
+    option.opt.width = Field::def_width/*_wider*/();
+    line.append_option(option);
+
+    optgroup->append_line(line);
+}
+
+void TabSLAMaterial::build_tilt_group(Slic3r::GUI::PageShp page)
+{
+    // Legend
+    std::vector<std::pair<std::string, std::string>> legend_columns = {
+        // TRN: This is a label of a column of parameters in settings to be used when the area is below certain threshold.
+        {L("Below"),
+        L("Values in this column are applied when layer area is smaller than area_fill.")},
+        // TRN: This is a label of a column of parameters in settings to be used when the area is above certain threshold.
+        {L("Above"),
+        L("Values in this column are applied when layer area is larger than area_fill.")},
+    };
+    create_legend(page, legend_columns, comExpert/*, true*/);
+
+    // TRN: 'Profile' in this context denotes a group of parameters used to configure
+    //      layer separation procedure for SLA printers.
+    auto optgroup = page->new_optgroup(L("Profile settings"));
+    optgroup->m_on_change = [this, optgroup](const t_config_option_key& key, boost::any value)
+    {
+        if (key.find_first_of("use_tilt") == 0)
+            toggle_tilt_options(key == "use_tilt#0");
+
+        update_dirty();
+        update();
+    };
+
+    for (const std::string& opt_key : tilt_options())
+        append_tilt_options_line(optgroup, opt_key);
+}
+
+std::vector<std::string> disable_tilt_options = {
+         "tilt_down_initial_speed"
+        ,"tilt_down_offset_steps"
+        ,"tilt_down_offset_delay"
+        ,"tilt_down_finish_speed"
+        ,"tilt_down_cycles"
+        ,"tilt_down_delay"
+        ,"tilt_up_initial_speed"
+        ,"tilt_up_offset_steps"
+        ,"tilt_up_offset_delay"
+        ,"tilt_up_finish_speed"
+        ,"tilt_up_cycles"
+        ,"tilt_up_delay"
+};
+
+void TabSLAMaterial::toggle_tilt_options(bool is_above)
+{
+    if (m_active_page && m_active_page->title() == "Material printing profile")
+    {
+        int column_id = is_above ? 0 : 1;
+        auto optgroup = m_active_page->get_optgroup("Profile settings");
+        bool use_tilt = boost::any_cast<bool>(optgroup->get_config_value(*m_config, "use_tilt", column_id));
+
+        for (const std::string& opt_key : disable_tilt_options) {
+            auto field = optgroup->get_fieldc(opt_key, column_id);
+            if (field != nullptr)
+                field->toggle(use_tilt);
+        }
+    }
 }
 
 void TabSLAMaterial::toggle_options()
 {
-    const Preset &current_printer = wxGetApp().preset_bundle->printers.get_edited_preset();
-    std::string model = current_printer.config.opt_string("printer_model");
-    m_config_manipulation.toggle_field("material_print_speed", model != "SL1");
-
     if (m_active_page->title() == "Material Overrides")
         update_material_overrides_page();
 }
@@ -5421,6 +5535,52 @@ void TabSLAMaterial::update()
 //
 //     if (m_update_cnt == 0)
         wxGetApp().mainframe->on_config_changed(m_config);
+}
+
+void TabSLAMaterial::update_sla_prusa_specific_visibility()
+{
+    if (m_active_page && m_active_page->title() == "Material printing profile") {
+        for (auto& title : { "", "Profile settings" }) {
+            auto og_it = std::find_if(m_active_page->m_optgroups.begin(), m_active_page->m_optgroups.end(), 
+                         [title](const ConfigOptionsGroupShp og) { return og->title == title; });
+            if (og_it != m_active_page->m_optgroups.end())
+                og_it->get()->Show(m_mode >= comAdvanced && is_prusa_printer());
+        }
+
+        auto og_it = std::find_if(m_active_page->m_optgroups.begin(), m_active_page->m_optgroups.end(), 
+                        [](const ConfigOptionsGroupShp og) { return og->title == "Material printing profile"; });
+        if (og_it != m_active_page->m_optgroups.end())
+            og_it->get()->Show(m_mode >= comAdvanced && !is_prusa_printer());
+
+        Layout();
+    }
+}
+
+void TabSLAMaterial::clear_pages()
+{
+    Tab::clear_pages();
+
+    for (auto& over_opt : m_overrides_options)
+        over_opt.second = nullptr;
+}
+
+void TabSLAMaterial::msw_rescale()
+{
+    for (const auto& over_opt : m_overrides_options)
+        if (wxWindow* win = over_opt.second)
+            win->SetInitialSize(win->GetBestSize());
+    Tab::msw_rescale();
+}
+
+void TabSLAMaterial::sys_color_changed()
+{
+    Tab::sys_color_changed();
+
+    for (const auto& over_opt : m_overrides_options)
+        if (wxWindow* check_box = over_opt.second) {
+            wxGetApp().UpdateDarkUI(check_box);
+            CheckBox::SysColorChanged(check_box);
+        }
 }
 
 static void add_options_into_line(ConfigOptionsGroupShp &optgroup,
@@ -5489,10 +5649,6 @@ static std::vector<std::string> get_override_opt_kyes_for_line(const std::string
         for (auto& prefix : { "", "branching" })
             opt_keys.push_back(preprefix + prefix + key);
     }
-    else if (key == "relative_correction") {
-        for (auto& axis : { "x", "y", "z" })
-            opt_keys.push_back(preprefix + key + "_" + char(axis[0]));
-    }
     else
         opt_keys.push_back(preprefix + key);
 
@@ -5505,17 +5661,7 @@ void TabSLAMaterial::create_line_with_near_label_widget(ConfigOptionsGroupShp op
         add_options_into_line(optgroup, { {"", L("Default")}, {"branching", L("Branching")} }, key, "material_ow_");
     else {
         const std::string opt_key = std::string("material_ow_") + key;
-        if (key == "relative_correction") {
-            Line line = Line{ m_preset_bundle->printers.get_edited_preset().config.def()->get("relative_correction")->full_label, "" };
-            for (auto& axis : { "X", "Y", "Z" }) {
-                auto opt = optgroup->get_option(opt_key + "_" + char(std::tolower(axis[0])));
-                opt.opt.label = axis;
-                line.append_option(opt);
-            }
-            optgroup->append_line(line);
-        }
-        else
-            optgroup->append_single_option_line(opt_key);
+        optgroup->append_single_option_line(opt_key);
     }
 
     Line* line = optgroup->get_last_line();
@@ -5561,7 +5707,7 @@ std::vector<std::pair<std::string, std::vector<std::string>>> material_overrides
         "support_points_density_relative"
     }},
     {"Corrections", {
-        "relative_correction",
+        "absolute_correction",
         "elefant_foot_compensation"
     }}
 };

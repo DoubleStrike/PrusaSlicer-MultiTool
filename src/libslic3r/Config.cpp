@@ -294,6 +294,7 @@ ConfigOption* ConfigOptionDef::create_empty_option() const
 	    case coBool:            return new ConfigOptionBool();
 	    case coBools:           return new ConfigOptionBools();
 	    case coEnum:            return new ConfigOptionEnumGeneric(this->enum_def->m_enum_keys_map);
+	    case coEnums:           return new ConfigOptionEnumsGeneric(this->enum_def->m_enum_keys_map);
 	    default:                throw ConfigurationError(std::string("Unknown option type for option ") + this->label);
 	    }
 	}
@@ -304,7 +305,10 @@ ConfigOption* ConfigOptionDef::create_default_option() const
     if (this->default_value)
         return (this->default_value->type() == coEnum) ?
             // Special case: For a DynamicConfig, convert a templated enum to a generic enum.
-            new ConfigOptionEnumGeneric(this->enum_def->m_enum_keys_map, this->default_value->getInt()) :
+            new ConfigOptionEnumGeneric(this->enum_def->m_enum_keys_map, this->default_value->getInt()) : 
+               (this->default_value->type() == coEnums) ?
+            // Special case: For a DynamicConfig, convert a templated enums to a generic enums.
+            new ConfigOptionEnumsGeneric(this->enum_def->m_enum_keys_map, this->default_value->getInts()) :
             this->default_value->clone();
     return this->create_empty_option();
 }
@@ -333,7 +337,7 @@ void ConfigDef::finalize()
     // Validate & finalize open & closed enums.
     for (std::pair<const t_config_option_key, ConfigOptionDef> &kvp : options) {
         ConfigOptionDef& def = kvp.second;
-        if (def.type == coEnum) {
+        if (def.type == coEnum || def.type == coEnums) {
             assert(def.enum_def);
             assert(def.enum_def->is_valid_closed_enum());
             assert(! def.is_gui_type_enum_open());
@@ -1467,6 +1471,7 @@ CEREAL_REGISTER_TYPE(Slic3r::ConfigOptionBool)
 CEREAL_REGISTER_TYPE(Slic3r::ConfigOptionBools)
 CEREAL_REGISTER_TYPE(Slic3r::ConfigOptionBoolsNullable)
 CEREAL_REGISTER_TYPE(Slic3r::ConfigOptionEnumGeneric)
+CEREAL_REGISTER_TYPE(Slic3r::ConfigOptionEnumsGeneric)
 CEREAL_REGISTER_TYPE(Slic3r::ConfigBase)
 CEREAL_REGISTER_TYPE(Slic3r::DynamicConfig)
 
@@ -1508,4 +1513,5 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(Slic3r::ConfigOptionSingle<bool>, Slic3r::C
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Slic3r::ConfigOptionVector<unsigned char>, Slic3r::ConfigOptionBools)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Slic3r::ConfigOptionVector<unsigned char>, Slic3r::ConfigOptionBoolsNullable)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Slic3r::ConfigOptionInt, Slic3r::ConfigOptionEnumGeneric)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Slic3r::ConfigOptionInts, Slic3r::ConfigOptionEnumsGeneric)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Slic3r::ConfigBase, Slic3r::DynamicConfig)

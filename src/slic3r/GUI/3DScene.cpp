@@ -508,7 +508,7 @@ int GLVolumeCollection::load_wipe_tower_preview(
 
     // Because the GLVolume is also used for arrangement, it must be safely larger
     // than the actual extruded tower, otherwise the arranged tower ends up out of bed.
-    float offset = 0.3;
+    float offset = 0.3f;
     pos_x -= offset;
     pos_y -= offset;
     width += 2.f * offset;

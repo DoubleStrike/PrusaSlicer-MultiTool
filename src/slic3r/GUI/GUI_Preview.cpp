@@ -362,16 +362,6 @@ void Preview::sys_color_changed()
         m_layers_slider->sys_color_changed();
 }
 
-void Preview::jump_layers_slider(wxKeyEvent& evt)
-{
-    if (m_layers_slider) m_layers_slider->OnChar(evt);
-}
-
-void Preview::move_layers_slider(wxKeyEvent& evt)
-{
-    if (m_layers_slider != nullptr) m_layers_slider->OnKeyDown(evt);
-}
-
 void Preview::edit_layers_slider(wxKeyEvent& evt)
 {
     if (m_layers_slider != nullptr) m_layers_slider->OnChar(evt);
@@ -539,7 +529,7 @@ void Preview::update_layers_slider(const std::vector<double>& layers_z, bool kee
     bool sequential_print = wxGetApp().preset_bundle->prints.get_edited_preset().config.opt_bool("complete_objects");
     m_layers_slider->SetDrawMode(sla_print_technology, sequential_print);
     if (sla_print_technology)
-        m_layers_slider->SetLayersTimes(plater->sla_print().print_statistics().layers_times);
+        m_layers_slider->SetLayersTimes(plater->sla_print().print_statistics().layers_times_running_total);
     else {
         auto print_mode_stat = m_gcode_result->print_statistics.modes.front();
         m_layers_slider->SetLayersTimes(print_mode_stat.layers_times, print_mode_stat.time);
@@ -907,6 +897,16 @@ void Preview::load_print_as_sla()
     }
 }
 
+void Preview::jump_layers_slider(wxKeyEvent& evt)
+{
+    if (m_layers_slider) m_layers_slider->OnChar(evt);
+}
+ 
+void Preview::move_layers_slider(wxKeyEvent& evt)
+{
+    if (m_layers_slider != nullptr) m_layers_slider->OnKeyDown(evt);
+}
+
 void Preview::on_layers_slider_scroll_changed(wxCommandEvent& event)
 {
     if (IsShown()) {
@@ -919,6 +919,7 @@ void Preview::on_layers_slider_scroll_changed(wxCommandEvent& event)
         else if (tech == ptSLA) {
             m_canvas->set_clipping_plane(0, ClippingPlane(Vec3d::UnitZ(), -m_layers_slider->GetLowerValueD()));
             m_canvas->set_clipping_plane(1, ClippingPlane(-Vec3d::UnitZ(), m_layers_slider->GetHigherValueD()));
+            m_canvas->set_layer_slider_index(m_layers_slider->GetHigherValue());
             m_canvas->render();
         }
     }

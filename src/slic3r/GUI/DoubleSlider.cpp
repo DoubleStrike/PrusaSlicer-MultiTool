@@ -440,8 +440,7 @@ void Control::SetLayersTimes(const std::vector<double>& layers_times)
 { 
     m_is_wipe_tower = false;
     m_layers_times = layers_times;
-    for (size_t i = 1; i < m_layers_times.size(); i++)
-        m_layers_times[i] += m_layers_times[i - 1];
+    std::copy(layers_times.begin(), layers_times.end(), m_layers_times.begin());
 }
 
 void Control::SetDrawMode(bool is_sla_print, bool is_sequential_print)

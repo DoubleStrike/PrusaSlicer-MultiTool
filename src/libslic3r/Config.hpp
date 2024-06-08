@@ -214,6 +214,8 @@ enum ConfigOptionType {
     coBools         = coBool + coVectorType,
     // a generic enum
     coEnum          = 9,
+    // vector of enum values
+    coEnums         = coEnum + coVectorType,
 };
 
 enum ConfigOptionMode {
@@ -290,6 +292,7 @@ public:
     // Set a value from a ConfigOption. The two options should be compatible.
     virtual void                set(const ConfigOption *option) = 0;
     virtual int                 getInt()        const { throw BadOptionTypeException("Calling ConfigOption::getInt on a non-int ConfigOption"); }
+    virtual std::vector<int>    getInts()       const { throw BadOptionTypeException("Calling ConfigOption::getInts on a non-ints ConfigOption"); }
     virtual double              getFloat()      const { throw BadOptionTypeException("Calling ConfigOption::getFloat on a non-float ConfigOption"); }
     virtual bool                getBool()       const { throw BadOptionTypeException("Calling ConfigOption::getBool on a non-boolean ConfigOption");  }
     virtual void                setInt(int /* val */) { throw BadOptionTypeException("Calling ConfigOption::setInt on a non-int ConfigOption"); }
@@ -1741,6 +1744,113 @@ public:
     }
 };
 
+template <class T>
+class ConfigOptionEnums : public ConfigOptionVector<T>
+{
+public:
+    // by default, use the first value (0) of the T enum type
+    ConfigOptionEnums() : ConfigOptionVector<T>() {}
+    explicit ConfigOptionEnums(size_t n, const T& value) : ConfigOptionVector<T>(n, value) {}
+    explicit ConfigOptionEnums(std::initializer_list<T> il) : ConfigOptionVector<T>(std::move(il)) {}
+    explicit ConfigOptionEnums(const std::vector<T>& values) : ConfigOptionVector<T>(values) {}
+
+    static ConfigOptionType static_type() { return coEnums; }
+    ConfigOptionType        type()  const override { return static_type(); }
+    ConfigOption*           clone() const override { return new ConfigOptionEnums<T>(*this); }
+    ConfigOptionEnums<T>&   operator=(const ConfigOption *opt) { this->set(opt); return *this; }
+    bool                    operator==(const ConfigOptionEnums<T> &rhs) const throw() { return this->values == rhs.values; }
+    bool                    operator< (const ConfigOptionEnums<T> &rhs) const throw() { return this->values < rhs.values; }
+    bool                    is_nil(size_t) const override { return false; }
+
+    std::vector<int>        getInts() const override { 
+        std::vector<int> ret;
+        ret.reserve(this->values.size());
+        for (const auto& v : this->values)
+         ret.push_back(int(v));
+        return ret;
+    }
+
+    bool operator==(const ConfigOption& rhs) const override
+    {
+        if (rhs.type() != this->type())
+            throw ConfigurationError("ConfigOptionEnums<T>: Comparing incompatible types");
+        // rhs could be of the following type: ConfigOptionEnumsGeneric or ConfigOptionEnums<T>
+        return this->getInts() == rhs.getInts();
+    }
+
+    void set(const ConfigOption* rhs) override {
+        if (rhs->type() != this->type())
+            throw ConfigurationError("ConfigOptionEnums<T>: Assigning an incompatible type");
+        // rhs could be of the following type: ConfigOptionEnumGeneric or ConfigOptionEnum<T>
+        std::vector<T> ret;
+        std::vector<int> rhs_vals = rhs->getInts();
+        ret.reserve(rhs_vals.size());
+        for (const int& v : rhs_vals)
+            ret.push_back(T(v));
+        this->values = ret;
+    }
+
+    std::string serialize() const override
+    {
+        const t_config_enum_names& names = ConfigOptionEnum<T>::get_enum_names();
+        std::ostringstream ss;
+        for (const T& v : this->values) {
+            assert(static_cast<int>(v) < int(names.size()));
+            if (&v != &this->values.front())
+                ss << "," << names[static_cast<int>(v)];
+        }
+        return ss.str();
+    }
+
+    std::vector<std::string> vserialize() const override
+    {
+        std::vector<std::string> vv;
+        vv.reserve(this->values.size());
+        for (const T v : this->values) {
+            std::ostringstream ss;
+            serialize_single_value(ss, int(v));
+            vv.push_back(ss.str());
+        }
+        return vv;
+    }
+
+    bool deserialize(const std::string& str, bool append = false) override
+    {
+        if (!append)
+            this->values.clear();
+        std::istringstream is(str);
+        std::string item_str;
+        while (std::getline(is, item_str, ',')) {
+            boost::trim(item_str);
+            if (item_str == "nil") {
+                throw ConfigurationError("Deserializing nil into a non-nullable object");
+            }
+            else {
+                std::istringstream iss(item_str);
+                int value;
+                iss >> value;
+                this->values.push_back(static_cast<T>(value));
+            }
+        }
+        return true;
+    }
+
+    static bool from_string(const std::string &str, T &value)
+    {
+        const t_config_enum_values &enum_keys_map = ConfigOptionEnum<T>::get_enum_values();
+        auto it = enum_keys_map.find(str);
+        if (it == enum_keys_map.end())
+            return false;
+        value = static_cast<T>(it->second);
+        return true;
+    }
+
+private:
+    void serialize_single_value(std::ostringstream& ss, const int v) const {
+        ss << v;
+    }
+};
+
 // Generic enum configuration value.
 // We use this one in DynamicConfig objects when creating a config value object for ConfigOptionType == coEnum.
 // In the StaticConfig, it is better to use the specialized ConfigOptionEnum<T> containers.
@@ -1796,6 +1906,132 @@ private:
 	friend class cereal::access;
 	template<class Archive> void serialize(Archive& ar) { ar(cereal::base_class<ConfigOptionInt>(this)); }
 };
+
+template<bool NULLABLE>
+class ConfigOptionEnumsGenericTempl : public ConfigOptionIntsTempl<NULLABLE>
+{
+public:
+    ConfigOptionEnumsGenericTempl(const t_config_enum_values* keys_map = nullptr) : keys_map(keys_map) {}
+    explicit ConfigOptionEnumsGenericTempl(const t_config_enum_values* keys_map, std::vector<int> values) : keys_map(keys_map) { this->values = values; }
+
+    const t_config_enum_values* keys_map;
+
+    ConfigOptionEnumsGenericTempl() : ConfigOptionIntsTempl<NULLABLE>() {}
+    explicit ConfigOptionEnumsGenericTempl(size_t n, int value) : ConfigOptionIntsTempl<NULLABLE>(n, value) {}
+    explicit ConfigOptionEnumsGenericTempl(std::initializer_list<int> il) : ConfigOptionIntsTempl<NULLABLE>(std::move(il)) {}
+    explicit ConfigOptionEnumsGenericTempl(const std::vector<int>& v) : ConfigOptionIntsTempl<NULLABLE>(v) {}
+    explicit ConfigOptionEnumsGenericTempl(std::vector<int>&& v) : ConfigOptionIntsTempl<NULLABLE>(std::move(v)) {}
+
+    static ConfigOptionType static_type() { return coEnums; }
+    ConfigOptionType        type()  const override { return static_type(); }
+    ConfigOption* clone() const override { return new ConfigOptionEnumsGenericTempl(*this); }
+    ConfigOptionEnumsGenericTempl& operator= (const ConfigOption* opt) { this->set(opt); return *this; }
+    bool                    operator==(const ConfigOptionEnumsGenericTempl& rhs) const throw() { return this->values == rhs.values; }
+    bool                    operator< (const ConfigOptionEnumsGenericTempl& rhs) const throw() { return this->values < rhs.values; }
+    std::vector<int>        getInts() const override { return this->values; }
+
+    bool operator==(const ConfigOption& rhs) const override
+    {
+        if (rhs.type() != this->type())
+            throw ConfigurationError("ConfigOptionEnumsGeneric: Comparing incompatible types");
+        // rhs could be of the following type: ConfigOptionEnumsGeneric or ConfigOptionEnums<T>
+        return this->values == rhs.getInts();
+    }
+
+    void set(const ConfigOption* rhs) override {
+        if (rhs->type() != this->type())
+            throw ConfigurationError("ConfigOptionEnumsGeneric: Assigning an incompatible type");
+        // rhs could be of the following type: ConfigOptionEnumsGeneric or ConfigOptionEnums<T>
+        this->values = rhs->getInts();
+    }
+
+    // Could a special "nil" value be stored inside the vector, indicating undefined value?
+    bool 					nullable() const override { return NULLABLE; }
+    // Special "nil" value to be stored into the vector if this->supports_nil().
+    static int	 			nil_value() { return std::numeric_limits<int>::max(); }
+    // A scalar is nil, or all values of a vector are nil.
+    bool   					is_nil() const override { for (auto v : this->values) if (v != nil_value()) return false; return true; }
+    bool   					is_nil(size_t idx) const override { return this->values[idx < this->values.size() ? idx : 0] == nil_value(); }
+
+    int& get_at(size_t i) {
+        assert(!this->values.empty());
+        return *reinterpret_cast<int*>(&((i < this->values.size()) ? this->values[i] : this->values.front()));
+    }
+
+    int get_at(size_t i) const { return i < this->values.size() ? this->values[i] : this->values.front(); }
+
+    std::string serialize() const override
+    {
+        std::ostringstream ss;
+        for (const int& v : this->values) {
+            if (&v != &this->values.front())
+                ss << ",";
+            serialize_single_value(ss, v);
+        }
+        return ss.str();
+    }
+
+    std::vector<std::string> vserialize() const override
+    {
+        std::vector<std::string> vv;
+        vv.reserve(this->values.size());
+        for (const int v : this->values) {
+            std::ostringstream ss;
+            serialize_single_value(ss, v);
+            vv.push_back(ss.str());
+        }
+        return vv;
+    }
+
+    bool deserialize(const std::string& str, bool append = false) override
+    {
+        if (!append)
+            this->values.clear();
+        std::istringstream is(str);
+        std::string item_str;
+        while (std::getline(is, item_str, ',')) {
+            boost::trim(item_str);
+            if (item_str == "nil") {
+                if (NULLABLE)
+                    this->values.push_back(nil_value());
+                else
+                    throw ConfigurationError("Deserializing nil into a non-nullable object");
+            }
+            else {
+                auto it = this->keys_map->find(item_str);
+                if (it == this->keys_map->end())
+                    return false;
+                this->values.push_back(it->second);
+            }
+        }
+        return true;
+    }
+
+private:
+    void serialize_single_value(std::ostringstream& ss, const int v) const {
+        if (v == nil_value()) {
+            if (NULLABLE)
+                ss << "nil";
+            else
+                throw ConfigurationError("Serializing NaN");
+        }
+        else {
+            for (const auto& kvp : *this->keys_map)
+                if (kvp.second == v) {
+                    ss << kvp.first;
+                    return;
+                }
+            ss << std::string();
+        }
+    }
+
+    friend class cereal::access;
+    template<class Archive> void serialize(Archive& ar) { ar(cereal::base_class<ConfigOptionVector<int>>(this)); }
+};
+
+using ConfigOptionEnumsGeneric = ConfigOptionEnumsGenericTempl<false>;
+using ConfigOptionEnumsGenericNullable = ConfigOptionEnumsGenericTempl<true>;
+
 
 // Definition of values / labels for a combo box.
 // Mostly used for closed enums (when type == coEnum), but may be used for 
@@ -2041,6 +2277,7 @@ public:
 		    case coBool:            { auto opt = new ConfigOptionBool(); 			archive(*opt); return opt; }
 		    case coBools:           { auto opt = new ConfigOptionBools(); 			archive(*opt); return opt; }
 		    case coEnum:            { auto opt = new ConfigOptionEnumGeneric(this->enum_def->m_enum_keys_map); archive(*opt); return opt; }
+		    case coEnums:           { auto opt = new ConfigOptionEnumsGeneric(this->enum_def->m_enum_keys_map); archive(*opt); return opt; }
 		    default:                throw ConfigurationError(std::string("ConfigOptionDef::load_option_from_archive(): Unknown option type for option ") + this->opt_key);
 		    }
 		}
@@ -2075,6 +2312,7 @@ public:
 		    case coBool:            archive(*static_cast<const ConfigOptionBool*>(opt)); 			break;
 		    case coBools:           archive(*static_cast<const ConfigOptionBools*>(opt)); 			break;
 		    case coEnum:            archive(*static_cast<const ConfigOptionEnumGeneric*>(opt)); 	break;
+		    case coEnums:           archive(*static_cast<const ConfigOptionEnumsGeneric*>(opt)); 	break;
 		    default:                throw ConfigurationError(std::string("ConfigOptionDef::save_option_to_archive(): Unknown option type for option ") + this->opt_key);
 		    }
 		}
@@ -2482,6 +2720,8 @@ public:
     // Thus the virtual method getInt() is used to retrieve the enum value.
     template<typename ENUM>
     ENUM                opt_enum(const t_config_option_key &opt_key) const                      { return static_cast<ENUM>(this->option(opt_key)->getInt()); }
+    template<typename ENUM>
+    ENUM                opt_enum(const t_config_option_key &opt_key, unsigned int idx) const    { return dynamic_cast<const ConfigOptionEnums<ENUM>*>(this->option(opt_key))->get_at(idx);}
 
     bool                opt_bool(const t_config_option_key &opt_key) const                      { return this->option<ConfigOptionBool>(opt_key)->value != 0; }
     bool                opt_bool(const t_config_option_key &opt_key, unsigned int idx) const    { return this->option<ConfigOptionBools>(opt_key)->get_at(idx) != 0; }

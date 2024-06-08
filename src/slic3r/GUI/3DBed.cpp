@@ -85,7 +85,6 @@ bool Bed3D::set_shape(const Pointfs& bed_shape, const double max_print_height, c
     const BoundingBox bbox = m_contour.contour.bounding_box();
     if (!bbox.defined)
         throw RuntimeError(std::string("Invalid bed shape"));
-    m_polygon = offset(m_contour.contour, (float)bbox.radius() * 1.7f, jtRound, scale_(0.5)).front();
 
     m_triangles.reset();
     m_gridlines.reset();
@@ -102,16 +101,6 @@ bool Bed3D::set_shape(const Pointfs& bed_shape, const double max_print_height, c
 
     // Let the calee to update the UI.
     return true;
-}
-
-bool Bed3D::contains(const Point& point) const
-{
-    return m_polygon.contains(point);
-}
-
-Point Bed3D::point_projection(const Point& point) const
-{
-    return m_polygon.point_projection(point);
 }
 
 void Bed3D::render(GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix, bool bottom, float scale_factor, bool show_texture)

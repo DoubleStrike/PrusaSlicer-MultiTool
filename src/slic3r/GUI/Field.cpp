@@ -1156,6 +1156,10 @@ void Choice::set_selection()
         field->SetSelection(m_opt.default_value->getInt());
 		break;
 	}
+	case coEnums:{
+        field->SetSelection(m_opt.default_value->getInts()[m_opt_idx]);
+		break;
+	}
 	case coFloat:
 	case coPercent:	{
 		double val = m_opt.default_value->getFloat();
@@ -1243,7 +1247,8 @@ void Choice::set_value(const boost::any& value, bool change_event)
 
 		break;
 	}
-	case coEnum: {
+	case coEnum:
+	case coEnums: {
 		auto val = m_opt.enum_def->enum_to_index(boost::any_cast<int>(value));
         assert(val.has_value());
 		field->SetSelection(val.has_value() ? *val : 0);
@@ -1308,7 +1313,7 @@ boost::any& Choice::get_value()
 		if (m_opt_id == rp_option)
 			return m_value = boost::any(ret_str);
 
-	if (m_opt.type == coEnum)
+	if (m_opt.type == coEnum || m_opt.type == coEnums)
         // Closed enum: The combo box item index returned by the field must be convertible to an enum value.
         m_value = m_opt.enum_def->index_to_enum(field->GetSelection());
     else if (m_opt.gui_type == ConfigOptionDef::GUIType::f_enum_open || m_opt.gui_type == ConfigOptionDef::GUIType::i_enum_open) {

@@ -1346,7 +1346,7 @@ bool GUI_App::on_init_inner()
         mainframe->select_tab(size_t(0));
 
     sidebar().obj_list()->init_objects(); // propagate model objects to object list
-//     update_mode(); // !!! do that later
+    update_mode(); // mode sizer doesn't exist anymore, so we came update mode here, before load_current_presets
     SetTopWindow(mainframe);
 
     plater_->init_notification_manager();
