@@ -84,7 +84,7 @@ void ArrangeSettingsDialogImgui::render(float pos_x, float pos_y)
     }
 
     if (m_show_xl_combo_predicate() &&
-        settings.xl_align >= 0 &&
+        // settings.xl_align >= 0 &&
         ImGuiPureWrap::combo(_u8L("Alignment"),
                        {_u8L("Center"), _u8L("Rear left"), _u8L("Front left"),
                         _u8L("Front right"), _u8L("Rear right"),

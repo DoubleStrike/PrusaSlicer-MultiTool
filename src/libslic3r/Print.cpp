@@ -611,29 +611,7 @@ std::string Print::validate(std::vector<std::string>* warnings) const
         [](const PrintObject *object) { return object->model_object()->has_custom_layering(); }) 
         != m_objects.end();
 
-    // Custom layering is not allowed for tree supports as of now.
-    for (size_t print_object_idx = 0; print_object_idx < m_objects.size(); ++ print_object_idx)
-        if (const PrintObject &print_object = *m_objects[print_object_idx];
-            print_object.has_support_material() && print_object.config().support_material_style.value == smsOrganic &&
-            print_object.model_object()->has_custom_layering()) {
-            if (const std::vector<coordf_t> &layers = layer_height_profile(print_object_idx); ! layers.empty())
-                if (! check_object_layers_fixed(print_object.slicing_parameters(), layers))
-                    return _u8L("Variable layer height is not supported with Organic supports.");
-        }
-
     if (this->has_wipe_tower() && ! m_objects.empty()) {
-        // Make sure all extruders use same diameter filament and have the same nozzle diameter
-        // EPSILON comparison is used for nozzles and 10 % tolerance is used for filaments
-        double first_nozzle_diam = m_config.nozzle_diameter.get_at(extruders.front());
-        double first_filament_diam = m_config.filament_diameter.get_at(extruders.front());
-        for (const auto& extruder_idx : extruders) {
-            double nozzle_diam = m_config.nozzle_diameter.get_at(extruder_idx);
-            double filament_diam = m_config.filament_diameter.get_at(extruder_idx);
-            if (nozzle_diam - EPSILON > first_nozzle_diam || nozzle_diam + EPSILON < first_nozzle_diam
-             || std::abs((filament_diam-first_filament_diam)/first_filament_diam) > 0.1)
-                 return _u8L("The wipe tower is only supported if all extruders have the same nozzle diameter "
-                          "and use filaments of the same diameter.");
-        }
 
         if (m_config.gcode_flavor != gcfRepRapSprinter && m_config.gcode_flavor != gcfRepRapFirmware &&
             m_config.gcode_flavor != gcfRepetier && m_config.gcode_flavor != gcfMarlinLegacy &&
@@ -748,11 +726,6 @@ std::string Print::validate(std::vector<std::string>* warnings) const
     					// Soluble interface
     					if (! object->config().support_material_synchronize_layers)
     						return _u8L("For the Wipe Tower to work with the soluble supports, the support layers need to be synchronized with the object layers.");
-    				} else {
-    					// Non-soluble interface
-    					if (object->config().support_material_extruder != 0 || object->config().support_material_interface_extruder != 0)
-    						return _u8L("The Wipe Tower currently supports the non-soluble supports only if they are printed with the current extruder without triggering a tool change. "
-    							     "(both support_material_extruder and support_material_interface_extruder need to be set to 0).");
     				}
                 }
                 if (object->config().support_material_style == smsOrganic) {
