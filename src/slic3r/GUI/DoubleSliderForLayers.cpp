@@ -27,7 +27,7 @@ using Slic3r::format;
 
 namespace DoubleSlider {
 
-static const float VERTICAL_SLIDER_WIDTH  = 105.0f;
+//static const float VERTICAL_SLIDER_WIDTH  = 105.0f;
 
 DSForLayers::DSForLayers(   int lowerValue,
                             int higherValue,
@@ -42,7 +42,10 @@ DSForLayers::DSForLayers(   int lowerValue,
     Init(lowerValue, higherValue, minValue, maxValue, "layers_slider", false);
     m_ctrl.ShowLabelOnMouseMove(true);
 
-    m_ctrl.set_get_label_on_move_cb([this](int pos) { return m_show_estimated_times ? get_label(pos, ltEstimatedTime) : ""; });
+    m_ctrl.set_get_label_on_move_cb([this](int pos) {
+        m_pos_on_move = pos; 
+        return m_show_estimated_times ? get_label(pos, ltEstimatedTime) : "";
+    });
     m_ctrl.set_extra_draw_cb([this](const ImRect& draw_rc) {return draw_ticks(draw_rc); });
 
     m_ticks.set_values(&m_values);
@@ -170,22 +173,25 @@ using namespace ImGui;
 
 void DSForLayers::draw_ticks(const ImRect& slideable_region)
 {
-    //if(m_draw_mode != dmRegular)
-    //    return;
-    //if (m_ticks.empty() || m_mode == MultiExtruder)
-    //    return;
+    if (m_show_ruler)
+        draw_ruler(slideable_region);
+
     if (m_ticks.empty() || m_draw_mode == dmSlaPrint)
         return;
 
+    // distance form center           begin  end 
     const ImVec2 tick_border = ImVec2(23.0f, 2.0f) * m_scale;
-    // distance form center         begin  end 
-    const ImVec2 tick_size   = ImVec2(19.0f, 11.0f) * m_scale;
-    const float  tick_width  = 1.0f * m_scale;
-    const float  icon_side   = m_imgui->GetTextureCustomRect(ImGui::PausePrint)->Height;
-    const float  icon_offset = 0.5f * icon_side;;
 
-    const ImU32 tick_clr         = ImGui::ColorConvertFloat4ToU32(ImGuiPureWrap::COL_ORANGE_DARK);
-    const ImU32 tick_hovered_clr = ImGui::ColorConvertFloat4ToU32(ImGuiPureWrap::COL_WINDOW_BACKGROUND);
+    const float inner_x     = 11.f * m_scale;
+    const float outer_x     = 19.f * m_scale;
+    const float x_center    = slideable_region.GetCenter().x;
+
+    const float tick_width  = float(int(1.0f * m_scale + 0.5f));
+    const float icon_side   = m_imgui->GetTextureCustomRect(ImGui::PausePrint)->Height;
+    const float icon_offset = 0.5f * icon_side;;
+
+    const ImU32 tick_clr         = ImGui::ColorConvertFloat4ToU32(m_show_ruler ? ImGuiPureWrap::COL_ORANGE_LIGHT : ImGuiPureWrap::COL_ORANGE_DARK);
+    const ImU32 tick_hovered_clr = ImGui::ColorConvertFloat4ToU32(m_show_ruler ? ImGuiPureWrap::COL_ORANGE_DARK : ImGuiPureWrap::COL_WINDOW_BACKGROUND);
 
     auto get_tick_pos = [this, slideable_region](int tick) {
         return m_ctrl.GetPositionInRect(tick, slideable_region);
@@ -197,8 +203,8 @@ void DSForLayers::draw_ticks(const ImRect& slideable_region)
         float tick_pos = get_tick_pos(tick_it->tick);
 
         //draw tick hover box when hovered
-        ImRect tick_hover_box = ImRect(slideable_region.GetCenter().x - tick_border.x, tick_pos - tick_border.y, 
-                                       slideable_region.GetCenter().x + tick_border.x, tick_pos + tick_border.y - tick_width);
+        ImRect tick_hover_box = ImRect(x_center - tick_border.x, tick_pos - tick_border.y, 
+                                       x_center + tick_border.x, tick_pos + tick_border.y - tick_width);
 
         if (ImGui::IsMouseHoveringRect(tick_hover_box.Min, tick_hover_box.Max)) {
             ImGui::RenderFrame(tick_hover_box.Min, tick_hover_box.Max, tick_hovered_clr, false);
@@ -219,12 +225,12 @@ void DSForLayers::draw_ticks(const ImRect& slideable_region)
         float tick_pos = get_tick_pos(tick_it->tick);
 
         //draw ticks
-        ImRect tick_left    = ImRect(slideable_region.GetCenter().x - tick_size.x, tick_pos - tick_width, slideable_region.GetCenter().x - tick_size.y, tick_pos);
-        ImRect tick_right   = ImRect(slideable_region.GetCenter().x + tick_size.y, tick_pos - tick_width, slideable_region.GetCenter().x + tick_size.x, tick_pos);
+        ImRect tick_left    = ImRect(x_center - outer_x, tick_pos - tick_width, x_center - inner_x, tick_pos);
+        ImRect tick_right   = ImRect(x_center + inner_x, tick_pos - tick_width, x_center + outer_x, tick_pos);
         ImGui::RenderFrame(tick_left.Min, tick_left.Max, tick_clr, false);
         ImGui::RenderFrame(tick_right.Min, tick_right.Max, tick_clr, false);
 
-        ImVec2      icon_pos = ImVec2(tick_right.Max.x + 0.5f * icon_offset, tick_pos - icon_offset);
+        ImVec2      icon_pos = ImVec2(m_ctrl.GetCtrlPos().x + GetWidth(), tick_pos - icon_offset);
         std::string btn_label   = "tick " + std::to_string(tick_it->tick);
 
         //draw tick icon-buttons
@@ -254,6 +260,174 @@ void DSForLayers::draw_ticks(const ImRect& slideable_region)
         }
 
         ++tick_it;
+    }
+}
+
+void DSForLayers::draw_ruler(const ImRect& slideable_region)
+{
+    if (m_values.empty())
+        return;
+
+    const double step = double(slideable_region.GetHeight()) / (m_ctrl.GetMaxPos() - m_ctrl.GetMinPos());
+
+    if (!m_ruler.valid())
+        m_ruler.init(m_values, step);
+
+    const float inner_x         = 11.f * m_scale;
+    const float long_outer_x    = 17.f * m_scale;
+    const float short_outer_x   = 14.f * m_scale;
+    const float tick_width      = float(int(1.0f * m_scale +0.5f));
+    const float label_height    = m_imgui->GetTextureCustomRect(ImGui::PausePrint)->Height;
+
+    const ImU32 tick_clr = IM_COL32(255, 255, 255, 255);
+
+    const float x_center = slideable_region.GetCenter().x;
+
+    double max_val = 0.;
+    for (const auto& val : m_ruler.max_values)
+        if (max_val < val)
+            max_val = val;
+
+    if (m_show_ruler_bg) {
+        // draw ruler BG
+        ImRect bg_rect = slideable_region;
+        bg_rect.Expand(ImVec2(0.f, long_outer_x));
+        bg_rect.Min.x -= tick_width;
+        bg_rect.Max.x = m_ctrl.GetCtrlPos().x + GetWidth();
+        bg_rect.Min.y = m_ctrl.GetCtrlPos().y + label_height;
+        bg_rect.Max.y = m_ctrl.GetCtrlPos().y + GetHeight() - label_height;
+        const ImU32 bg_color = ImGui::ColorConvertFloat4ToU32(ImVec4(0.13f, 0.13f, 0.13f, 0.5f));
+
+        ImGui::RenderFrame(bg_rect.Min, bg_rect.Max, bg_color, false, 2.f * m_ctrl.rounding());
+    }
+
+    auto get_tick_pos = [this, slideable_region](int tick) -> float {
+        return m_ctrl.GetPositionInRect(tick, slideable_region);
+    };
+
+    auto draw_text = [max_val, x_center, label_height,  long_outer_x, this](const int tick, const float tick_pos)
+    {
+        ImVec2 start = ImVec2(x_center + long_outer_x + 1, tick_pos - (0.5f * label_height));
+        std::string label = get_label(tick, ltHeight, max_val > 100.0 ? "%1$.1f" : "%1$.2f");
+        ImGui::RenderText(start, label.c_str());
+    };
+
+    auto draw_tick = [tick_clr, x_center, tick_width, inner_x](const float tick_pos, const float outer_x)
+    {
+        ImRect tick_right = ImRect(x_center + inner_x, tick_pos - tick_width, x_center + outer_x, tick_pos);
+        ImGui::RenderFrame(tick_right.Min, tick_right.Max, tick_clr, false);
+    };
+
+    auto draw_short_ticks = [this, short_outer_x, draw_tick, get_tick_pos](double& current_tick, int max_tick) 
+    {
+        if (m_ruler.short_step <= 0.0)
+            return;
+        while (current_tick < max_tick) {
+            float pos = get_tick_pos(lround(current_tick));
+            draw_tick(pos, short_outer_x);
+            current_tick += m_ruler.short_step;
+            if (current_tick > m_ctrl.GetMaxPos())
+                break;
+        }
+    };
+
+    double short_tick = NaNd;
+    int tick = 0;
+    double value = 0.0;
+    size_t sequence = 0;
+    int prev_y_pos = -1;
+    int values_size = (int)m_values.size();
+
+    if (m_ruler.long_step < 0) {
+        // sequential print when long_step wasn't detected because of a lot of printed objects 
+        if (m_ruler.max_values.size() > 1) {
+            while (tick <= m_ctrl.GetMaxPos() && sequence < m_ruler.count()) {
+                // draw just ticks with max value
+                value = m_ruler.max_values[sequence];
+                short_tick = tick;
+
+                for (; tick < values_size; tick++) {
+                    if (m_values[tick] == value)
+                        break;
+                    if (m_values[tick] > value) {
+                        if (tick > 0)
+                            tick--;
+                        break;
+                    }
+                }
+                if (tick > m_ctrl.GetMaxPos())
+                    break;
+
+                float pos = get_tick_pos(tick);
+                draw_tick(pos, long_outer_x);
+                if (prev_y_pos < 0 || prev_y_pos - pos >= label_height) {
+                    draw_text(tick, pos);
+                    prev_y_pos = pos;
+                }
+                draw_short_ticks(short_tick, tick);
+
+                sequence++;
+                tick++;
+            }
+        }
+        // very short object or some non-trivial ruler with non-regular step (see https://github.com/prusa3d/PrusaSlicer/issues/7263)
+        else {
+            if (step < 1) // step less then 1 px indicates very tall object with non-regular laayer step (probably in vase mode)
+                return;
+            for (size_t tick = 1; tick < m_values.size(); tick++) {
+                float pos = get_tick_pos(tick);
+                draw_tick(pos, long_outer_x);
+                draw_text(tick, pos);
+            }
+        }
+    }
+    else {
+        while (tick <= m_ctrl.GetMaxPos()) {
+            value += m_ruler.long_step;
+
+            if (sequence < m_ruler.count() && value > m_ruler.max_values[sequence])
+                value = m_ruler.max_values[sequence];
+
+            short_tick = tick;
+
+            for (; tick < values_size; tick++) {
+                if (m_values[tick] == value)
+                    break;
+                if (m_values[tick] > value) {
+                    if (tick > 0)
+                        tick--;
+                    break;
+                }
+            }
+            if (tick > m_ctrl.GetMaxPos())
+                break;
+
+            float pos = get_tick_pos(tick);
+            draw_tick(pos, long_outer_x);
+            if (prev_y_pos < 0 || prev_y_pos - pos >= label_height) {
+                draw_text(tick, pos);
+                prev_y_pos = pos;
+            }
+
+            draw_short_ticks(short_tick, tick);
+
+            if (sequence < m_ruler.count() && value == m_ruler.max_values[sequence]) {
+                value = 0.0;
+                sequence++;
+                tick++;
+            }
+        }
+        // short ticks from the last tick to the end 
+        draw_short_ticks(short_tick, m_ctrl.GetMaxPos());
+    }
+
+    // draw mose move line
+    if (m_pos_on_move > 0) {
+        float line_pos = get_tick_pos(m_pos_on_move);
+
+        ImRect move_line = ImRect(x_center + 0.75f * inner_x, line_pos - tick_width, x_center + 1.5f * long_outer_x, line_pos);
+        ImGui::RenderFrame(move_line.Min, move_line.Max, ImGui::ColorConvertFloat4ToU32(ImGuiPureWrap::COL_ORANGE_LIGHT), false);
+        m_pos_on_move = -1;
     }
 }
 
@@ -504,7 +678,7 @@ bool DSForLayers::render_multi_extruders_menu(bool switch_current_code/* = false
 void DSForLayers::render_color_picker()
 {
     ImGuiContext& context = *GImGui;
-    const std::string title = _u8L("Select color for color change");
+    const std::string title = ("Select color for Color Change");
     if (m_show_color_picker) {
 
         ImGuiPureWrap::set_next_window_pos(1200, 200, ImGuiCond_Always, 0.5f, 0.0f);
@@ -532,13 +706,32 @@ void DSForLayers::render_cog_menu()
         if (ImGuiPureWrap::menu_item_with_icon(_u8L("Jump to height").c_str(), "Shift+G")) {
             jump_to_value();
         }
-        if (ImGuiPureWrap::menu_item_with_icon(_u8L("Show estimated print time on mouse moving").c_str(), "", icon_sz, 0, m_show_estimated_times)) {
+        if (ImGuiPureWrap::menu_item_with_icon(_u8L("Show estimated print time on hover").c_str(), "", icon_sz, 0, m_show_estimated_times)) {
             m_show_estimated_times = !m_show_estimated_times;
+            if (m_cb_change_app_config)
+                m_cb_change_app_config("show_estimated_times_in_dbl_slider", m_show_estimated_times ? "1" : "0");
         }
         if (m_mode == MultiAsSingle && m_draw_mode == dmRegular && 
             ImGuiPureWrap::menu_item_with_icon(_u8L("Set extruder sequence for the entire print").c_str(), "")) {
             if (m_ticks.edit_extruder_sequence(m_ctrl.GetMaxPos(), m_mode))
                 process_ticks_changed();
+        }
+        if (ImGuiPureWrap::begin_menu(_u8L("Ruler").c_str())) {
+            if (ImGuiPureWrap::menu_item_with_icon(_u8L("Show").c_str(), "", icon_sz, 0, m_show_ruler)) {
+                m_show_ruler = !m_show_ruler;
+                if (m_show_ruler)
+                    m_imgui->set_requires_extra_frame();
+                if (m_cb_change_app_config)
+                    m_cb_change_app_config("show_ruler_in_dbl_slider", m_show_ruler ? "1" : "0");
+            }
+
+            if (ImGuiPureWrap::menu_item_with_icon(_u8L("Show backgroung").c_str(), "", icon_sz, 0, m_show_ruler_bg)) {
+                m_show_ruler_bg = !m_show_ruler_bg;
+                if (m_cb_change_app_config)
+                    m_cb_change_app_config("show_ruler_bg_in_dbl_slider", m_show_ruler_bg ? "1" : "0");
+            }
+
+            ImGuiPureWrap::end_menu();
         }
         if (can_edit()) {
             if (ImGuiPureWrap::menu_item_with_icon(_u8L("Use default colors").c_str(), "", icon_sz, 0, m_ticks.used_default_colors())) {
@@ -707,10 +900,14 @@ void DSForLayers::Render(const int canvas_width, const int canvas_height, float 
         return;
     m_scale = extra_scale * 0.1f * m_em;
 
+    m_ruler.set_scale(m_scale);
+
     const float action_btn_sz   = m_imgui->GetTextureCustomRect(ImGui::DSRevert)->Height;
     const float tick_icon_side  = m_imgui->GetTextureCustomRect(ImGui::PausePrint)->Height;
 
     ImVec2 pos;
+
+    const float VERTICAL_SLIDER_WIDTH = m_show_ruler ? 125.f : 105.0f;
 
     pos.x = canvas_width - VERTICAL_SLIDER_WIDTH * m_scale - tick_icon_side;
     pos.y = 1.5f * action_btn_sz + offset;
@@ -719,7 +916,7 @@ void DSForLayers::Render(const int canvas_width, const int canvas_height, float 
 
     ImVec2 size = ImVec2(VERTICAL_SLIDER_WIDTH * m_scale, canvas_height - 4.f * action_btn_sz - offset);
 
-    m_ctrl.Init(pos, size, m_scale);
+    m_ctrl.Init(pos, size, m_scale, m_show_ruler);
     if (m_ctrl.render()) {
         // request one more frame if value was changes with mouse wheel
         if (GImGui->IO.MouseWheel != 0.0f)
@@ -768,6 +965,12 @@ void DSForLayers::Render(const int canvas_width, const int canvas_height, float 
 
     if (can_edit())
         render_color_picker();
+}
+
+void DSForLayers::force_ruler_update()
+{
+    if (m_show_ruler)
+        m_ruler.invalidate();
 }
 
 bool DSForLayers::is_wipe_tower_layer(int tick) const
@@ -824,7 +1027,7 @@ static std::string short_and_splitted_time(const std::string& time)
     return get_s();
 }
 
-std::string DSForLayers::get_label(int pos, LabelType label_type) const
+std::string DSForLayers::get_label(int pos, LabelType label_type, const std::string& fmt/* = "%1$.2f"*/) const
 {
     const size_t value = pos;
 
@@ -861,7 +1064,7 @@ std::string DSForLayers::get_label(int pos, LabelType label_type) const
         }
         return value < m_layers_times.size() ? short_and_splitted_time(get_time_dhms(m_layers_times[value])) : "";
     }
-    std::string str = format("%1$.2f", m_values[value]);
+    std::string str = format(fmt, m_values[value]);
     if (label_type == ltHeight)
         return str;
     if (label_type == ltHeightWithLayer) {

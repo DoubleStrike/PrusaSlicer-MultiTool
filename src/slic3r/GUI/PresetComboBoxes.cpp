@@ -740,14 +740,17 @@ PlaterPresetComboBox::PlaterPresetComboBox(wxWindow *parent, Preset::Type preset
 
         connect_info_sizer->Add(new wxStaticBitmap(parent, wxID_ANY, *get_bmp_bundle("connect_status", 14, 14, "#5CD800")), 0, wxALIGN_CENTER_VERTICAL | wxTOP, 1);
         connect_info_sizer->Add(connect_available_info, 0, wxALIGN_CENTER_VERTICAL);
+        // TRN: this is part of the infoline below Printer Settings dropdown, informing about number of printers available/offline/printing in Prusa Connect.
         connect_info_sizer->Add(new wxStaticText(parent, wxID_ANY, _L("available")), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
 
         connect_info_sizer->Add(new wxStaticBitmap(parent, wxID_ANY, *get_bmp_bundle("connect_status", 14, 14, "#FB3636")), 0, wxALIGN_CENTER_VERTICAL | wxTOP, 1);
         connect_info_sizer->Add(connect_offline_info, 0, wxALIGN_CENTER_VERTICAL);
+        // TRN: this is part of the infoline below Printer Settings dropdown, informing about number of printers available/offline/printing in Prusa Connect.
         connect_info_sizer->Add(new wxStaticText(parent, wxID_ANY, _L("offline")), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
 
         connect_info_sizer->Add(new wxStaticBitmap(parent, wxID_ANY, *get_bmp_bundle("connect_status", 14, 14, "#2E9BFF")), 0, wxALIGN_CENTER_VERTICAL | wxTOP, 1);
         connect_info_sizer->Add(connect_printing_info, 0, wxALIGN_CENTER_VERTICAL);
+        // TRN: this is part of the infoline below Printer Settings dropdown, informing about number of printers available/offline/printing in Prusa Connect.
         connect_info_sizer->Add(new wxStaticText(parent, wxID_ANY, _L("printing")), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
 #endif
     }

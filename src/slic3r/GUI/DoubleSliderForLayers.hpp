@@ -6,6 +6,7 @@
 #define slic3r_GUI_DoubleSliderForLayers_hpp_
 
 #include "ImGuiDoubleSlider.hpp"
+#include "RulerForDoubleSlider.hpp"
 #include "TickCodesManager.hpp"
 
 #include <vector>
@@ -72,6 +73,7 @@ public:
     void    SetModeAndOnlyExtruder(const bool is_one_extruder_printed_model, const int only_extruder);
 
     void    Render(const int canvas_width, const int canvas_height, float extra_scale = 1.f, float offset = 0.f) override;
+    void    force_ruler_update();
 
     // jump to selected layer
     void    jump_to_value();
@@ -82,6 +84,8 @@ public:
     void    UseDefaultColors(bool def_colors_on);
     bool    is_new_print(const std::string& print_obj_idxs);
     void    set_imgui_wrapper(Slic3r::GUI::ImGuiWrapper* imgui) { m_imgui = imgui; }
+    void    show_estimated_times(bool show)                     { m_show_estimated_times = show; }
+    void    show_ruler(bool show, bool show_bg)                 { m_show_ruler = show; m_show_ruler_bg = show_bg; }
 
     // manipulation with slider from keyboard
 
@@ -103,6 +107,9 @@ public:
 
     void    set_callback_on_get_print (std::function<const Slic3r::Print& ()> cb)
             { m_cb_get_print = cb; }
+
+    void    set_callback_on_change_app_config (std::function<void(const std::string&, const std::string&)> cb)
+            { m_cb_change_app_config = cb; }
 
     void    set_callback_on_empty_auto_color_change(std::function<void()> cb)
             { m_ticks.set_callback_on_empty_auto_color_change(cb); }
@@ -134,14 +141,18 @@ private:
 
     bool        is_osx                  { false };
     bool        m_allow_editing         { true };
-    bool        m_show_estimated_times  { false };
+    bool        m_show_estimated_times  { true };
+    bool        m_show_ruler            { false };
+    bool        m_show_ruler_bg         { true };
     bool        m_show_cog_menu         { false };
     bool        m_show_edit_menu        { false };
+    int         m_pos_on_move           { -1 };
 
     DrawMode    m_draw_mode             { dmRegular };
     Mode        m_mode                  { SingleExtruder };
     FocusedItem m_focus                 { fiNone };
 
+    Ruler                       m_ruler;
     TickCodeManager             m_ticks;
     Slic3r::GUI::ImGuiWrapper*  m_imgui { nullptr };
 
@@ -150,7 +161,7 @@ private:
 
     bool        is_wipe_tower_layer(int tick) const;
 
-    std::string get_label(int tick, LabelType label_type) const;
+    std::string get_label(int tick, LabelType label_type, const std::string& fmt = "%1$.2f") const;
 
     std::string get_tooltip(int tick = -1);
 
@@ -160,6 +171,7 @@ private:
 
     void        draw_colored_band(const ImRect& groove, const ImRect& slideable_region);
     void        draw_ticks(const ImRect& slideable_region);
+    void        draw_ruler(const ImRect& slideable_region);
     void        render_menu();
     void        render_cog_menu();
     void        render_edit_menu();
@@ -195,6 +207,7 @@ private:
     std::function<void()>                       m_cb_ticks_changed              { nullptr };
     std::function<std::vector<std::string>()>   m_cb_get_extruder_colors        { nullptr };
     std::function<const Slic3r::Print&()>       m_cb_get_print                  { nullptr };
+    std::function<void(const std::string&, const std::string&)> m_cb_change_app_config  { nullptr };
 };
 
 } // DoubleSlider;

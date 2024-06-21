@@ -97,6 +97,7 @@
 #include "Mouse3DController.hpp"
 #include "Tab.hpp"
 #include "Jobs/ArrangeJob2.hpp"
+#include "ConfigWizardWebViewPage.hpp"
 
 #include "Jobs/RotoptimizeJob.hpp"
 #include "Jobs/SLAImportJob.hpp"
@@ -868,18 +869,19 @@ Plater::priv::priv(Plater *q, MainFrame *main_frame)
             BOOST_LOG_TRIVIAL(trace) << "Received login from other instance event.";
             user_account->on_login_code_recieved(evt.data);
         });
-        this->q->Bind(EVT_OPEN_PRUSAAUTH, [](OpenPrusaAuthEvent& evt) {
-           BOOST_LOG_TRIVIAL(info)  << "open browser: " << evt.data;
-           // first register url to be sure to get the code back
-           //auto downloader_worker = new DownloaderUtils::Worker(nullptr);
-           DownloaderUtils::Worker::perform_register(wxGetApp().app_config->get("url_downloader_dest"));
-    #ifdef __linux__
-           if (DownloaderUtils::Worker::perform_registration_linux)
-               DesktopIntegrationDialog::perform_downloader_desktop_integration();
-    #endif // __linux__
-           // than open url
-           wxGetApp().open_login_browser_with_dialog(evt.data);
-         });
+        this->q->Bind(EVT_LOGIN_VIA_WIZARD, [this](Event<std::string> &evt) {
+            BOOST_LOG_TRIVIAL(trace) << "Received login from wizard.";
+            user_account->on_login_code_recieved(evt.data);
+        });
+        this->q->Bind(EVT_OPEN_PRUSAAUTH, [this](OpenPrusaAuthEvent& evt) {
+            BOOST_LOG_TRIVIAL(info)  << "open login browser: " << evt.data;
+            std::string dialog_msg;
+            LoginWebViewDialog dialog(this->q, dialog_msg, evt.data);
+            if (dialog.ShowModal() != wxID_OK) {
+                return;
+            }
+            user_account->on_login_code_recieved(dialog_msg);
+        });
     
         this->q->Bind(EVT_UA_LOGGEDOUT, [this](UserAccountSuccessEvent& evt) {
             user_account->clear();
@@ -890,10 +892,11 @@ Plater::priv::priv(Plater *q, MainFrame *main_frame)
             this->main_frame->refresh_account_menu(true);
             // Update sidebar printer status
             sidebar->update_printer_presets_combobox();
-#if 0
-            wxGetApp().update_login_dialog();
-#endif // 0
+            wxGetApp().update_wizard_login_page();
             this->show_action_buttons(this->ready_to_slice);
+
+             LogoutWebViewDialog dlg(this->q);
+            dlg.ShowModal();
         });
 
         this->q->Bind(EVT_UA_ID_USER_SUCCESS, [this](UserAccountSuccessEvent& evt) {
@@ -909,9 +912,7 @@ Plater::priv::priv(Plater *q, MainFrame *main_frame)
                 this->main_frame->add_connect_webview_tab();
                 // Update User name in TopBar
                 this->main_frame->refresh_account_menu();
-#if 0
-                wxGetApp().update_login_dialog();
-#endif // 0
+                wxGetApp().update_wizard_login_page();
                 this->show_action_buttons(this->ready_to_slice);
  
             } else {
@@ -980,9 +981,6 @@ Plater::priv::priv(Plater *q, MainFrame *main_frame)
            fwrite(evt.data.c_str(), 1, evt.data.size(), file);
            fclose(file);
            this->main_frame->refresh_account_menu(true);
-#if 0
-           wxGetApp().update_login_dialog();
-#endif // 0    
         }); 
         this->q->Bind(EVT_UA_PRUSACONNECT_PRINTER_DATA_SUCCESS, [this](UserAccountSuccessEvent& evt) {
             this->user_account->set_current_printer_data(evt.data);
@@ -991,7 +989,7 @@ Plater::priv::priv(Plater *q, MainFrame *main_frame)
         this->q->Bind(EVT_UA_PRUSACONNECT_PRINTER_DATA_FAIL, [this](UserAccountFailEvent& evt) {
             BOOST_LOG_TRIVIAL(error) << "Failed communication with Prusa Account: " << evt.data;
             user_account->on_communication_fail();
-            std::string msg = _u8L("Failed to select printer from PrusaConnect.");
+            std::string msg = _u8L("Failed to select printer from Prusa Connect.");
             this->notification_manager->close_notification_of_type(NotificationType::SelectFilamentFromConnect);
             this->notification_manager->push_notification(NotificationType::SelectFilamentFromConnect, NotificationManager::NotificationLevel::WarningNotificationLevel, msg);
         });
@@ -1461,8 +1459,7 @@ std::vector<size_t> Plater::priv::load_files(const std::vector<fs::path>& input_
                         if (!found) {
                             // return to original print profile
                             wxGetApp().get_tab(Preset::Type::TYPE_SLA_PRINT)->select_preset(edited_print_name, false);
-                            std::string notif_text = into_u8(_L("Material preset was not loaded:"));
-                            notif_text += "\n - " + preset_name;
+                            std::string notif_text = GUI::format(_L("Material preset was not loaded:\n - %1%"), preset_name);
                             q->get_notification_manager()->push_notification(NotificationType::CustomNotification,
                                 NotificationManager::NotificationLevel::PrintInfoNotificationLevel, notif_text);
                             break;
@@ -4145,7 +4142,11 @@ void Plater::load_gcode(const wxString& filename)
     GCodeProcessor processor;
     try
     {
-        processor.process_file(filename.ToUTF8().data());
+        p->notification_manager->push_download_progress_notification("Loading...", []() { return false; });
+        processor.process_file(filename.ToUTF8().data(), [this](float value) {
+            p->notification_manager->set_download_progress_percentage(value);
+            p->get_current_canvas3D()->render();
+        });
     }
     catch (const std::exception& ex)
     {
@@ -5962,7 +5963,7 @@ bool load_secret(const std::string& id, const std::string& opt, std::string& usr
     wxString username;
     wxSecretValue password;
     if (!store.Load(service, username, password)) {
-        std::string msg(_u8L("Failed to load credentials from the system secret store."));
+        std::string msg(_u8L("Failed to load credentials from the system password store."));
         BOOST_LOG_TRIVIAL(error) << msg;
         show_error(nullptr, msg);
         return false;
@@ -5987,7 +5988,7 @@ void Plater::connect_gcode()
         }
     }   
     if (dialog_msg.empty())  {
-        show_error(this, _L("Failed to select a printer. PrusaConnect did not return a value."));
+        show_error(this, _L("Failed to select a printer."));
         return;
     }
     BOOST_LOG_TRIVIAL(debug) << "Message from Printer pick webview: " << dialog_msg;
@@ -6008,7 +6009,7 @@ void Plater::connect_gcode()
 
     std::string data_subtree = p->user_account->get_print_data_from_json(dialog_msg, "data");
     if (filename.empty() || team_id.empty() || data_subtree.empty()) {
-        std::string msg = _u8L("Failed to read response from Connect server. Upload is canceled.");
+        std::string msg = _u8L("Failed to read response from Prusa Connect server. Upload is cancelled.");
         BOOST_LOG_TRIVIAL(error) << msg;
         BOOST_LOG_TRIVIAL(error) << "Response: " << dialog_msg;
         show_error(this, msg);
@@ -6633,6 +6634,20 @@ bool Plater::set_printer_technology(PrinterTechnology printer_technology)
     return ret;
 }
 
+void Plater::clear_before_change_volume(ModelVolume &mv, const std::string &notification_msg) {
+    // When we change the geometry of the volume, we remove any custom supports/seams/multi-material painting.
+    if (const bool paint_removed = !mv.supported_facets.empty() || !mv.seam_facets.empty() || !mv.mm_segmentation_facets.empty(); paint_removed) {
+        mv.supported_facets.reset();
+        mv.seam_facets.reset();
+        mv.mm_segmentation_facets.reset();
+
+        get_notification_manager()->push_notification(
+                NotificationType::CustomSupportsAndSeamRemovedAfterRepair,
+                NotificationManager::NotificationLevel::PrintInfoNotificationLevel,
+                notification_msg);
+    }
+}
+
 void Plater::clear_before_change_mesh(int obj_idx, const std::string &notification_msg)
 {
     ModelObject* mo = model().objects[obj_idx];
@@ -6948,8 +6963,11 @@ void Plater::act_with_user_account()
     if (p->user_account) {
         if (p->user_account->is_logged())
             p->user_account->do_logout();
-        else
+        else {
             p->user_account->do_login();
+            if (!wxGetApp().app_config->has("show_login_button"))
+                wxGetApp().app_config->set("show_login_button", "1");
+        }
     }
 }
 

@@ -189,7 +189,7 @@ bool save_secret(const std::string& id, const std::string& opt, const std::strin
     const wxString username = boost::nowide::widen(usr);
     const wxSecretValue password(boost::nowide::widen(psswd));
     if (!store.Save(service, username, password)) {
-        std::string msg(_u8L("Failed to save credentials to the system secret store."));
+        std::string msg(_u8L("Failed to save credentials to the system password store."));
         BOOST_LOG_TRIVIAL(error) << msg;
         show_error(nullptr, msg);
         return false;
@@ -215,7 +215,7 @@ bool load_secret(const std::string& id, const std::string& opt, std::string& usr
     wxString username;
     wxSecretValue password;
     if (!store.Load(service, username, password)) {
-        std::string msg(_u8L("Failed to load credentials from the system secret store."));
+        std::string msg(_u8L("Failed to load credentials from the system password store."));
         BOOST_LOG_TRIVIAL(error) << msg;
         show_error(nullptr, msg);
         return false;
@@ -889,7 +889,7 @@ void PhysicalPrinterDialog::OnOK(wxEvent& event)
     const auto opt = m_config->option<ConfigOptionEnum<PrintHostType>>("host_type");
     if (opt->value == htPrusaConnect) {
         if (printhost_win && printhost_win->GetValue() != L"https://connect.prusa3d.com"){
-            InfoDialog msg(this, _L("Warning"), _L("URL of PrusaConnect is different from https://connect.prusa3d.com. Do you want to continue?"), true, wxYES_NO);
+            InfoDialog msg(this, _L("Warning"), _L("URL of Prusa Connect is different from https://connect.prusa3d.com. Do you want to continue?"), true, wxYES_NO);
             if(msg.ShowModal() != wxID_YES){
                 printhost_win->SetValue(L"https://connect.prusa3d.com");
                 return;

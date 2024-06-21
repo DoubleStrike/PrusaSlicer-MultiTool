@@ -360,6 +360,7 @@ void Preview::hide_layers_slider()
 void Preview::on_size(wxSizeEvent& evt)
 {
     evt.Skip();
+    m_layers_slider->force_ruler_update();
     Refresh();
 }
 
@@ -393,11 +394,17 @@ void Preview::create_sliders()
     m_layers_slider = std::make_unique<DoubleSlider::DSForLayers>(0, 0, 0, 100, wxGetApp().is_editor());
     m_layers_slider->SetEmUnit(wxGetApp().em_unit());
     m_layers_slider->set_imgui_wrapper(wxGetApp().imgui());
+    m_layers_slider->show_estimated_times(wxGetApp().app_config->get_bool("show_estimated_times_in_dbl_slider"));
+    m_layers_slider->show_ruler(wxGetApp().app_config->get_bool("show_ruler_in_dbl_slider"), wxGetApp().app_config->get_bool("show_ruler_bg_in_dbl_slider"));
 
     m_layers_slider->SetDrawMode(wxGetApp().preset_bundle->printers.get_edited_preset().printer_technology() == ptSLA,
                                  wxGetApp().preset_bundle->prints.get_edited_preset().config.opt_bool("complete_objects"));
 
     m_layers_slider->set_callback_on_thumb_move( [this]() -> void { Preview::on_layers_slider_scroll_changed(); } );
+
+    m_layers_slider->set_callback_on_change_app_config([this](const std::string& key, const std::string& val)   -> void {
+        wxGetApp().app_config->set(key, val);
+    });
 
     if (wxGetApp().is_editor()) {
         m_layers_slider->set_callback_on_ticks_changed([this]()                 -> void {
@@ -605,6 +612,7 @@ void Preview::update_layers_slider(const std::vector<double>& layers_z, bool kee
     //first of all update extruder colors to avoid crash, when we are switching printer preset from MM to SM
     m_layers_slider->SetExtruderColors(plater->get_extruder_color_strings_from_plater_config(wxGetApp().is_editor() ? nullptr : m_gcode_result));
     m_layers_slider->SetSliderValues(layers_z);
+    m_layers_slider->force_ruler_update();
     assert(m_layers_slider->GetMinPos() == 0);
 
     m_layers_slider->Freeze();

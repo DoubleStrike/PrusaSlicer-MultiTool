@@ -5,12 +5,15 @@
 #include "Event.hpp"
 #include "libslic3r/AppConfig.hpp"
 
+#include <wx/timer.h>
+
 #include <queue>
 #include <condition_variable>
 #include <map>
 #include <thread>
 #include <mutex>
 #include <memory>
+#include <wx/timer.h>
 
 namespace Slic3r {
 namespace GUI {
@@ -39,6 +42,7 @@ public:
     void do_login();
     void do_logout();
     void do_clear();
+    wxString get_login_redirect_url();
     // Trigger function starts various remote operations
     void enqueue_connect_status_action();
     void enqueue_connect_printer_models_action();

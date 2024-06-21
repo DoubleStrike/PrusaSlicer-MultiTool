@@ -471,7 +471,7 @@ TopBarItemsCtrl::TopBarItemsCtrl(wxWindow *parent, TopBarMenus* menus/* = nullpt
 
     wxBoxSizer* right_sizer = new wxBoxSizer(wxHORIZONTAL);
 
-    m_workspace_btn = new ButtonWithPopup(this, _L("Workspace"), "mode_simple");
+    m_workspace_btn = new ButtonWithPopup(this, "Workspace", "mode_simple");
     right_sizer->AddStretchSpacer(20);
     right_sizer->Add(m_workspace_btn, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, m_btn_margin);
     
@@ -492,12 +492,6 @@ TopBarItemsCtrl::TopBarItemsCtrl(wxWindow *parent, TopBarMenus* menus/* = nullpt
 
     m_sizer->SetItemMinSize(1, wxSize(42 * wxGetApp().em_unit(), -1));
 
-    this->Bind(wxEVT_UPDATE_UI, [this](wxUpdateUIEvent& evt) {
-        auto user_account = m_menus->get_user_account_info();
-        evt.Enable(user_account.is_logged);
-        evt.Check (user_account.remember_session);
-    }, m_menus->remember_me_item_id);
-
     update_btns_width();
 }
 
@@ -514,6 +508,12 @@ void TopBarItemsCtrl::UpdateMode()
 
     m_workspace_btn->SetLabel(m_collapsed_btns ? "" : m_menus->get_workspace_name());
 
+    this->Layout();
+}
+
+void TopBarItemsCtrl::ShowUserAccount(bool show)
+{
+    m_account_btn->Show(show);
     this->Layout();
 }
 

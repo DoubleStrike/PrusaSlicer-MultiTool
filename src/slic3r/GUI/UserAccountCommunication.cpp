@@ -5,8 +5,10 @@
 #include "../Utils/Http.hpp"
 #include "slic3r/GUI/I18N.hpp"
 
+#include <boost/algorithm/string/split.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/beast/core/detail/base64.hpp>
+#include <boost/algorithm/string.hpp>
 #include <curl/curl.h>
 #include <string>
 
@@ -91,7 +93,7 @@ bool save_secret(const std::string& opt, const std::string& usr, const std::stri
     const wxString username = boost::nowide::widen(usr);
     const wxSecretValue password(boost::nowide::widen(psswd));
     if (!store.Save(service, username, password)) {
-        std::string msg(_u8L("Failed to save credentials to the system secret store."));
+        std::string msg(_u8L("Failed to save credentials to the system password store."));
         BOOST_LOG_TRIVIAL(error) << msg;
         //show_error(nullptr, msg);
         return false;
@@ -117,7 +119,7 @@ bool load_secret(const std::string& opt, std::string& usr, std::string& psswd)
     wxString username;
     wxSecretValue password;
     if (!store.Load(service, username, password)) {
-        std::string msg(_u8L("Failed to load credentials from the system secret store."));
+        std::string msg(_u8L("Failed to load credentials from the system password store."));
         BOOST_LOG_TRIVIAL(error) << msg;
         //show_error(nullptr, msg);
         return false;
@@ -255,19 +257,25 @@ void UserAccountCommunication::on_uuid_map_success()
     }
 }
 
-void UserAccountCommunication::login_redirect()
-{
+wxString UserAccountCommunication::get_login_redirect_url() {
     const std::string AUTH_HOST = "https://account.prusa3d.com";
     const std::string CLIENT_ID = client_id();
     const std::string REDIRECT_URI = "prusaslicer://login";
     CodeChalengeGenerator ccg;
     m_code_verifier = ccg.generate_verifier();
     std::string code_challenge = ccg.generate_chalenge(m_code_verifier);
+    wxString language = GUI::wxGetApp().current_language_code();
+    language = language.SubString(0, 1);
     BOOST_LOG_TRIVIAL(info) << "code verifier: " << m_code_verifier;
     BOOST_LOG_TRIVIAL(info) << "code challenge: " << code_challenge;
 
-    wxString url = GUI::format_wxstr(L"%1%/o/authorize/?client_id=%2%&response_type=code&code_challenge=%3%&code_challenge_method=S256&scope=basic_info&redirect_uri=%4%&choose_account=1", AUTH_HOST, CLIENT_ID, code_challenge, REDIRECT_URI);
+    wxString url = GUI::format_wxstr(L"%1%/o/authorize/?embed=1&client_id=%2%&response_type=code&code_challenge=%3%&code_challenge_method=S256&scope=basic_info&redirect_uri=%4%&choose_account=1&language=%5%", AUTH_HOST, CLIENT_ID, code_challenge, REDIRECT_URI, language);
 
+    return url;
+}
+void UserAccountCommunication::login_redirect()
+{
+    wxString url = get_login_redirect_url();
     wxQueueEvent(m_evt_handler,new OpenPrusaAuthEvent(GUI::EVT_OPEN_PRUSAAUTH, std::move(url)));
 }
 

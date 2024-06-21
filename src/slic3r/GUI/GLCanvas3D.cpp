@@ -6008,7 +6008,7 @@ bool GLCanvas3D::check_toolbar_icon_size(float init_scale, float& new_scale_to_s
     const float top_tb_width = m_main_toolbar.get_width() + m_undoredo_toolbar.get_width() + collapse_toolbar.get_width();
     float items_cnt = float(m_main_toolbar.get_visible_items_cnt() + m_undoredo_toolbar.get_visible_items_cnt() + collapse_toolbar.get_visible_items_cnt());
     const float noitems_width = top_tb_width - float(size) * items_cnt; // width of separators and borders in top toolbars 
-    items_cnt += 1.6; // +1.6 means a place for some minimal margin between toolbars
+    items_cnt += 1.6f; // +1.6 means a place for some minimal margin between toolbars
 
     // calculate scale needed for items in all top toolbars
     // the std::max() is there because on some Linux dialects/virtual machines this code is called when the canvas has not been properly initialized yet,

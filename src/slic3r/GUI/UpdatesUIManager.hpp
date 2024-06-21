@@ -51,6 +51,8 @@ class RepositoryUpdateUIManager
     wxFlexGridSizer*            m_online_sizer  { nullptr };
     wxFlexGridSizer*            m_offline_sizer { nullptr };
 
+    wxButton*                   m_load_btn      { nullptr };
+
     std::vector<OnlineEntry>    m_online_entries;
     std::vector<OfflineEntry>   m_offline_entries;
 
@@ -60,8 +62,6 @@ class RepositoryUpdateUIManager
     void fill_entries(bool init_selection = false);
     void fill_grids();
 
-    void update();
-
     void remove_offline_repos(const std::string& id);
     void load_offline_repos();
     void check_selection();
@@ -70,6 +70,8 @@ public:
     RepositoryUpdateUIManager() {}
     RepositoryUpdateUIManager(wxWindow* parent, PresetArchiveDatabase* pad, int em);
     ~RepositoryUpdateUIManager() {}
+
+    void update();
 
     wxSizer*    get_sizer() { return m_main_sizer; }
     bool        set_selected_repositories();

@@ -573,8 +573,10 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
                     // When prefer_clockwise_movements is true, we have to ensure that extrusion paths will not be reversed during path planning.
                     extrusion_entities_append_paths(
                         eec->entities, std::move(polylines),
-						ExtrusionAttributes{ surface_fill.params.extrusion_role,
-							ExtrusionFlow{ flow_mm3_per_mm, float(flow_width), surface_fill.params.flow.height() } 
+						ExtrusionAttributes{
+                            surface_fill.params.extrusion_role,
+							ExtrusionFlow{ flow_mm3_per_mm, float(flow_width), surface_fill.params.flow.height() },
+                            f->is_self_crossing()
 						}, !params.prefer_clockwise_movements);
                     layerm.m_fills.entities.push_back(eec);
                 }

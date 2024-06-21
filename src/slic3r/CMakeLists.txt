@@ -215,6 +215,8 @@ set(SLIC3R_GUI_SOURCES
     GUI/ConfigWizard.cpp
     GUI/ConfigWizard.hpp
     GUI/ConfigWizard_private.hpp
+    GUI/ConfigWizardWebViewPage.cpp
+    GUI/ConfigWizardWebViewPage.hpp
     GUI/MsgDialog.cpp
     GUI/MsgDialog.hpp
     GUI/UpdateDialogs.cpp
@@ -262,6 +264,8 @@ set(SLIC3R_GUI_SOURCES
     GUI/DoubleSliderForLayers.hpp
     GUI/DoubleSliderForGcode.cpp
     GUI/DoubleSliderForGcode.hpp
+    GUI/RulerForDoubleSlider.cpp
+    GUI/RulerForDoubleSlider.hpp
     GUI/Notebook.cpp
     GUI/Notebook.hpp
     GUI/TopBar.cpp

@@ -221,7 +221,7 @@ namespace {
 
 bool UserAccount::on_connect_printers_success(const std::string& data, AppConfig* app_config, bool& out_printers_changed)
 {
-    BOOST_LOG_TRIVIAL(debug) << "PrusaConnect printers message: " << data;
+    BOOST_LOG_TRIVIAL(debug) << "Prusa Connect printers message: " << data;
     pt::ptree ptree;
     try {
         std::stringstream ss(data);

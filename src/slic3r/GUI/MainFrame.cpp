@@ -472,7 +472,9 @@ void MainFrame::update_layout()
 
     if (m_layout == ESettingsLayout::Old)
         m_tabpanel->InsertNewPage(0, m_plater, _L("Plater"), "", true);
-    
+
+    update_topbars();
+
     Layout();
     Thaw();
 }
@@ -596,6 +598,22 @@ static wxString GetTooltipForSettingsButton(PrinterTechnology pt)
     return from_u8(tooltip);
 }
 
+void MainFrame::update_topbars()
+{
+    if (wxGetApp().is_gcode_viewer())
+        return;
+
+    const bool show_login = !wxGetApp().app_config->has("show_login_button") || wxGetApp().app_config->get_bool("show_login_button");
+    m_tmp_top_bar->ShowUserAccount(show_login);
+    m_tabpanel->ShowUserAccount(show_login);
+
+    if (!show_login) {
+        if (auto user_account = wxGetApp().plater()->get_user_account();
+            user_account && user_account->is_logged())
+            user_account->do_logout();
+    }
+}
+
 void MainFrame::set_callbacks_for_topbar_menus()
 {
     m_bar_menus.set_workspaces_menu_callbacks(
@@ -605,17 +623,33 @@ void MainFrame::set_callbacks_for_topbar_menus()
     );
 
     m_bar_menus.set_account_menu_callbacks(
-        []() -> void { wxGetApp().plater()->toggle_remember_user_account_session(); },
         []() -> void { wxGetApp().plater()->act_with_user_account(); },
+        [this]() -> void {
+            wxString preferences_item = _L("Show Log in button in application top bar");
+            wxString msg =
+                _L("PrusaSlicer will remember your choice.") + "\n\n" +
+                format_wxstr(_L("Visit \"Preferences\" and check \"%1%\"\nto changes your choice."), preferences_item);
+
+            MessageDialog msg_dlg(this, msg, _L("PrusaSlicer: Don't ask me again"), wxOK | wxCANCEL | wxICON_INFORMATION);
+            if (msg_dlg.ShowModal() == wxID_OK) {
+                wxGetApp().app_config->set("show_login_button", "0");
+
+                m_bar_menus.RemoveHideLoginItem();
+                update_topbars();
+            }
+        },
         []() -> TopBarMenus::UserAccountInfo {
             if (auto user_account = wxGetApp().plater()->get_user_account())
                 return { user_account->is_logged(),
-                         user_account->get_remember_session(),
                          user_account->get_username(),
                          user_account->get_avatar_path(true) };
             return TopBarMenus::UserAccountInfo();
         }
     );
+
+    // we need "Hide Log in button" menu item only till "show_login_button" wasn't changed
+    if (wxGetApp().app_config->has("show_login_button"))
+        m_bar_menus.RemoveHideLoginItem();
 }
 
 void MainFrame::init_tabpanel()
@@ -1867,9 +1901,8 @@ void MainFrame::export_configbundle(bool export_physical_printers /*= false*/)
 #if wxUSE_SECRETSTORE
             // First password prompts user with dialog
             if (!passwords_dialog_shown) {
-                //wxString msg = GUI::format_wxstr(L"%1%\n%2%", _L("Some of the exported printers contains passwords, which are stored in the system password store."), _L("Do you wish to include the passwords to the exported file in the plain text form?"));
-                wxString msg = _L("Some of the exported printers contains passwords, which are stored in the system password store." 
-                                  " Do you wish to include the passwords in the plain text form to the exported file?");
+                wxString msg = _L("Some of the exported printers contain passwords, which are stored in the system password store." 
+                                  " Do you want to include the passwords in the plain text form in the exported file?");
                 MessageDialog dlg_psswd(this, msg, wxMessageBoxCaptionStr, wxYES_NO | wxYES_DEFAULT | wxICON_QUESTION);
                 if (dlg_psswd.ShowModal() == wxID_YES)
                     passwords_to_plain = true;
@@ -1880,7 +1913,7 @@ void MainFrame::export_configbundle(bool export_physical_printers /*= false*/)
             wxSecretStore store = wxSecretStore::GetDefault();
             wxString errmsg;
             if (!store.IsOk(&errmsg)) {
-                std::string msg = GUI::format("%1% (%2%).", _u8L("Failed to load credentials from the system secret store."), errmsg);
+                std::string msg = GUI::format("%1% (%2%).", _u8L("Failed to load credentials from the system password store."), errmsg);
                 BOOST_LOG_TRIVIAL(error) << msg;
                 show_error(nullptr, msg);
                 // Do not try again. System store is not reachable.
@@ -1891,7 +1924,7 @@ void MainFrame::export_configbundle(bool export_physical_printers /*= false*/)
             wxString username;
             wxSecretValue password;
             if (!store.Load(service, username, password)) {
-                std::string msg = GUI::format(_u8L("Failed to load credentials from the system secret store for the printer %1%."), printer_id);
+                std::string msg = GUI::format(_u8L("Failed to load credentials from the system password store for printer %1%."), printer_id);
                 BOOST_LOG_TRIVIAL(error) << msg;
                 show_error(nullptr, msg);
                 return false;
@@ -2160,6 +2193,8 @@ void MainFrame::update_ui_from_settings()
 //    m_plater->sidebar().show_reslice(!bp_on);
 //    m_plater->sidebar().show_export(bp_on);
 //    m_plater->sidebar().Layout();
+
+    update_topbars();
 
     if (m_plater)
         m_plater->update_ui_from_settings();

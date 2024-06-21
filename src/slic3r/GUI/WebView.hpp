@@ -10,7 +10,7 @@ class wxString;
 
 namespace WebView
 {
-    wxWebView *CreateWebView(wxWindow *parent, const wxString& url, std::vector<std::string>& message_handlers);
+    wxWebView *CreateWebView(wxWindow *parent, const wxString& url, const std::vector<std::string>& message_handlers);
 };
 
 #endif // !slic3r_GUI_WebView_hpp_

@@ -532,6 +532,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("chamber_temperature", coInts);
+    // TRN: Label of a configuration parameter: Nominal chamber temperature.
     def->label = L("Nominal");
     def->full_label = L("Chamber temperature");
     def->tooltip = L("Required chamber temperature for the print.\nWhen set to zero, "
@@ -543,6 +544,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionInts{ 0 });
 
     def = this->add("chamber_minimal_temperature", coInts);
+    // TRN: Label of a configuration parameter: Minimal chamber temperature
     def->label = L("Minimal");
     def->full_label = L("Chamber minimal temperature");
     def->tooltip = L("Minimal chamber temperature that the printer waits for before the print starts. This allows "
@@ -635,12 +637,12 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionFloat(1));
 
     def = this->add("top_one_perimeter_type", coEnum);
-    def->label = L("Only one perimeter type");
+    def->label = L("Single perimeter on top surfaces");
     def->category = L("Layers and Perimeters");
-    def->tooltip = L("Use only one perimeter on flat top surface, to give more space to the top infill pattern. Could be applied on topmost surface or all top surface.");
+    def->tooltip = L("Use only one perimeter on flat top surface, to give more space to the top infill pattern. Could be applied on topmost surface or all top surfaces.");
     def->mode = comExpert;
     def->set_enum<TopOnePerimeterType>({
-        { "none",    L("None surfaces") },
+        { "none",    L("Disabled") },
         { "top",     L("All top surfaces") },
         { "topmost", L("Topmost surface only") }
     });
@@ -649,7 +651,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("only_one_perimeter_first_layer", coBool);
     def->label = L("Only one perimeter on first layer");
     def->category = L("Layers and Perimeters");
-    def->tooltip = L("Use only one perimeter on the first layer of model.");
+    def->tooltip = L("Use only one perimeter on the first layer.");
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionBool(false));
 
@@ -1137,6 +1139,26 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloats { 0. });
 
+    def = this->add("filament_infill_max_speed", coFloats);
+    def->label = L("Max non-crossing infill speed");
+    def->tooltip = L("Maximum speed allowed for this filament while printing infill without "
+                     "any self intersections in a single layer. "
+                     "Set to zero for no limit.");
+    def->sidetext = L("mm/s");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloats { 0. });
+
+    def = this->add("filament_infill_max_crossing_speed", coFloats);
+    def->label = L("Max crossing infill speed");
+    def->tooltip = L("Maximum speed allowed for this filament while printing infill with "
+                     "self intersections in a single layer. "
+                     "Set to zero for no limit.");
+    def->sidetext = L("mm/s");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloats { 0. });
+
     def = this->add("filament_loading_speed", coFloats);
     def->label = L("Loading speed");
     def->tooltip = L("Speed used for loading the filament on the wipe tower.");
@@ -1368,10 +1390,10 @@ void PrintConfigDef::init_fff_params()
     def->cli = ConfigOptionDef::nocli;
 
     def = this->add("filament_shrinkage_compensation_xy", coPercents);
-    def->label = L("Shrinkage XY");
+    def->label = L("Shrinkage compensation XY");
     def->tooltip = L("Enter your filament shrinkage percentages for the X and Y axes here to apply scaling of the object to "
                      "compensate for shrinkage in the X and Y axes. For example, if you measured 99mm instead of 100mm, "
-                     "then you should put here 1%.");
+                     "enter 1%.");
     def->sidetext = L("%");
     def->mode = comAdvanced;
     def->min = -10.;
@@ -1379,10 +1401,10 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionPercents { 0 });
 
     def = this->add("filament_shrinkage_compensation_z", coPercents);
-    def->label = L("Shrinkage Z");
+    def->label = L("Shrinkage compensation Z");
     def->tooltip = L("Enter your filament shrinkage percentages for the Z axis here to apply scaling of the object to "
                      "compensate for shrinkage in the Z axis. For example, if you measured 99mm instead of 100mm, "
-                     "then you should put here 1%.");
+                     "enter 1%.");
     def->sidetext = L("%");
     def->mode = comAdvanced;
     def->min = -10.;
@@ -5433,8 +5455,8 @@ CLIActionsConfigDef::CLIActionsConfigDef()
     def->set_default_value(new ConfigOptionBool(false));
 
     def = this->add("opengl-aa", coBool);
-    def->label = L("Automatic OpenGL antialising samples number selection");
-    def->tooltip = L("Automatically select the highest number of samples for OpenGL antialising.");
+    def->label = L("Automatic OpenGL antialiasing samples number selection");
+    def->tooltip = L("Automatically select the highest number of samples for OpenGL antialiasing.");
     def->cli = "opengl-aa";
     def->set_default_value(new ConfigOptionBool(false));
 

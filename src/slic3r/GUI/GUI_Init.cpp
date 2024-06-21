@@ -26,6 +26,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
 #include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/console.hpp>
 
 #if __APPLE__
     #include <signal.h>
@@ -52,7 +53,7 @@ int GUI_Run(GUI_InitParams &params)
 #ifdef SLIC3R_LOG_TO_FILE
     auto sink = boost::log::add_file_log(get_default_datadir() + "/slicer.log");
     sink->locked_backend()->auto_flush();
-    boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
+    boost::log::add_console_log();
 #endif // SLIC3R_LOG_TO_FILE
     try {
         GUI::GUI_App* gui = new GUI::GUI_App(params.start_as_gcodeviewer ? GUI::GUI_App::EAppMode::GCodeViewer : GUI::GUI_App::EAppMode::Editor);

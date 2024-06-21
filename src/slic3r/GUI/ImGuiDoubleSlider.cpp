@@ -80,6 +80,43 @@ static bool behavior(ImGuiID id, const ImRect& region,
     return value_changed;
 }
 
+static bool lclicked_on_thumb(ImGuiID id, const ImRect& region, 
+                             const ImS32 v_min, const ImS32 v_max, 
+                             const ImRect& thumb, ImGuiSliderFlags flags = 0)
+{
+    ImGuiContext& context = *GImGui;
+
+    if (context.ActiveId == id && context.ActiveIdSource == ImGuiInputSource_Mouse && 
+        context.IO.MouseReleased[0]) 
+    {
+        const ImGuiAxis axis = (flags & ImGuiSliderFlags_Vertical) ? ImGuiAxis_Y : ImGuiAxis_X;
+
+        ImS32 v_range = (v_min < v_max ? v_max - v_min : v_min - v_max);
+        const float region_usable_sz = (region.Max[axis] - region.Min[axis]);
+        const float region_usable_pos_min = region.Min[axis];
+        const float region_usable_pos_max = region.Max[axis];
+
+        const float mouse_abs_pos = context.IO.MousePos[axis];
+        float mouse_pos_ratio = (region_usable_sz > 0.0f) ? ImClamp((mouse_abs_pos - region_usable_pos_min) / region_usable_sz, 0.0f, 1.0f) : 0.0f;
+        if (axis == ImGuiAxis_Y)
+            mouse_pos_ratio = 1.0f - mouse_pos_ratio;
+
+        ImS32 v_new = v_min + (ImS32)(v_range * mouse_pos_ratio + 0.5f);
+
+        // Output thumb position so it can be displayed by the caller
+        const ImS32 v_clamped = (v_min < v_max) ? ImClamp(v_new, v_min, v_max) : ImClamp(v_new, v_max, v_min);
+        float thumb_pos_ratio = v_range != 0 ? ((float)(v_clamped - v_min) / (float)v_range) : 0.0f;
+        thumb_pos_ratio = axis == ImGuiAxis_Y ? 1.0f - thumb_pos_ratio : thumb_pos_ratio;
+        const float thumb_pos = region_usable_pos_min + (region_usable_pos_max - region_usable_pos_min) * thumb_pos_ratio;
+
+        ImVec2 new_thumb_center = axis == ImGuiAxis_Y ? ImVec2(thumb.GetCenter().x, thumb_pos) : ImVec2(thumb_pos, thumb.GetCenter().y);
+        if (thumb.Contains(new_thumb_center))
+            return true;
+    }
+
+    return false;
+}
+
 ImRect ImGuiControl::DrawOptions::groove(const ImVec2& pos, const ImVec2& size, bool is_horizontal) const
 {
     ImVec2 groove_start =   is_horizontal ?
@@ -262,6 +299,7 @@ bool ImGuiControl::IsLClickOnThumb()
     if (m_lclick_on_selected_thumb) {
         // discard left mouse click at list its value is checked to avoud reuse it on next frame
         m_lclick_on_selected_thumb = false;
+        m_suppress_process_behavior = false;
         return true;
     }
     return false;
@@ -493,29 +531,55 @@ bool ImGuiControl::draw_slider( int* higher_pos, int* lower_pos,
         ImGui::ItemHoverable(m_regions.lower_thumb, id) && context.IO.MouseClicked[0])
         m_selection = ssLower;
 
+    // detect left click on selected thumb
+    {
+        const ImRect& active_thumb = m_selection == ssHigher ? m_regions.higher_thumb : m_regions.lower_thumb;
+        if (ImGui::ItemHoverable(active_thumb, id) && context.IO.MouseClicked[0]) {
+            m_active_thumb = active_thumb;
+            m_suppress_process_behavior = true;
+        }
+        else if (ImGui::ItemHoverable(active_thumb, id) && context.IO.MouseReleased[0]) { 
+            const ImRect& slideable_region = m_selection == ssHigher ? m_regions.higher_slideable_region : m_regions.lower_slideable_region;
+            if (lclicked_on_thumb(id, slideable_region, m_min_pos, m_max_pos, m_active_thumb, m_flags)) {
+                m_suppress_process_behavior = true;
+                m_lclick_on_selected_thumb = true;
+            }
+        }
+    }
+
     // update thumb position
     bool pos_changed = false;
-    if (m_selection == ssHigher) {
-        pos_changed = behavior(id, m_regions.higher_slideable_region, m_min_pos, m_max_pos,
-                                 higher_pos, &m_regions.higher_thumb, m_flags);
-    }
-    else if (m_draw_lower_thumb && !m_combine_thumbs) {
-        pos_changed = behavior(id, m_regions.lower_slideable_region, m_min_pos, m_max_pos,
-                                 lower_pos, &m_regions.lower_thumb, m_flags);
-    }
+    if (!m_suppress_process_behavior) {
+        if (m_selection == ssHigher) {
+            pos_changed = behavior(id, m_regions.higher_slideable_region, m_min_pos, m_max_pos,
+                                     higher_pos, &m_regions.higher_thumb, m_flags);
+        }
+        else if (m_draw_lower_thumb && !m_combine_thumbs) {
+            pos_changed = behavior(id, m_regions.lower_slideable_region, m_min_pos, m_max_pos,
+                                     lower_pos, &m_regions.lower_thumb, m_flags);
+        }
 
-    // check thumbs poss and correct them if needed
-    check_and_correct_thumbs(higher_pos, lower_pos);
-
+        // check thumbs poss and correct them if needed
+        check_and_correct_thumbs(higher_pos, lower_pos);
+    }
     const ImRect& slideable_region  = m_selection == ssHigher ? m_regions.higher_slideable_region : m_regions.lower_slideable_region;
     const ImRect& active_thumb      = m_selection == ssHigher ? m_regions.higher_thumb            : m_regions.lower_thumb;
 
     bool show_move_label = false;
     ImRect mouse_pos_rc = active_thumb;
-    if (!pos_changed && ImGui::ItemHoverable(item_size, id) && !ImGui::IsMouseDragging(0)) {
-        behavior(id, slideable_region, m_min_pos, m_max_pos,
+
+    std::string move_label = "";
+
+    auto move_size = item_size;
+    move_size.Min.x += left_dummy_sz().x;
+    if (!pos_changed && ImGui::ItemHoverable(move_size, id) && !ImGui::IsMouseDragging(0)) {
+        auto sl_region = slideable_region;
+        if (!is_horizontal() && m_draw_opts.has_ruler)
+            sl_region.Max.x += m_draw_opts.dummy_sz().x;
+        behavior(id, sl_region, m_min_pos, m_max_pos,
                  &m_mouse_pos, &mouse_pos_rc, m_flags, true);
         show_move_label = true;
+        move_label = get_label_on_move(m_mouse_pos);
     }
 
     // detect right click on selected thumb
@@ -525,16 +589,8 @@ bool ImGuiControl::draw_slider( int* higher_pos, int* lower_pos,
         context.IO.MouseClicked[0])
         m_rclick_on_selected_thumb = false;
 
-    // detect left click on selected thumb
-    if (ImGui::ItemHoverable(active_thumb, id) && !pos_changed) {
-        ImVec2 active_thumb_center = active_thumb.GetCenter();
-        if (context.IO.MouseClicked[0])
-            m_active_thumb_center_on_lcklick = active_thumb_center;
-        if (context.IO.MouseReleased[0] && 
-            (m_active_thumb_center_on_lcklick.y == active_thumb_center.y) && 
-            (m_active_thumb_center_on_lcklick.x == active_thumb_center.x)     )
-            m_lclick_on_selected_thumb = true;
-    }
+    if (m_suppress_process_behavior && ImGui::ItemHoverable(item_size, id) && ImGui::IsMouseDragging(0))
+        m_suppress_process_behavior = false;
 
     // render slider
 
@@ -565,8 +621,7 @@ bool ImGuiControl::draw_slider( int* higher_pos, int* lower_pos,
     }
 
     // draw label on mouse move
-    if (show_move_label)
-        draw_label(get_label_on_move(m_mouse_pos), mouse_pos_rc, false, true);
+    draw_label(move_label, mouse_pos_rc, false, true);
 
     return pos_changed;
 }

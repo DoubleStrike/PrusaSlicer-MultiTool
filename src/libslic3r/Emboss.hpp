@@ -282,8 +282,6 @@ namespace Emboss
     class IProjection : public IProject3d
     {
     public:
-        virtual ~IProjection() = default;
-
         /// <summary>
         /// convert 2d point to 3d points
         /// </summary>
@@ -461,7 +459,11 @@ namespace Emboss
     /// <param name="polygon">Polygon know neighbor of point</param>
     /// <returns>angle(atan2) of normal in polygon point</returns>
     double calculate_angle(int32_t distance, PolygonPoint polygon_point, const Polygon &polygon);
-    std::vector<double> calculate_angles(int32_t distance, const PolygonPoints& polygon_points, const Polygon &polygon);
+    std::vector<double> calculate_angles(
+        const BoundingBoxes &glyph_sizes,
+        const PolygonPoints &polygon_points,
+        const Polygon &polygon
+    );
 
 } // namespace Emboss
 

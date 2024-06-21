@@ -172,6 +172,7 @@ public:
     void        update_title();
 
     void        set_callbacks_for_topbar_menus();
+    void        update_topbars();
     void        init_tabpanel();
     void        create_preset_tabs();
     void        add_created_tab(Tab* panel, const std::string& bmp_name = "");

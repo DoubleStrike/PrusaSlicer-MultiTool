@@ -3270,16 +3270,26 @@ std::string GCodeGenerator::travel_to_first_position(const Vec3crd& point, const
 }
 
 double cap_speed(
-    double speed, const double mm3_per_mm, const FullPrintConfig &config, int extruder_id
+    double speed, const FullPrintConfig &config, int extruder_id, const ExtrusionAttributes &path_attr
 ) {
-    const double general_cap{config.max_volumetric_speed.value};
-    if (general_cap > 0) {
-        speed = std::min(speed, general_cap / mm3_per_mm);
+    const double general_volumetric_cap{config.max_volumetric_speed.value};
+    if (general_volumetric_cap > 0) {
+        speed = std::min(speed, general_volumetric_cap / path_attr.mm3_per_mm);
     }
-    const double filament_cap{config.filament_max_volumetric_speed.get_at(extruder_id)};
-    if (filament_cap > 0) {
-        speed = std::min(speed, filament_cap / mm3_per_mm);
+    const double filament_volumetric_cap{config.filament_max_volumetric_speed.get_at(extruder_id)};
+    if (filament_volumetric_cap > 0) {
+        speed = std::min(speed, filament_volumetric_cap / path_attr.mm3_per_mm);
     }
+    if (path_attr.role == ExtrusionRole::InternalInfill) {
+        const double infill_cap{
+            path_attr.maybe_self_crossing ?
+                config.filament_infill_max_crossing_speed.get_at(extruder_id) :
+                config.filament_infill_max_speed.get_at(extruder_id)};
+        if (infill_cap > 0) {
+            speed = std::min(speed, infill_cap);
+        }
+    }
+
     return speed;
 }
 
@@ -3411,7 +3421,7 @@ std::string GCodeGenerator::_extrude(
         if (external_perim_reference_speed == 0)
             external_perim_reference_speed = m_volumetric_speed / path_attr.mm3_per_mm;
         external_perim_reference_speed = cap_speed(
-            external_perim_reference_speed, path_attr.mm3_per_mm, m_config, m_writer.extruder()->id()
+            external_perim_reference_speed, m_config, m_writer.extruder()->id(), path_attr
         );
 
         dynamic_speed_and_fan_speed = ExtrusionProcessor::calculate_overhang_speed(path_attr, this->m_config, m_writer.extruder()->id(),
@@ -3423,7 +3433,7 @@ std::string GCodeGenerator::_extrude(
     }
 
     // cap speed with max_volumetric_speed anyway (even if user is not using autospeed)
-    speed = cap_speed(speed, path_attr.mm3_per_mm, m_config, m_writer.extruder()->id());
+    speed = cap_speed(speed, m_config, m_writer.extruder()->id(), path_attr);
 
     double F = speed * 60;  // convert mm/sec to mm/min
 

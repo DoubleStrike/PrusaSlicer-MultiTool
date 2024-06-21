@@ -87,6 +87,7 @@ public:
 
     // Run the Wizard. Return whether it was completed.
     bool run(RunReason reason, StartPage start_page = SP_WELCOME);
+    void update_login();
 
     static const wxString& name(const bool from_menu = false);
 protected:

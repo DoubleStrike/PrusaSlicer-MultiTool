@@ -22,6 +22,7 @@ class FillHoneycomb : public Fill
 {
 public:
     ~FillHoneycomb() override {}
+    bool is_self_crossing() override { return false; }
 
 protected:
     Fill* clone() const override { return new FillHoneycomb(*this); };

@@ -1053,7 +1053,7 @@ bool PresetUpdater::priv::perform_updates(Updates &&updates, const SharedArchive
                         if (it != repositories.end())
                             get_or_copy_missing_resource((*it), vp.id, resource, vp.repo_id);
                         else {
-                            BOOST_LOG_TRIVIAL(error) << "Failed to prepare " << resource << " for " << vp.id << " " << model.id << ": Missing record for repository with repo_id " << vp.repo_id;
+                            BOOST_LOG_TRIVIAL(error) << "Failed to prepare " << resource << " for " << vp.id << " " << model.id << ": Missing record for source with repo_id " << vp.repo_id;
                         }
 					}
 					catch (const std::exception& e)

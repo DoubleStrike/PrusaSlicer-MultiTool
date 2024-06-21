@@ -123,6 +123,8 @@ public:
     // Do not sort the fill lines to optimize the print head path?
     virtual bool no_sort() const { return false; }
 
+    virtual bool is_self_crossing() = 0;
+
     // Perform the fill.
     virtual Polylines fill_surface(const Surface *surface, const FillParams &params);
     virtual ThickPolylines fill_surface_arachne(const Surface *surface, const FillParams &params);

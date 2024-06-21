@@ -26,6 +26,7 @@ public:
     Fill* clone() const override { return new FillRectilinear(*this); }
     ~FillRectilinear() override = default;
     Polylines fill_surface(const Surface *surface, const FillParams &params) override;
+    bool is_self_crossing() override { return false; }
 
 protected:
     // Fill by single directional lines, interconnect the lines along perimeters.
@@ -75,6 +76,7 @@ public:
     Fill* clone() const override { return new FillGrid(*this); }
     ~FillGrid() override = default;
     Polylines fill_surface(const Surface *surface, const FillParams &params) override;
+    bool is_self_crossing() override { return true; }
 
 protected:
 	// The grid fill will keep the angle constant between the layers, see the implementation of Slic3r::Fill.
@@ -87,6 +89,7 @@ public:
     Fill* clone() const override { return new FillTriangles(*this); }
     ~FillTriangles() override = default;
     Polylines fill_surface(const Surface *surface, const FillParams &params) override;
+    bool is_self_crossing() override { return true; }
 
 protected:
 	// The grid fill will keep the angle constant between the layers, see the implementation of Slic3r::Fill.
@@ -99,6 +102,7 @@ public:
     Fill* clone() const override { return new FillStars(*this); }
     ~FillStars() override = default;
     Polylines fill_surface(const Surface *surface, const FillParams &params) override;
+    bool is_self_crossing() override { return true; }
 
 protected:
     // The grid fill will keep the angle constant between the layers, see the implementation of Slic3r::Fill.
@@ -111,6 +115,7 @@ public:
     Fill* clone() const override { return new FillCubic(*this); }
     ~FillCubic() override = default;
     Polylines fill_surface(const Surface *surface, const FillParams &params) override;
+    bool is_self_crossing() override { return true; }
 
 protected:
 	// The grid fill will keep the angle constant between the layers, see the implementation of Slic3r::Fill.

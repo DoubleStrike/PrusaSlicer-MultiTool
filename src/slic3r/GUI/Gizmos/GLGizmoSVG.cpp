@@ -118,15 +118,6 @@ std::string get_file_name(const std::string &file_path);
 /// <returns>Name for volume</returns>
 std::string volume_name(const EmbossShape& shape);
 
-/// <summary>
-/// Create input for volume creation
-/// </summary>
-/// <param name="canvas">parent of gizmo</param>
-/// <param name="raycaster">Keep scene</param>
-/// <param name="volume_type">Type of volume to be created</param>
-/// <returns>Params</returns>
-CreateVolumeParams create_input(GLCanvas3D &canvas, RaycastManager &raycaster, ModelVolumeType volume_type);
-
 enum class IconType : unsigned {
     reset_value,
     reset_value_hover,
@@ -198,33 +189,38 @@ struct GLGizmoSVG::GuiCfg: public ::GuiCfg{};
 
 bool GLGizmoSVG::create_volume(ModelVolumeType volume_type, const Vec2d &mouse_pos)
 {
-    CreateVolumeParams input = create_input(m_parent, m_raycast_manager, volume_type);
-    DataBasePtr base = create_emboss_data_base(m_job_cancel, volume_type);
-    if (!base) return false; // Uninterpretable svg
-    return start_create_volume(input, std::move(base), mouse_pos);
+    CreateVolumeParams input = create_input(volume_type);
+    if (!input.data) return false; // Uninterpretable svg
+    return start_create_volume(input, mouse_pos);
 }
 
 bool GLGizmoSVG::create_volume(ModelVolumeType volume_type) 
 {
-    CreateVolumeParams input = create_input(m_parent, m_raycast_manager, volume_type);
-    DataBasePtr base = create_emboss_data_base(m_job_cancel,volume_type);
-    if (!base) return false; // Uninterpretable svg
-    return start_create_volume_without_position(input, std::move(base));
+    CreateVolumeParams input = create_input(volume_type);
+    if (!input.data) return false; // Uninterpretable svg
+    return start_create_volume_without_position(input);
 }
 
 bool GLGizmoSVG::create_volume(std::string_view svg_file, ModelVolumeType volume_type){
-    CreateVolumeParams input = create_input(m_parent, m_raycast_manager, volume_type);
-    DataBasePtr base = create_emboss_data_base(m_job_cancel, volume_type, svg_file);
-    if (!base) return false; // Uninterpretable svg
-    return start_create_volume_without_position(input, std::move(base));
+    CreateVolumeParams input = create_input(volume_type, svg_file);
+    if (!input.data) return false; // Uninterpretable svg
+    return start_create_volume_without_position(input);
 }
 
 bool GLGizmoSVG::create_volume(std::string_view svg_file, const Vec2d &mouse_pos, ModelVolumeType volume_type)
 {
-    CreateVolumeParams input = create_input(m_parent, m_raycast_manager, volume_type);
-    DataBasePtr base = create_emboss_data_base(m_job_cancel, volume_type, svg_file);
-    if (!base) return false; // Uninterpretable svg
-    return start_create_volume(input, std::move(base), mouse_pos);
+    CreateVolumeParams input = create_input(volume_type, svg_file);
+    if (!input.data) return false; // Uninterpretable svg
+    return start_create_volume(input, mouse_pos);
+}
+
+CreateVolumeParams GLGizmoSVG::create_input(ModelVolumeType volume_type, std::string_view svg_filepath) {
+    DataBasePtr base = create_emboss_data_base(m_job_cancel, volume_type, svg_filepath);
+    auto gizmo = static_cast<unsigned char>(GLGizmosManager::Svg);
+    const GLVolume *gl_volume = get_first_hovered_gl_volume(m_parent);
+    Plater *plater = wxGetApp().plater();
+    return CreateVolumeParams{std::move(base), m_parent, plater->get_camera(), plater->build_volume(),
+        plater->get_ui_job_worker(), volume_type, m_raycast_manager, gizmo, gl_volume};
 }
 
 bool GLGizmoSVG::is_svg(const ModelVolume &volume) {
@@ -2115,15 +2111,6 @@ std::string volume_name(const EmbossShape &shape)
     if (!file_name.empty())
         return file_name;
     return "SVG shape";
-}
-
-CreateVolumeParams create_input(GLCanvas3D &canvas, RaycastManager& raycaster, ModelVolumeType volume_type)
-{
-    auto gizmo = static_cast<unsigned char>(GLGizmosManager::Svg);
-    const GLVolume *gl_volume = get_first_hovered_gl_volume(canvas);
-    Plater *plater = wxGetApp().plater();
-    return CreateVolumeParams{canvas, plater->get_camera(), plater->build_volume(),
-        plater->get_ui_job_worker(), volume_type, raycaster, gizmo, gl_volume};
 }
 
 GuiCfg create_gui_configuration() {

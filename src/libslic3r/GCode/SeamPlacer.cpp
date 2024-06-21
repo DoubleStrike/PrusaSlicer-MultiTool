@@ -288,12 +288,8 @@ struct NearestCorner {
                 perimeter.point_classifications[i] == point_classification &&
                 perimeter.angle_types[i] != Perimeters::AngleType::smooth) {
                 const Vec2d &point{perimeter.positions[i]};
-                if (!corner_candidate) {
-                    corner_candidate = {i, i, point};
-                    continue;
-                }
                 const double distance{(prefered_position - point).norm()};
-                if (distance < min_distance) {
+                if (!corner_candidate || distance < min_distance) {
                     corner_candidate = {i, i, point};
                     min_distance = distance;
                 }

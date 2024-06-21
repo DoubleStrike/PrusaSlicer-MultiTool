@@ -24,6 +24,9 @@
 namespace Slic3r{
 class ModelVolume;
 enum class ModelVolumeType : int;
+namespace GUI::Emboss {
+struct CreateVolumeParams;
+}
 }
 
 namespace Slic3r::GUI {
@@ -133,6 +136,8 @@ private:
 
     void volume_transformation_changed();
     
+    Emboss::CreateVolumeParams create_input(ModelVolumeType volume_type, std::string_view svg_filepath = "");
+
     struct GuiCfg;
     std::unique_ptr<const GuiCfg> m_gui_cfg;
 

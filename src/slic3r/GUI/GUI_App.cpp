@@ -3268,6 +3268,7 @@ bool GUI_App::run_wizard(ConfigWizard::RunReason reason, ConfigWizard::StartPage
     // ConfigWizard can take some time to start. Because it is a wxWidgets window, it has to be done
     // in UI thread, so displaying a nice modal dialog and letting the CW start in a worker thread
     // is not an option. Let's at least show a modeless dialog before the UI thread freezes.
+    // TRN: Text showing while the ConfigWizard is loading, so the user knows something is happening.
     auto cw_loading_dlg =  new ConfigWizardLoadingDialog(mainframe, _L("Loading Configuration Wizard..."));
     cw_loading_dlg->CenterOnParent();
     cw_loading_dlg->Show();
@@ -3285,18 +3286,19 @@ bool GUI_App::run_wizard(ConfigWizard::RunReason reason, ConfigWizard::StartPage
         preset_updater->config_update(app_config->orig_version(), PresetUpdater::UpdateParams::SHOW_TEXT_BOX, repos);
     }
 
-    auto wizard = new ConfigWizard(mainframe);
+    m_config_wizard = new ConfigWizard(mainframe);
     cw_loading_dlg->Close();
 
-    const bool res = wizard->run(reason, start_page);
+    const bool res = m_config_wizard->run(reason, start_page);
 
 
     // !!! Deallocate memory after close ConfigWizard.
     // Note, that mainframe is a parent of ConfigWizard.
     // So, wizard will be destroyed only during destroying of mainframe
     // To avoid this state the wizard have to be disconnected from mainframe and Destroyed explicitly
-    mainframe->RemoveChild(wizard);
-    wizard->Destroy();
+    mainframe->RemoveChild(m_config_wizard);
+    m_config_wizard->Destroy();
+    m_config_wizard = nullptr;
 
     if (res) {
         load_current_presets();
@@ -3308,15 +3310,13 @@ bool GUI_App::run_wizard(ConfigWizard::RunReason reason, ConfigWizard::StartPage
     return res;
 }
 
-#if 0
-void GUI_App::update_login_dialog()
+void GUI_App::update_wizard_login_page()
 {
-    if (!m_login_dialog) {
+    if (!m_config_wizard) {
         return;
     }
-    m_login_dialog->update_account();
+    m_config_wizard->update_login();
 }
-#endif // 0
 
 void GUI_App::show_desktop_integration_dialog()
 {
@@ -3516,10 +3516,13 @@ bool GUI_App::check_updates(const bool invoked_by_user)
         // for preset_updater sync we need to sync archive database first
         plater()->get_preset_archive_database()->sync_blocking();
         // Now re-extract offline repos
-        std::string extract_msg;
-        if (!plater()->get_preset_archive_database()->extract_archives_with_check(extract_msg)) {
-            extract_msg = GUI::format("%1%\n\n%2%", _L("Following repositories won't be updated:"), extract_msg);
-            show_error(nullptr, extract_msg);
+        std::string failed_paths;
+        if (!plater()->get_preset_archive_database()->extract_archives_with_check(failed_paths)) {
+            int cnt = std::count(failed_paths.begin(), failed_paths.end(), '\n') + 1;
+            // TRN: %1% contains paths from which loading failed. They are separated by \n, there is no \n at the end.
+            failed_paths = GUI::format(_L_PLURAL("It was not possible to extract data from %1%. The source will not be updated.",
+                "It was not possible to extract data for following local sources. They will not be updated.\n\n %1%", cnt), failed_paths);
+            show_error(nullptr, failed_paths);
         }
         // then its time for preset_updater sync 
         preset_updater->sync_blocking(preset_bundle, this, plater()->get_preset_archive_database()->get_selected_archive_repositories());
@@ -3592,7 +3595,7 @@ bool GUI_App::open_login_browser_with_dialog(const wxString& url, wxWindow* pare
 {
     bool auth_login_dialog_confirmed = app_config->get_bool("auth_login_dialog_confirmed");
     if (!auth_login_dialog_confirmed) {
-        RichMessageDialog dialog(parent, _L("Open default browser with Prusa Account Log in page?\n(On Yes, You will not be asked again.)"), _L("PrusaSlicer: Open Log in page"), wxICON_QUESTION | wxYES_NO);
+        RichMessageDialog dialog(parent, _L("Open default browser with Prusa Account Log in page?\n(If you select 'Yes', you will not be asked again.)"), _L("PrusaSlicer: Open Log in page"), wxICON_QUESTION | wxYES_NO);
          if (dialog.ShowModal() != wxID_YES)
              return false;
          app_config->set("auth_login_dialog_confirmed", "1");
@@ -3852,8 +3855,8 @@ bool GUI_App::select_printer_from_connect(const std::string& msg)
     bool is_installed = printer_preset && select_printer_preset(printer_preset);
     // notification
     std::string out = printer_preset ?
-        (is_installed ? GUI::format(_L("Installed and Selected Printer:\n%1%"), printer_preset->name) :
-            GUI::format(_L("Selected Printer:\n%1%"), printer_preset->name)) :
+        (is_installed ? GUI::format(_L("Installed and selected printer:\n%1%"), printer_preset->name) :
+            GUI::format(_L("Selected printer:\n%1%"), printer_preset->name)) :
         GUI::format(_L("Printer not found:\n%1%"), model_name);
     this->plater()->get_notification_manager()->close_notification_of_type(NotificationType::SelectPrinterFromConnect);
     this->plater()->get_notification_manager()->push_notification(
@@ -3898,7 +3901,7 @@ void GUI_App::search_and_select_filaments(const std::string& material, size_t ex
         {
             out_message += /*(extruder_count == 1)
                 ? GUI::format(_L("Selected Filament:\n%1%"), filament_preset.preset->name)
-                : */GUI::format(_L("Extruder %1%: Selected Filament %2%\n"), extruder_index + 1, filament.preset->name);
+                : */GUI::format(_L("Extruder %1%: Selected filament %2%\n"), extruder_index + 1, filament.preset->name);
             return;
         }
     }
@@ -3915,7 +3918,7 @@ void GUI_App::search_and_select_filaments(const std::string& material, size_t ex
         {
             out_message += /*(extruder_count == 1)
                 ? GUI::format(_L("Selected Filament:\n%1%"), filament_preset.preset->name) 
-                : */GUI::format(_L("Extruder %1%: Selected Filament %2%\n"), extruder_index + 1, filament.preset->name);
+                : */GUI::format(_L("Extruder %1%: Selected filament %2%\n"), extruder_index + 1, filament.preset->name);
             return;
         }
     }
@@ -3930,11 +3933,11 @@ void GUI_App::search_and_select_filaments(const std::string& material, size_t ex
             && filament.preset->name.compare(0, 9, "Prusament") == 0
             && select_filament_preset(filament.preset, extruder_index))
         {
-            out_message += GUI::format(_L("Extruder %1%: Selected and Installed Filament %2%\n"), extruder_index + 1, filament.preset->name);
+            out_message += GUI::format(_L("Extruder %1%: Installed and selected filament %2%\n"), extruder_index + 1, filament.preset->name);
             return;
         }
     }
-    out_message += GUI::format(_L("Extruder %2%: Failed to Find and Select Filament type: %1%\n"), material, extruder_index + 1);
+    out_message += GUI::format(_L("Extruder %2%: Failed to find and select filament type: %1%\n"), material, extruder_index + 1);
 }
 
 void GUI_App::select_filament_from_connect(const std::string& msg)

@@ -7,7 +7,7 @@
 #include "slic3r/GUI/UserAccount.hpp"
 #include "slic3r/GUI/format.hpp"
 #include "slic3r/GUI/WebView.hpp"
-
+#include "slic3r/GUI/MsgDialog.hpp"
 
 #include <wx/webview.h>
 
@@ -27,12 +27,37 @@ namespace Slic3r {
 namespace GUI {
 
 
+WebViewPanel::~WebViewPanel()
+{
+    SetEvtHandlerEnabled(false);
+#ifdef DEBUG_URL_PANEL
+    delete m_tools_menu;
+#endif
+}
+
+void WebViewPanel::load_url(const wxString& url)
+{
+    if (!m_browser)
+        return;
+
+    this->on_page_will_load();
+
+    this->Show();
+    this->Raise();
+#ifdef DEBUG_URL_PANEL
+    m_url->SetLabelText(url);
+#endif
+    m_browser->LoadURL(url);
+    m_browser->SetFocus();
+}
+
+
 WebViewPanel::WebViewPanel(wxWindow *parent, const wxString& default_url, const std::vector<std::string>& message_handler_names, const std::string& loading_html/* = "loading"*/)
-        : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
-        , m_default_url (default_url)
-        , m_loading_html(loading_html)
-        , m_script_message_hadler_names(message_handler_names)
- {
+    : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
+    , m_default_url (default_url)
+    , m_loading_html(loading_html)
+    , m_script_message_hadler_names(message_handler_names)
+{
     wxBoxSizer* topsizer = new wxBoxSizer(wxVERTICAL);
 #ifdef DEBUG_URL_PANEL
     // Create the button
@@ -86,19 +111,19 @@ WebViewPanel::WebViewPanel(wxWindow *parent, const wxString& default_url, const 
 #ifdef DEBUG_URL_PANEL
     // Create the Tools menu
     m_tools_menu = new wxMenu();
-    wxMenuItem* viewSource = m_tools_menu->Append(wxID_ANY, _L("View Source"));
-    wxMenuItem* viewText = m_tools_menu->Append(wxID_ANY, _L("View Text"));
+    wxMenuItem* viewSource = m_tools_menu->Append(wxID_ANY, "View Source");
+    wxMenuItem* viewText = m_tools_menu->Append(wxID_ANY, "View Text");
     m_tools_menu->AppendSeparator();
 
     wxMenu* script_menu = new wxMenu;
-   
-    m_script_custom = script_menu->Append(wxID_ANY, "Custom script");
-    m_tools_menu->AppendSubMenu(script_menu, _L("Run Script"));
-    wxMenuItem* addUserScript = m_tools_menu->Append(wxID_ANY, _L("Add user script"));
-    wxMenuItem* setCustomUserAgent = m_tools_menu->Append(wxID_ANY, _L("Set custom user agent"));
 
-    m_context_menu = m_tools_menu->AppendCheckItem(wxID_ANY, _L("Enable Context Menu"));
-    m_dev_tools = m_tools_menu->AppendCheckItem(wxID_ANY, _L("Enable Dev Tools"));
+    m_script_custom = script_menu->Append(wxID_ANY, "Custom script");
+    m_tools_menu->AppendSubMenu(script_menu, "Run Script");
+    wxMenuItem* addUserScript = m_tools_menu->Append(wxID_ANY, "Add user script");
+    wxMenuItem* setCustomUserAgent = m_tools_menu->Append(wxID_ANY, "Set custom user agent");
+
+    m_context_menu = m_tools_menu->AppendCheckItem(wxID_ANY, "Enable Context Menu");
+    m_dev_tools = m_tools_menu->AppendCheckItem(wxID_ANY, "Enable Dev Tools");
 
 #endif
 
@@ -129,29 +154,6 @@ WebViewPanel::WebViewPanel(wxWindow *parent, const wxString& default_url, const 
 #endif
     //Connect the idle events
     Bind(wxEVT_IDLE, &WebViewPanel::on_idle, this);
- }
-
-WebViewPanel::~WebViewPanel()
-{
-    SetEvtHandlerEnabled(false);
-#ifdef DEBUG_URL_PANEL
-    delete m_tools_menu;
-#endif
-}
-
-
-void WebViewPanel::load_url(const wxString& url)
-{
-    if (!m_browser)
-        return;
-
-    this->Show();
-    this->Raise();
-#ifdef DEBUG_URL_PANEL
-    m_url->SetLabelText(url);
-#endif
-    m_browser->LoadURL(url);
-    m_browser->SetFocus();
 }
 
 void WebViewPanel::load_default_url_delayed()
@@ -258,6 +260,10 @@ void WebViewPanel::on_navigation_request(wxWebViewEvent &evt)
 {
 }
 
+void WebViewPanel::on_page_will_load()
+{
+}
+
 /**
     * Invoked when user selects the "View Source" menu item
     */
@@ -318,7 +324,7 @@ void WebViewPanel::run_script(const wxString& javascript)
     // Remember the script we run in any case, so the next time the user opens
     // the "Run Script" dialog box, it is shown there for convenient updating.
     m_javascript = javascript;
-    BOOST_LOG_TRIVIAL(debug) << "RunScript " << javascript;
+    BOOST_LOG_TRIVIAL(debug) << "RunScript " << javascript << "\n";
     m_browser->RunScriptAsync(javascript);
 }
 
@@ -353,7 +359,9 @@ void WebViewPanel::on_add_user_script(wxCommandEvent& WXUNUSED(evt))
     if (dialog.ShowModal() != wxID_OK)
         return;
 
-    if (!m_browser->AddUserScript(dialog.GetValue()))
+    const wxString& javascript = dialog.GetValue();
+    BOOST_LOG_TRIVIAL(debug) << "RunScript " << javascript << "\n";
+    if (!m_browser->AddUserScript(javascript))
         wxLogError("Could not add user script");
 }
 
@@ -443,7 +451,7 @@ case type: \
     BOOST_LOG_TRIVIAL(error) << "WebViewPanel error: " << category;
     load_error_page();
 #ifdef DEBUG_URL_PANEL
-    m_info->ShowMessage(_L("An error occurred loading ") + evt.GetURL() + "\n" +
+    m_info->ShowMessage(wxString("An error occurred loading ") + evt.GetURL() + "\n" +
         "'" + category + "'", wxICON_ERROR);
 #endif
 }
@@ -478,6 +486,7 @@ ConnectRequestHandler::ConnectRequestHandler()
     m_actions["SELECT_PRINTER"] = std::bind(&ConnectRequestHandler::on_connect_action_select_printer, this, std::placeholders::_1);
     m_actions["PRINT"] = std::bind(&ConnectRequestHandler::on_connect_action_print, this, std::placeholders::_1);
     m_actions["REQUEST_OPEN_IN_BROWSER"] = std::bind(&ConnectRequestHandler::on_connect_action_request_open_in_browser, this, std::placeholders::_1);
+    m_actions["ERROR"] = std::bind(&ConnectRequestHandler::on_connect_action_error, this, std::placeholders::_1);
 }
 ConnectRequestHandler::~ConnectRequestHandler()
 {
@@ -514,6 +523,11 @@ void ConnectRequestHandler::handle_message(const std::string& message)
     if (m_actions.find(action_string) != m_actions.end()) {
         m_actions[action_string](message);
     }
+}
+
+void ConnectRequestHandler::on_connect_action_error(const std::string &message_data)
+{
+    BOOST_LOG_TRIVIAL(error) << "WebKit runtime error: " << message_data;
 }
 
 void ConnectRequestHandler::resend_config()
@@ -560,10 +574,26 @@ ConnectWebViewPanel::ConnectWebViewPanel(wxWindow* parent)
 {  
     //m_browser->RegisterHandler(wxSharedPtr<wxWebViewHandler>(new WebViewHandler("https")));
 
+    wxGetApp().plater()->Bind(EVT_UA_ID_USER_SUCCESS, &ConnectWebViewPanel::on_user_token, this);
+}
+
+ConnectWebViewPanel::~ConnectWebViewPanel()
+{
+    m_browser->Unbind(EVT_UA_ID_USER_SUCCESS, &ConnectWebViewPanel::on_user_token, this);
+}
+
+wxString ConnectWebViewPanel::get_login_script(bool refresh)
+{
     Plater* plater = wxGetApp().plater();
-    m_browser->AddUserScript(wxString::Format(
+    const std::string& access_token = plater->get_user_account()->get_access_token();
+    assert(!access_token.empty());
+    auto javascript = wxString::Format(
 
 #if AUTH_VIA_FETCH_OVERRIDE
+        refresh
+            ?
+            "window.__access_token = '%s';window.__access_token_version = (window.__access_token_version || 0) + 1;console.log('Updated Auth token', window.__access_token);"
+            :
         /*
          * Notes:
          * - The fetch() function has two distinct prototypes (i.e. input args):
@@ -594,50 +624,55 @@ ConnectWebViewPanel::ConnectWebViewPanel(wxWindow* parent)
             window.__access_token_version = 0;
         )",
 #else
-    R"(
+        R"(
         console.log('Preparing login');
-        window.fetch('/slicer/login', {method: 'POST', headers: {Authorization: 'Bearer %s'}})
-            .then((resp) => {
+        function errorHandler(err) {
+            const msg = {
+                action: 'ERROR',
+                error: JSON.stringify(err),
+                critical: false
+            };
+            console.error('Login error occurred', msg);
+            window._prusaSlicer.postMessage(msg);
+        };
+        window.fetch('/slicer/loginx', {method: 'POST', headers: {Authorization: 'Bearer %s'}})
+            .then(function (resp) {
                 console.log('Login resp', resp);
-                resp.text().then((json) => console.log('Login resp body', json));
-            });
+                resp.text()
+                    .then(function (json) { console.log('Login resp body', json); })
+                    .then(function (body) {
+                        if (resp.status >= 400) errorHandler({status: resp.status, body});
+                    });
+            })
+            .catch(errorHandler);
         )",
 #endif
-        plater->get_user_account()->get_access_token()
-    ));
-    plater->Bind(EVT_UA_ID_USER_SUCCESS, &ConnectWebViewPanel::on_user_token, this);
+        access_token
+    );
+    return javascript;
 }
 
-ConnectWebViewPanel::~ConnectWebViewPanel()
+void ConnectWebViewPanel::on_page_will_load()
 {
-    m_browser->Unbind(EVT_UA_ID_USER_SUCCESS, &ConnectWebViewPanel::on_user_token, this);
+    auto javascript = get_login_script(false);
+    BOOST_LOG_TRIVIAL(debug) << "RunScript " << javascript << "\n";
+    m_browser->AddUserScript(javascript);
 }
 
 void ConnectWebViewPanel::on_user_token(UserAccountSuccessEvent& e)
 {
     e.Skip();
-    wxString javascript = wxString::Format(
-#if AUTH_VIA_FETCH_OVERRIDE
-        "window.__access_token = '%s';window.__access_token_version = (window.__access_token_version || 0) + 1;console.log('Updated Auth token', window.__access_token);",
-#else
-        R"(
-        console.log('Preparing login');
-        window.fetch('/slicer/login', {method: 'POST', headers: {Authorization: 'Bearer %s'}})
-            .then((resp) => {
-                console.log('Login resp', resp);
-                resp.text().then((json) => console.log('Login resp body', json));
-            });
-        )",
-#endif
-        wxGetApp().plater()->get_user_account()->get_access_token()
-    );
+    auto access_token = wxGetApp().plater()->get_user_account()->get_access_token();
+    assert(!access_token.empty());
+    wxString javascript = get_login_script(true);
     //m_browser->AddUserScript(javascript, wxWEBVIEW_INJECT_AT_DOCUMENT_END);
+    BOOST_LOG_TRIVIAL(debug) << "RunScript " << javascript << "\n";
     m_browser->RunScriptAsync(javascript);
 }
 
 void ConnectWebViewPanel::on_script_message(wxWebViewEvent& evt)
 {
-    BOOST_LOG_TRIVIAL(debug) << "recieved message from PrusaConnect FE: " << evt.GetString();
+    BOOST_LOG_TRIVIAL(debug) << "received message from Prusa Connect FE: " << evt.GetString();
     handle_message(into_u8(evt.GetString()));
 }
 void ConnectWebViewPanel::on_navigation_request(wxWebViewEvent &evt) 
@@ -654,23 +689,41 @@ void ConnectWebViewPanel::on_navigation_request(wxWebViewEvent &evt)
         evt.Veto();
     }
 }
+
+void ConnectWebViewPanel::on_connect_action_error(const std::string &message_data)
+{
+    ConnectRequestHandler::on_connect_action_error(message_data);
+    // TODO: make this more user friendly (and make sure only once opened if multiple errors happen)
+//    MessageDialog dialog(
+//        this,
+//        GUI::format_wxstr(_L("WebKit Runtime Error encountered:\n\n%s"), message_data),
+//        "WebKit Runtime Error",
+//        wxOK
+//    );
+//    dialog.ShowModal();
+
+}
+
 void ConnectWebViewPanel::logout()
 {
     wxString script = L"window._prusaConnect_v1.logout()";
     run_script(script);
 
     Plater* plater = wxGetApp().plater();
-    m_browser->RunScript(wxString::Format(
-        R"(
+    auto javascript = wxString::Format(
+                     R"(
             console.log('Preparing login');
             window.fetch('/slicer/logout', {method: 'POST', headers: {Authorization: 'Bearer %s'}})
-                .then((resp) => {
+                .then(function (resp){
                     console.log('Login resp', resp);
-                    resp.text().then((json) => console.log('Login resp body', json));
+                    resp.text().then(function (json) { console.log('Login resp body', json) });
                 });
         )",
-        plater->get_user_account()->get_access_token()
-    ));
+                     plater->get_user_account()->get_access_token()
+    );
+    BOOST_LOG_TRIVIAL(debug) << "RunScript " << javascript << "\n";
+    m_browser->RunScript(javascript);
+
 }
 
 void ConnectWebViewPanel::sys_color_changed()
@@ -729,6 +782,7 @@ void PrinterWebViewPanel::send_api_key()
     key);
 
     m_browser->RemoveAllUserScripts();
+    BOOST_LOG_TRIVIAL(debug) << "RunScript " << script << "\n";
     m_browser->AddUserScript(script);
     m_browser->Reload();
     
@@ -754,7 +808,9 @@ void PrinterWebViewPanel::send_credentials()
 )", usr, psk);
     
     m_browser->RemoveAllUserScripts();
+    BOOST_LOG_TRIVIAL(debug) << "RunScript " << script << "\n";
     m_browser->AddUserScript(script);
+    
     m_browser->Reload();
     
 }
@@ -819,19 +875,19 @@ WebViewDialog::WebViewDialog(wxWindow* parent, const wxString& url, const wxStri
 #ifdef DEBUG_URL_PANEL
     // Create the Tools menu
     m_tools_menu = new wxMenu();
-    wxMenuItem* viewSource = m_tools_menu->Append(wxID_ANY, _L("View Source"));
-    wxMenuItem* viewText = m_tools_menu->Append(wxID_ANY, _L("View Text"));
+    wxMenuItem* viewSource = m_tools_menu->Append(wxID_ANY, "View Source");
+    wxMenuItem* viewText = m_tools_menu->Append(wxID_ANY, "View Text");
     m_tools_menu->AppendSeparator();
 
     wxMenu* script_menu = new wxMenu;
 
     m_script_custom = script_menu->Append(wxID_ANY, "Custom script");
-    m_tools_menu->AppendSubMenu(script_menu, _L("Run Script"));
-    wxMenuItem* addUserScript = m_tools_menu->Append(wxID_ANY, _L("Add user script"));
-    wxMenuItem* setCustomUserAgent = m_tools_menu->Append(wxID_ANY, _L("Set custom user agent"));
+    m_tools_menu->AppendSubMenu(script_menu, "Run Script");
+    wxMenuItem* addUserScript = m_tools_menu->Append(wxID_ANY, "Add user script");
+    wxMenuItem* setCustomUserAgent = m_tools_menu->Append(wxID_ANY, "Set custom user agent");
 
-    m_context_menu = m_tools_menu->AppendCheckItem(wxID_ANY, _L("Enable Context Menu"));
-    m_dev_tools = m_tools_menu->AppendCheckItem(wxID_ANY, _L("Enable Dev Tools"));
+    m_context_menu = m_tools_menu->AppendCheckItem(wxID_ANY, "Enable Context Menu");
+    m_dev_tools = m_tools_menu->AppendCheckItem(wxID_ANY, "Enable Dev Tools");
 
 #endif
     
@@ -860,6 +916,8 @@ WebViewDialog::WebViewDialog(wxWindow* parent, const wxString& url, const wxStri
     Bind(wxEVT_MENU, &WebViewDialog::on_run_script_custom, this, m_script_custom->GetId());
     Bind(wxEVT_MENU, &WebViewDialog::on_add_user_script, this, addUserScript->GetId());
 #endif
+    Bind(wxEVT_WEBVIEW_NAVIGATING, &WebViewDialog::on_navigation_request, this, m_browser->GetId());
+    Bind(wxEVT_WEBVIEW_LOADED, &WebViewDialog::on_loaded, this, m_browser->GetId());
 
     Bind(wxEVT_CLOSE_WINDOW, ([this](wxCloseEvent& evt) { EndModal(wxID_CANCEL); }));
 
@@ -941,6 +999,11 @@ void WebViewDialog::on_reload_button(wxCommandEvent& WXUNUSED(evt))
     if (!m_browser)
         return;
     m_browser->Reload();
+}
+
+
+void WebViewDialog::on_navigation_request(wxWebViewEvent &evt) 
+{
 }
 
 void WebViewDialog::on_script_message(wxWebViewEvent& evt)
@@ -1031,7 +1094,9 @@ void WebViewDialog::on_add_user_script(wxCommandEvent& WXUNUSED(evt))
     if (dialog.ShowModal() != wxID_OK)
         return;
 
-    if (!m_browser->AddUserScript(dialog.GetValue()))
+    const wxString& javascript = dialog.GetValue();
+    BOOST_LOG_TRIVIAL(debug) << "RunScript " << javascript <<"\n";
+    if (!m_browser->AddUserScript(javascript))
         wxLogError("Could not add user script");
 }
 
@@ -1138,7 +1203,7 @@ void WebViewDialog::run_script(const wxString& javascript)
     // Remember the script we run in any case, so the next time the user opens
     // the "Run Script" dialog box, it is shown there for convenient updating.
     m_javascript = javascript;
-    BOOST_LOG_TRIVIAL(debug) << "RunScript " << javascript;
+    BOOST_LOG_TRIVIAL(debug) << "RunScript " << javascript << "\n";
     m_browser->RunScriptAsync(javascript);
 }
 
@@ -1248,6 +1313,38 @@ void PrinterPickWebViewDialog::request_compatible_printers_SLA()
     wxString script = GUI::format_wxstr("window._prusaConnect_v1.requestCompatiblePrinter(%1%)", request);
     run_script(script);
 }
+LoginWebViewDialog::LoginWebViewDialog(wxWindow *parent, std::string &ret_val, const wxString& url) 
+    : WebViewDialog(parent
+        , url
+        , _L("Log in dialog")
+        , wxSize(parent->GetClientSize().x / 3, parent->GetClientSize().y / 4 * 3)
+        , {})
+    , m_ret_val(ret_val)
+{
+    Centre();
+}
+void LoginWebViewDialog::on_navigation_request(wxWebViewEvent &evt)
+{
+    wxString url = evt.GetURL();
+    if (url.starts_with(L"prusaslicer")) {
+        evt.Veto();
+        m_ret_val = into_u8(url);
+        EndModal(wxID_OK);
+    }
+}
 
+LogoutWebViewDialog::LogoutWebViewDialog(wxWindow *parent)
+    : WebViewDialog(parent
+        ,  L"https://account.prusa3d.com/logout"
+        , _L("Logout dialog")
+        , wxSize(std::max(parent->GetClientSize().x / 4, 10 * wxGetApp().em_unit()), std::max(parent->GetClientSize().y / 4, 10 * wxGetApp().em_unit()))
+        , {})
+{
+    Centre();
+}
+void LogoutWebViewDialog::on_loaded(wxWebViewEvent &evt)
+{
+     EndModal(wxID_OK);
+}
 } // GUI
 } // Slic3r

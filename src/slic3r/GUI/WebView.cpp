@@ -7,7 +7,7 @@
 
 #include <boost/log/trivial.hpp>
 
-wxWebView* WebView::CreateWebView(wxWindow * parent, const wxString& url, std::vector<std::string>& message_handlers)
+wxWebView* WebView::CreateWebView(wxWindow * parent, const wxString& url, const std::vector<std::string>& message_handlers)
 {
 #if wxUSE_WEBVIEW_EDGE
     bool backend_available = wxWebView::IsBackendAvailable(wxWebViewBackendEdge);

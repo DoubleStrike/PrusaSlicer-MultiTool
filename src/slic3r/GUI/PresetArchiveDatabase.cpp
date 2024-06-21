@@ -33,7 +33,7 @@ bool unzip_repository(const fs::path& source_path, const fs::path& target_path)
 	mz_zip_archive archive;
 	mz_zip_zero_struct(&archive);
 	if (!open_zip_reader(&archive, source_path.string())) {
-		BOOST_LOG_TRIVIAL(error) << "Couldn't open zipped Archive Repository. " << source_path;
+		BOOST_LOG_TRIVIAL(error) << "Couldn't open zipped Archive source. " << source_path;
 		return false;
 	}
 	size_t num_files = mz_zip_reader_get_num_files(&archive);
@@ -70,21 +70,21 @@ bool extract_repository_header(const pt::ptree& ptree, ArchiveRepository::Reposi
 	if (const auto name = ptree.get_optional<std::string>("name"); name){
 		data.name = *name;
 	} else {
-		BOOST_LOG_TRIVIAL(error) << "Failed to find \"name\" parameter in repository manifest. Repository is invalid.";
+		BOOST_LOG_TRIVIAL(error) << "Failed to find \"name\" parameter in source manifest. Source is invalid.";
 		return false;
 	}
 	if (const auto id = ptree.get_optional<std::string>("id"); id) {
 		data.id = *id;
 	}
 	else {
-		BOOST_LOG_TRIVIAL(error) << "Failed to find \"id\" parameter in repository manifest. Repository is invalid.";
+		BOOST_LOG_TRIVIAL(error) << "Failed to find \"id\" parameter in source manifest. Source is invalid.";
 		return false;
 	}
 	if (const auto url = ptree.get_optional<std::string>("url"); url) {
 		data.url = *url;
 	}
 	else {
-		BOOST_LOG_TRIVIAL(error) << "Failed to find \"url\" parameter in repository manifest. Repository is invalid.";
+		BOOST_LOG_TRIVIAL(error) << "Failed to find \"url\" parameter in source manifest. Source is invalid.";
 		return false;
 	}
 	// optional atributes
@@ -140,13 +140,13 @@ bool extract_local_archive_repository( ArchiveRepository::RepositoryManifest& ma
 		pt::ptree ptree;
 		pt::read_json(manifest_path.string(), ptree);
 		if (!extract_repository_header(ptree, manifest_data)) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to load repository: " << manifest_data.tmp_path;
+            BOOST_LOG_TRIVIAL(error) << "Failed to load source " << manifest_data.tmp_path;
 			return false;
 		}
 	}
 	catch (const std::exception& e)
 	{
-		BOOST_LOG_TRIVIAL(error) << "Failed to read repository manifest JSON " << manifest_path << ". reason: " << e.what();
+		BOOST_LOG_TRIVIAL(error) << "Failed to read source manifest JSON " << manifest_path << ". reason: " << e.what();
 		return false;
 	}
 	return true;
@@ -353,7 +353,7 @@ bool PresetArchiveDatabase::set_selected_repositories(const std::vector<std::str
             if (!archive->is_extracted()) {
                 // non existent local repo since start selected
                 msg = GUI::format(
-                    _L("Cannot select offline repository from path: %1%. It was not extracted."),
+                    _L("Cannot select local source from path: %1%. It was not extracted."),
                     archive->get_manifest().source_path
                 );
                 return false;
@@ -362,7 +362,7 @@ bool PresetArchiveDatabase::set_selected_repositories(const std::vector<std::str
 		}
 		assert(!id.empty());
 		if (auto it = used_set.find(id); it != used_set.end()) {
-			msg = GUI::format(_L("Cannot select two repositories with the same id: %1% and %2%"), it->second, name);
+			msg = GUI::format(_L("Cannot select two sources with the same id: %1% and %2%"), it->second, name);
 			return false;
 		}
 		used_set.emplace(id, name);
@@ -380,12 +380,12 @@ bool PresetArchiveDatabase::set_selected_repositories(const std::vector<std::str
 bool PresetArchiveDatabase::extract_archives_with_check(std::string &msg)
 {
     extract_local_archives();
-    for (auto &pair : m_selected_repositories_uuid) {
+    for (const std::pair<std::string, bool>& pair : m_selected_repositories_uuid) {
         if (!pair.second) {
             continue;
         }
-        std::string uuid = pair.first;
-        auto compare_repo = [uuid](const std::unique_ptr<ArchiveRepository> &repo) {
+        const std::string uuid = pair.first;
+        auto compare_repo = [&uuid](const std::unique_ptr<ArchiveRepository> &repo) {
             return repo->get_uuid() == uuid;
         };
 
@@ -393,10 +393,7 @@ bool PresetArchiveDatabase::extract_archives_with_check(std::string &msg)
         assert(archives_it != m_archive_repositories.end());
         if (!archives_it->get()->is_extracted()) {
             // non existent local repo since start selected
-            msg += GUI::format(
-                _L("Offline repository from path: %1% was not extracted.\n"),
-                archives_it->get()->get_manifest().source_path
-            );
+            msg += std::string(msg.empty() ? "" : "\n") + archives_it->get()->get_manifest().source_path.string();
         }
     }
     return msg.empty();
@@ -504,7 +501,7 @@ void PresetArchiveDatabase::load_app_manifest_json()
 	}
 	else {
 		assert(true);
-		BOOST_LOG_TRIVIAL(error) << "Failed to read Archive Repository Manifest at " << path;
+		BOOST_LOG_TRIVIAL(error) << "Failed to read Archive Source Manifest at " << path;
 	}
 	if (data.empty()) {
 		return;
@@ -549,7 +546,7 @@ void PresetArchiveDatabase::load_app_manifest_json()
 			std::string uuid = get_next_uuid();
 			if (!extract_repository_header(subtree.second, manifest)) {
 				assert(true);
-				BOOST_LOG_TRIVIAL(error) << "Failed to read one of repository headers.";
+				BOOST_LOG_TRIVIAL(error) << "Failed to read one of source headers.";
 				continue;
 			}
             // "selected" flag
@@ -879,7 +876,7 @@ bool sync_inner(std::string& manifest)
     http
 		.timeout_max(30)
 		.on_error([&](std::string body, std::string error, unsigned http_status) {
-			BOOST_LOG_TRIVIAL(error) << "Failed to get online archive repository manifests: "<< body << " ; " << error << " ; " << http_status;
+			BOOST_LOG_TRIVIAL(error) << "Failed to get online archive source manifests: "<< body << " ; " << error << " ; " << http_status;
 			ret = false;
 		})
 		.on_complete([&](std::string body, unsigned /* http_status */) {

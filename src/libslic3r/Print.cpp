@@ -235,6 +235,8 @@ bool Print::invalidate_state_by_config_options(const ConfigOptionResolver & /* n
             || opt_key == "filament_multitool_ramming_volume"
             || opt_key == "filament_multitool_ramming_flow"
             || opt_key == "filament_max_volumetric_speed"
+            || opt_key == "filament_infill_max_speed"
+            || opt_key == "filament_infill_max_crossing_speed"
             || opt_key == "gcode_flavor"
             || opt_key == "high_current_on_filament_swap"
             || opt_key == "infill_first"

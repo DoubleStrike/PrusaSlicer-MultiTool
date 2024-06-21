@@ -62,10 +62,11 @@ public:
     void    SetCtrlPos(ImVec2 pos)          { m_pos = pos; }
     void    SetCtrlSize(ImVec2 size)        { m_size = size; }
     void    SetCtrlScale(float scale)       { m_draw_opts.scale = scale; }
-    void    Init(const ImVec2& pos, const ImVec2& size, float scale) {
+    void    Init(const ImVec2& pos, const ImVec2& size, float scale, bool has_ruler = false) {
                                           m_pos = pos; 
                                           m_size = size;
                                           m_draw_opts.scale = scale;
+                                          m_draw_opts.has_ruler = has_ruler;
     }
     ImVec2  GetCtrlSize()               { return m_size; }
     ImVec2  GetCtrlPos()                { return m_pos; }
@@ -90,6 +91,8 @@ public:
     bool    render();
 
     std::string get_label(int pos) const;
+    float   rounding() const            { return m_draw_opts.rounding(); }
+    ImVec2  left_dummy_sz() const       { return m_draw_opts.text_dummy_sz() + m_draw_opts.text_padding(); }
 
     void    set_get_label_on_move_cb(std::function<std::string(int)> cb)                    { m_cb_get_label_on_move = cb; }
     void    set_get_label_cb(std::function<std::string(int)> cb)                            { m_cb_get_label = cb; }
@@ -100,12 +103,13 @@ private:
 
     struct DrawOptions {
         float       scale                   { 1.f }; // used for Retina on osx
+        bool        has_ruler               { false };
 
-        ImVec2      dummy_sz()           const { return ImVec2(24.0f, 16.0f) * scale; }
+        ImVec2      dummy_sz()           const { return ImVec2(has_ruler ? 48.0f : 24.0f, 16.0f) * scale; }
         ImVec2      thumb_dummy_sz()     const { return ImVec2(17.0f, 17.0f) * scale; }
         ImVec2      groove_sz()          const { return ImVec2(4.0f,   4.0f) * scale; }
         ImVec2      draggable_region_sz()const { return ImVec2(20.0f, 19.0f) * scale; }
-        ImVec2      text_dummy_sz()      const { return ImVec2(50.0f, 34.0f) * scale; }
+        ImVec2      text_dummy_sz()      const { return ImVec2(60.0f, 34.0f) * scale; }
         ImVec2      text_padding()       const { return ImVec2( 5.0f,  2.0f) * scale; }
 
         float       thumb_radius()       const { return 10.0f * scale; }
@@ -140,7 +144,8 @@ private:
 
     bool            m_rclick_on_selected_thumb{ false };
     bool            m_lclick_on_selected_thumb{ false };
-    ImVec2          m_active_thumb_center_on_lcklick;
+    bool            m_suppress_process_behavior{ false };
+    ImRect          m_active_thumb;
 
     bool            m_draw_lower_thumb{ true };
     bool            m_combine_thumbs  { false };

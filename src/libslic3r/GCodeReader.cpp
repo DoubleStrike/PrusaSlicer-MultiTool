@@ -131,6 +131,10 @@ bool GCodeReader::parse_file_raw_internal(const std::string &filename, ParseLine
 {
     FilePtr in{ boost::nowide::fopen(filename.c_str(), "rb") };
 
+    fseek(in.f, 0, SEEK_END);
+    const long file_size = ftell(in.f);
+    rewind(in.f);
+
     // Read the input stream 64kB at a time, extract lines and process them.
     std::vector<char> buffer(65536 * 10, 0);
     // Line buffer.
@@ -141,6 +145,7 @@ bool GCodeReader::parse_file_raw_internal(const std::string &filename, ParseLine
         size_t cnt_read = ::fread(buffer.data(), 1, buffer.size(), in.f);
         if (::ferror(in.f))
             return false;
+
         bool eof       = cnt_read == 0;
         auto it        = buffer.begin();
         auto it_bufend = buffer.begin() + cnt_read;
@@ -178,6 +183,8 @@ bool GCodeReader::parse_file_raw_internal(const std::string &filename, ParseLine
         if (eof)
             break;
         file_pos += cnt_read;
+        if (m_progress_callback != nullptr)
+            m_progress_callback(static_cast<float>(file_pos) / static_cast<float>(file_size));
     }
     return true;
 }

@@ -136,7 +136,7 @@ bool PrusaConnectNew::upload(PrintHostUpload upload_data, ProgressFn progress_fn
     std::string init_out;
     if (!init_upload(upload_data, init_out))
     {
-        error_fn(std::move(GUI::from_u8(init_out)));
+        error_fn(GUI::from_u8(init_out));
         return false;
     }
  
@@ -149,14 +149,14 @@ bool PrusaConnectNew::upload(PrintHostUpload upload_data, ProgressFn progress_fn
         pt::read_json(ss, ptree);
         const auto id_opt = ptree.get_optional<std::string>("id");
         if (!id_opt) {
-            error_fn(std::move(_L("Failed to extract upload id from server reply.")));
+            error_fn(wxString("Failed to extract upload id from server reply."));
             return false;
         }
         upload_id = *id_opt;
     }
     catch (const std::exception&)
     {
-        error_fn(std::move(_L("Failed to extract upload id from server reply.")));
+        error_fn(wxString("Failed to extract upload id from server reply."));
         return false;
     }
     const std::string name = get_name();
@@ -315,11 +315,11 @@ bool PrusaConnectNew::get_storage(wxArrayString& storage_path, wxArrayString& st
 
 wxString PrusaConnectNew::get_test_ok_msg() const
 {
-    return _L("Test OK.");
+    return _L("Test passed.");
 }
 wxString PrusaConnectNew::get_test_failed_msg(wxString& msg) const
 {
-    return _L("Test NOK.");
+    return _L("Test failed.");
 }
 
 std::string PrusaConnectNew::get_team_id(const std::string& data) const

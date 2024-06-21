@@ -10,6 +10,7 @@
 // FIXME: extract absolute units -> em
 
 #include "ConfigWizard_private.hpp"
+#include "ConfigWizardWebViewPage.hpp"
 
 #include <algorithm>
 #include <numeric>
@@ -648,7 +649,7 @@ void PageWelcome::set_run_reason(ConfigWizard::RunReason run_reason)
 }
 
 PageUpdateManager::PageUpdateManager(ConfigWizard* parent_in)
-    : ConfigWizardPage(parent_in, _L("Manage Configuration Updates"), _L("Configuration Manager"))
+    : ConfigWizardPage(parent_in, _L("Configuration sources"), _L("Configuration Sources"))
 {
     this->SetFont(wxGetApp().normal_font());
 
@@ -656,7 +657,7 @@ PageUpdateManager::PageUpdateManager(ConfigWizard* parent_in)
 
     manager = std::make_unique<RepositoryUpdateUIManager>(this, wxGetApp().plater()->get_preset_archive_database(), em);
 
-    warning_text = new wxStaticText(this, wxID_ANY, _L("WARNING: Select at least one repository."));
+    warning_text = new wxStaticText(this, wxID_ANY, _L("WARNING: Select at least one source."));
     warning_text->SetFont(wxGetApp().bold_font());
     warning_text->Hide();
 
@@ -677,7 +678,7 @@ PageUpdateManager::PageUpdateManager(ConfigWizard* parent_in)
 
         auto revert_page_selection = [this]() -> void {
             CallAfter([this]() { 
-                wizard_p()->index->go_to(1); 
+                wizard_p()->index->go_to(this);
                 if (!this->IsShown())
                     this->Show();
             });
@@ -1888,7 +1889,7 @@ wxString repo_title(const std::string& repo_id, const std::string& repo_name)
 {
     if (repo_name.empty())
     {
-        return repo_id.empty() ? _L("Other Vendors") : format_wxstr(_L("%1% Vendors"), repo_id);
+        return repo_id.empty() ? wxString::FromUTF8("Unknown repo") : format_wxstr("Unnamed repo (ID %1%)", repo_id);
     }
     return repo_name;
 }
@@ -1947,12 +1948,12 @@ PageVendors::PageVendors(ConfigWizard* parent, std::string repo_id /*= wxEmptySt
                     }
 
                 if (!user_presets_list.IsEmpty()) {
-                    wxString message = format_wxstr(_L_PLURAL("Following user preset has a same name as one of added system presets from '%1%' vendor:\n"
-                                                              "%2%Please note that this user preset will be rewrite by system preset.\n\n"
-                                                              "Do you still wish to add presets from '%1%'?",
-                                                              "Following user presets have same names as some of added system presets from '%1%' vendor:\n"
-                                                              "%2%Please note that these user presets will be rewrite by system presets.\n\n"
-                                                              "Do you still wish to add presets from '%1%'?",
+                    wxString message = format_wxstr(_L_PLURAL("Existing user preset '%2%' has the same name as one of new system presets from vendor '%1%'.\n"
+                                                              "Please note that this user preset will be rewritten by the system preset.\n\n"
+                                                              "Do you still wish to add presets from vendor '%1%'?",
+                                                              "Existing user presets (%2%) have the same names as some of new system presets from vendor '%1%'.\n"
+                                                              "Please note that these user presets will be rewritten by the system presets.\n\n"
+                                                              "Do you still wish to add presets from vendor '%1%'?",
                                                     user_presets_cnt), vendor->name, user_presets_list);
 
                     MessageDialog msg(this->GetParent(), message, _L("Notice"), wxYES_NO);
@@ -2586,6 +2587,7 @@ void ConfigWizard::priv::load_pages()
     index->clear();
 
     index->add_page(page_welcome);
+    index->add_page(page_login);
     index->add_page(page_update_manager);
 
     if (is_config_from_archive) {
@@ -2772,7 +2774,7 @@ void ConfigWizard::priv::load_vendors()
 
 void ConfigWizard::priv::add_page(ConfigWizardPage *page)
 {
-    const int proportion = (page->shortname == _L("Filaments")) || (page->shortname == _L("SLA Materials")) ? 1 : 0;
+    const int proportion = (page == page_login || page == page_filaments || page == page_sla_materials);
     hscroll_sizer->Add(page, proportion, wxEXPAND);
     all_pages.push_back(page);
 }
@@ -3775,9 +3777,10 @@ bool ConfigWizard::priv::can_clear_printer_pages()
     if (msg.IsEmpty())
         return true;
 
-    wxString message = format_wxstr( _L("Next pages will be deleted after configuration update:%1%\n"
-                                        "Installed presets will be uninstalled.\n"
-                                        "Would you like to process it?"), "\n\n"+ msg);
+    // TRN: %1% contains list of pages to be removed, each on its own line and ending with a line break.
+    wxString message = format_wxstr( _L("Following Configuration Wizard pages will be removed after the configuration update:\n\n%1%\n"
+                                        "Installed presets for the respective printers will also be removed.\n"
+                                        "Do you want to continue?"), msg);
 
     MessageDialog msg_dlg(this->q, message, _L("Notice"), wxYES_NO);
     return msg_dlg.ShowModal() == wxID_YES;
@@ -3980,6 +3983,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     wxGetApp().SetWindowVariantForButton(p->btn_cancel);
 
     p->add_page(p->page_welcome = new PageWelcome(this));
+    p->add_page(p->page_login = new ConfigWizardWebViewPage(this));
     p->add_page(p->page_update_manager = new PageUpdateManager(this));
 
     // other pages will be loaded later after confirm repositories selection
@@ -4032,8 +4036,9 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
         	// In that case don't leave the page and the function above queried the user whether to install default materials.
             return;
         if (active_page == p->page_update_manager && p->index->active_is_last()) {
+            size_t next_active = p->index->pages_cnt();
             p->page_update_manager->Hide();
-            p->index->go_to(2);
+            p->index->go_to(next_active);
             return;
         }
         this->p->index->go_next();
@@ -4128,6 +4133,16 @@ bool ConfigWizard::run(RunReason reason, StartPage start_page)
     } else {
         BOOST_LOG_TRIVIAL(info) << "ConfigWizard cancelled";
         return false;
+    }
+}
+
+void ConfigWizard::update_login()
+{
+    if (p->page_login && p->page_login->login_changed()) {
+        // repos changed - we need rebuild
+        wxGetApp().plater()->get_preset_archive_database()->sync_blocking();
+        // now change PageUpdateManager
+        p->page_update_manager->manager->update();
     }
 }
 

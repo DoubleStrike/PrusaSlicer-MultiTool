@@ -25,9 +25,7 @@
 // Serialization through the Cereal library
 #include <cereal/access.hpp>
 
-namespace Slic3r { 
-
-namespace Geometry {
+namespace Slic3r::Geometry {
 
 // Generic result of an orientation predicate.
 enum Orientation
@@ -553,6 +551,22 @@ Vec<3, T> spheric_to_dir(const Pair &v)
     return spheric_to_dir<T>(plr, azm);
 }
 
-} } // namespace Slicer::Geometry
+/**
+ * Checks if a given point is inside a corner of a polygon.
+ *
+ * The corner of a polygon is defined by three points A, B, C in counterclockwise order.
+ *
+ * Adapted from CuraEngine LinearAlg2D::isInsideCorner by Tim Kuipers @BagelOrb
+ * and @Ghostkeeper.
+ *
+ * @param a The first point of the corner.
+ * @param b The second point of the corner (the common vertex of the two edges forming the corner).
+ * @param c The third point of the corner.
+ * @param query_point The point to be checked if is inside the corner.
+ * @return True if the query point is inside the corner, false otherwise.
+ */
+bool is_point_inside_polygon_corner(const Point &a, const Point &b, const Point &c, const Point &query_point);
+
+} // namespace Slic3r::Geometry
 
 #endif

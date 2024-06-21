@@ -98,6 +98,7 @@ struct BundleMap : std::map<std::string /* = vendor ID */, Bundle>
 struct Materials;
 
 class RepositoryUpdateUIManager;
+class ConfigWizardWebViewPage;
 
 struct PrinterPickerEvent;
 
@@ -549,6 +550,7 @@ public:
     size_t active_item() const { return item_active; }
     ConfigWizardPage* active_page() const;
     bool active_is_last() const { return item_active < items.size() && item_active == last_page; }
+    size_t pages_cnt()    const { return items.size(); }
 
     void go_prev();
     void go_next();
@@ -631,6 +633,7 @@ struct ConfigWizard::priv
     wxButton *btn_cancel = nullptr;
 
     PageWelcome      *page_welcome = nullptr;
+    ConfigWizardWebViewPage *page_login = nullptr;
     PageUpdateManager*page_update_manager = nullptr;
     PageMaterials    *page_filaments = nullptr;
     PageMaterials    *page_sla_materials = nullptr;

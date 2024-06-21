@@ -218,6 +218,15 @@ void AppConfig::set_defaults()
     if (get("auth_login_dialog_confirmed").empty())
         set("auth_login_dialog_confirmed", "0");
 
+    if (get("show_estimated_times_in_dbl_slider").empty())
+        set("show_estimated_times_in_dbl_slider", "1");
+
+    if (get("show_ruler_in_dbl_slider").empty())
+        set("show_ruler_in_dbl_slider", "0");
+
+    if (get("show_ruler_bg_in_dbl_slider").empty())
+        set("show_ruler_bg_in_dbl_slider", "1");
+
 #ifdef _WIN32
     if (get("use_legacy_3DConnexion").empty())
         set("use_legacy_3DConnexion", "0");

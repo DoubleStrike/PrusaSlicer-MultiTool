@@ -76,6 +76,7 @@ public:
 
     void SetSelection(int sel, bool force = false);
     void UpdateMode();
+    void ShowUserAccount(bool show);
     void Rescale();
     void OnColorsChanged();
     void UpdateModeMarkers();
@@ -322,6 +323,11 @@ public:
     void UpdateMode()
     {
         GetTopBarItemsCtrl()->UpdateMode();
+    }
+
+    void ShowUserAccount(bool show)
+    {
+        GetTopBarItemsCtrl()->ShowUserAccount(show);
     }
 
     void Rescale()
