@@ -545,6 +545,11 @@ bool ImGuiControl::draw_slider( int* higher_pos, int* lower_pos,
                 m_lclick_on_selected_thumb = true;
             }
         }
+
+        if (ImGui::ItemHoverable(active_thumb, id) && ImGui::IsMouseDragging(0)) {
+            // invalidate active thumb clicking
+            m_active_thumb = ImRect(0.f, 0.f, 0.f, 0.f);
+        }
     }
 
     // update thumb position
@@ -621,7 +626,8 @@ bool ImGuiControl::draw_slider( int* higher_pos, int* lower_pos,
     }
 
     // draw label on mouse move
-    draw_label(move_label, mouse_pos_rc, false, true);
+    if (m_show_move_label)
+        draw_label(move_label, mouse_pos_rc, false, true);
 
     return pos_changed;
 }

@@ -268,7 +268,7 @@ public:
     bool            suppress_round_corners() const;
     wxSize          get_min_size(wxWindow* display_win) const;
     int             get_max_font_pt_size();
-    float           toolbar_icon_scale(const bool is_limited = false) const;
+    float           toolbar_icon_scale(bool& is_custom) const;
     void            set_auto_toolbar_icon_scale(float scale) const;
     void            check_printer_presets();
 
@@ -293,7 +293,7 @@ public:
     bool            save_mode(const /*ConfigOptionMode*/int mode) ;
     void            update_mode();
 
-    wxMenu*         get_config_menu();
+    wxMenu*         get_config_menu(MainFrame* main_frame);
     bool            has_unsaved_preset_changes() const;
     bool            has_current_preset_changes() const;
     void            update_saved_preset_from_current_preset();

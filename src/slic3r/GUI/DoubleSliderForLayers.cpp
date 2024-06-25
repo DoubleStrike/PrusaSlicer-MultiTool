@@ -725,7 +725,7 @@ void DSForLayers::render_cog_menu()
                     m_cb_change_app_config("show_ruler_in_dbl_slider", m_show_ruler ? "1" : "0");
             }
 
-            if (ImGuiPureWrap::menu_item_with_icon(_u8L("Show backgroung").c_str(), "", icon_sz, 0, m_show_ruler_bg)) {
+            if (ImGuiPureWrap::menu_item_with_icon(_u8L("Show background").c_str(), "", icon_sz, 0, m_show_ruler_bg)) {
                 m_show_ruler_bg = !m_show_ruler_bg;
                 if (m_cb_change_app_config)
                     m_cb_change_app_config("show_ruler_bg_in_dbl_slider", m_show_ruler_bg ? "1" : "0");
@@ -969,8 +969,7 @@ void DSForLayers::Render(const int canvas_width, const int canvas_height, float 
 
 void DSForLayers::force_ruler_update()
 {
-    if (m_show_ruler)
-        m_ruler.invalidate();
+    m_ruler.invalidate();
 }
 
 bool DSForLayers::is_wipe_tower_layer(int tick) const

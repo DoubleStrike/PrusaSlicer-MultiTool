@@ -109,11 +109,6 @@ void AppConfig::set_defaults()
         if (!get("use_legacy_opengl").empty())
             erase("", "use_legacy_opengl");
 
-#ifdef __APPLE__
-        if (get("use_retina_opengl").empty())
-            set("use_retina_opengl", "1");
-#endif
-
         if (get("single_instance").empty())
             set("single_instance", 
 #ifdef __APPLE__
@@ -181,6 +176,11 @@ void AppConfig::set_defaults()
             set("associate_bgcode", "0");
 #endif // _WIN32
     }
+
+#ifdef __APPLE__
+    if (get("use_retina_opengl").empty())
+        set("use_retina_opengl", "1");
+#endif // __APPLE__
 
     if (get("seq_top_layer_only").empty())
         set("seq_top_layer_only", "1");

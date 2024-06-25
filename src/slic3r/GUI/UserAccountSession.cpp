@@ -162,9 +162,9 @@ void UserAccountSession::token_success_callback(const std::string& body)
         return;
     }
 
-    BOOST_LOG_TRIVIAL(info) << "access_token: " << access_token;
-    BOOST_LOG_TRIVIAL(info) << "refresh_token: " << refresh_token;
-    BOOST_LOG_TRIVIAL(info) << "shared_session_key: " << shared_session_key;
+    //BOOST_LOG_TRIVIAL(info) << "access_token: " << access_token;
+    //BOOST_LOG_TRIVIAL(info) << "refresh_token: " << refresh_token;
+    //BOOST_LOG_TRIVIAL(info) << "shared_session_key: " << shared_session_key;
 
     m_access_token = access_token;
     m_refresh_token = refresh_token;

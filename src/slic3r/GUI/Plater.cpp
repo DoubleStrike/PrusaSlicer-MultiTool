@@ -634,7 +634,7 @@ Plater::priv::priv(Plater *q, MainFrame *main_frame)
     background_process.set_thumbnail_cb([this](const ThumbnailsParams& params) { return this->generate_thumbnails(params, Camera::EType::Ortho); });
     background_process.set_slicing_completed_event(EVT_SLICING_COMPLETED);
     background_process.set_finished_event(EVT_PROCESS_COMPLETED);
-	background_process.set_export_began_event(EVT_EXPORT_BEGAN);
+    background_process.set_export_began_event(EVT_EXPORT_BEGAN);
     // Default printer technology for default config.
     background_process.select_technology(this->printer_technology);
     // Register progress callback from the Print class to the Plater.
@@ -3325,8 +3325,8 @@ void Plater::priv::reset_canvas_volumes()
 
 bool Plater::priv::init_view_toolbar()
 {
-    if (wxGetApp().is_gcode_viewer())
-        return true;
+    //if (wxGetApp().is_gcode_viewer())
+    //    return true;
 
     if (view_toolbar.get_items_count() > 0)
         // already initialized
@@ -3367,16 +3367,20 @@ bool Plater::priv::init_view_toolbar()
     if (!view_toolbar.add_item(item))
         return false;
 
+    if (!view_toolbar.generate_icons_texture())
+        return false;
+
     view_toolbar.select_item("3D");
-    view_toolbar.set_enabled(true);
+    if (wxGetApp().is_editor())
+        view_toolbar.set_enabled(true);
 
     return true;
 }
 
 bool Plater::priv::init_collapse_toolbar()
 {
-    if (wxGetApp().is_gcode_viewer())
-        return true;
+    //if (wxGetApp().is_gcode_viewer())
+    //    return true;
 
     if (collapse_toolbar.get_items_count() > 0)
         // already initialized
@@ -3411,9 +3415,13 @@ bool Plater::priv::init_collapse_toolbar()
     if (!collapse_toolbar.add_item(item))
         return false;
 
+    if (!collapse_toolbar.generate_icons_texture())
+        return false;
+
     // Now "collapse" sidebar to current state. This is done so the tooltip
     // is updated before the toolbar is first used.
-    wxGetApp().plater()->collapse_sidebar(wxGetApp().plater()->is_sidebar_collapsed());
+    if (wxGetApp().is_editor())
+        wxGetApp().plater()->collapse_sidebar(wxGetApp().plater()->is_sidebar_collapsed());
     return true;
 }
 

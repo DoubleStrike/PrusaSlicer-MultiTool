@@ -4600,29 +4600,6 @@ bool GLCanvas3D::_render_arrange_menu(float pos_x)
     return true;
 }
 
-#define ENABLE_THUMBNAIL_GENERATOR_DEBUG_OUTPUT 0
-#if ENABLE_THUMBNAIL_GENERATOR_DEBUG_OUTPUT
-static void debug_output_thumbnail(const ThumbnailData& thumbnail_data)
-{
-    // debug export of generated image
-    wxImage image(thumbnail_data.width, thumbnail_data.height);
-    image.InitAlpha();
-
-    for (unsigned int r = 0; r < thumbnail_data.height; ++r)
-    {
-        unsigned int rr = (thumbnail_data.height - 1 - r) * thumbnail_data.width;
-        for (unsigned int c = 0; c < thumbnail_data.width; ++c)
-        {
-            unsigned char* px = (unsigned char*)thumbnail_data.pixels.data() + 4 * (rr + c);
-            image.SetRGB((int)c, (int)r, px[0], px[1], px[2]);
-            image.SetAlpha((int)c, (int)r, px[3]);
-        }
-    }
-
-    image.SaveFile("C:/prusa/test/test.png", wxBITMAP_TYPE_PNG);
-}
-#endif // ENABLE_THUMBNAIL_GENERATOR_DEBUG_OUTPUT
-
 void GLCanvas3D::_render_thumbnail_internal(ThumbnailData& thumbnail_data, const ThumbnailsParams& thumbnail_params, const GLVolumeCollection& volumes, Camera::EType camera_type)
 {
     auto is_visible = [](const GLVolume& v) {
@@ -4758,8 +4735,9 @@ void GLCanvas3D::_render_thumbnail_framebuffer(ThumbnailData& thumbnail_data, un
     if (!thumbnail_data.is_valid())
         return;
 
-    bool multisample = m_multisample_allowed;
-    if (multisample)
+    const bool multisample = ::glIsEnabled(GL_MULTISAMPLE);
+    glcheck();
+    if (m_multisample_allowed && !multisample)
         glsafe(::glEnable(GL_MULTISAMPLE));
 
     GLint max_samples;
@@ -4833,10 +4811,6 @@ void GLCanvas3D::_render_thumbnail_framebuffer(ThumbnailData& thumbnail_data, un
         }
         else
             glsafe(::glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, (void*)thumbnail_data.pixels.data()));
-
-#if ENABLE_THUMBNAIL_GENERATOR_DEBUG_OUTPUT
-        debug_output_thumbnail(thumbnail_data);
-#endif // ENABLE_THUMBNAIL_GENERATOR_DEBUG_OUTPUT
     }
 
     glsafe(::glBindFramebuffer(GL_FRAMEBUFFER, 0));
@@ -4847,7 +4821,7 @@ void GLCanvas3D::_render_thumbnail_framebuffer(ThumbnailData& thumbnail_data, un
         glsafe(::glDeleteTextures(1, &render_tex));
     glsafe(::glDeleteFramebuffers(1, &render_fbo));
 
-    if (multisample)
+    if (!multisample)
         glsafe(::glDisable(GL_MULTISAMPLE));
 }
 
@@ -4857,8 +4831,9 @@ void GLCanvas3D::_render_thumbnail_framebuffer_ext(ThumbnailData& thumbnail_data
     if (!thumbnail_data.is_valid())
         return;
 
-    bool multisample = m_multisample_allowed;
-    if (multisample)
+    const bool multisample = ::glIsEnabled(GL_MULTISAMPLE);
+    glcheck();
+    if (m_multisample_allowed && !multisample)
         glsafe(::glEnable(GL_MULTISAMPLE));
 
     GLint max_samples;
@@ -4932,10 +4907,6 @@ void GLCanvas3D::_render_thumbnail_framebuffer_ext(ThumbnailData& thumbnail_data
         }
         else
             glsafe(::glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, (void*)thumbnail_data.pixels.data()));
-
-#if ENABLE_THUMBNAIL_GENERATOR_DEBUG_OUTPUT
-        debug_output_thumbnail(thumbnail_data);
-#endif // ENABLE_THUMBNAIL_GENERATOR_DEBUG_OUTPUT
     }
 
     glsafe(::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
@@ -4946,7 +4917,7 @@ void GLCanvas3D::_render_thumbnail_framebuffer_ext(ThumbnailData& thumbnail_data
         glsafe(::glDeleteTextures(1, &render_tex));
     glsafe(::glDeleteFramebuffersEXT(1, &render_fbo));
 
-    if (multisample)
+    if (!multisample)
         glsafe(::glDisable(GL_MULTISAMPLE));
 }
 
@@ -4969,9 +4940,6 @@ void GLCanvas3D::_render_thumbnail_legacy(ThumbnailData& thumbnail_data, unsigne
     _render_thumbnail_internal(thumbnail_data, thumbnail_params, volumes, camera_type);
 
     glsafe(::glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, (void*)thumbnail_data.pixels.data()));
-#if ENABLE_THUMBNAIL_GENERATOR_DEBUG_OUTPUT
-    debug_output_thumbnail(thumbnail_data);
-#endif // ENABLE_THUMBNAIL_GENERATOR_DEBUG_OUTPUT
 
     // restore the default framebuffer size to avoid flickering on the 3D scene
     wxGetApp().plater()->get_camera().apply_viewport();
@@ -4996,8 +4964,8 @@ bool GLCanvas3D::_init_toolbars()
 
 bool GLCanvas3D::_init_main_toolbar()
 {
-    if (!m_main_toolbar.is_enabled())
-        return true;
+    //if (!m_main_toolbar.is_enabled())
+    //    return true;
 
     BackgroundTexture::Metadata background_data;
     background_data.filename = "toolbar_background.png";
@@ -5180,13 +5148,16 @@ bool GLCanvas3D::_init_main_toolbar()
     if (!m_main_toolbar.add_item(item))
         return false;
 
+    if (!m_main_toolbar.generate_icons_texture())
+        return false;
+
     return true;
 }
 
 bool GLCanvas3D::_init_undoredo_toolbar()
 {
-    if (!m_undoredo_toolbar.is_enabled())
-        return true;
+    //if (!m_undoredo_toolbar.is_enabled())
+    //    return true;
 
     BackgroundTexture::Metadata background_data;
     background_data.filename = "toolbar_background.png";
@@ -5293,6 +5264,10 @@ bool GLCanvas3D::_init_undoredo_toolbar()
     if (!m_undoredo_toolbar.add_separator())
         return false;
         */
+
+    if (!m_undoredo_toolbar.generate_icons_texture())
+        return false;
+
     return true;
 }
 
@@ -5975,7 +5950,7 @@ void GLCanvas3D::_render_sequential_clearance()
 }
 
 
-bool GLCanvas3D::check_toolbar_icon_size(float init_scale, float& new_scale_to_save, int counter/* = 3*/)
+bool GLCanvas3D::check_toolbar_icon_size(float init_scale, float& new_scale_to_save, bool is_custom, int counter/* = 3*/)
 {
     const Size cnv_size = get_canvas_size();
 
@@ -6031,6 +6006,9 @@ bool GLCanvas3D::check_toolbar_icon_size(float init_scale, float& new_scale_to_s
 
     new_scale_to_save = std::min(new_scale / max_scale, 1.f);
 
+    if (is_custom && new_scale_to_save > init_scale)
+        return false;
+
     if (is_approx(init_scale, new_scale_to_save, 0.015f) || counter == 0)
         return true;
 
@@ -6047,9 +6025,10 @@ void GLCanvas3D::_check_and_update_toolbar_icon_scale()
     if (wxGetApp().plater()->is_preview_shown())
         return;
 
-    const float init_scale = wxGetApp().toolbar_icon_scale();
+    bool is_custom;
+    const float init_scale = wxGetApp().toolbar_icon_scale(is_custom);
     float new_scale_to_save;
-    if (check_toolbar_icon_size(init_scale, new_scale_to_save) &&
+    if (check_toolbar_icon_size(init_scale, new_scale_to_save, is_custom) &&
         !is_approx(init_scale, new_scale_to_save, 0.015f))
         wxGetApp().set_auto_toolbar_icon_scale(new_scale_to_save);
 }
@@ -6167,7 +6146,13 @@ void GLCanvas3D::_render_collapse_toolbar() const
     const Size cnv_size = get_canvas_size();
     const float band = m_layers_editing.is_enabled() ? (wxGetApp().imgui()->get_style_scaling() * LayersEditing::THICKNESS_BAR_WIDTH) : 0.0;
     const float top  = 0.5f * (float)cnv_size.get_height();
+#if ENABLE_HACK_GCODEVIEWER_SLOW_ON_MAC
+    // When the application is run as GCodeViewer, render the collapse toolbar outside of the screen
+    const float left = wxGetApp().is_gcode_viewer() ? 0.5f * (float)cnv_size.get_width() :
+        0.5f * (float)cnv_size.get_width() - collapse_toolbar.get_width() - band;
+#else
     const float left = 0.5f * (float)cnv_size.get_width() - collapse_toolbar.get_width() - band;
+#endif // ENABLE_HACK_GCODEVIEWER_SLOW_ON_MAC
 
     collapse_toolbar.set_position(top, left);
     collapse_toolbar.render(*this);

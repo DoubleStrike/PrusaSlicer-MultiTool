@@ -320,7 +320,13 @@ void Preview::render_sliders(GLCanvas3D& canvas)
     const float extra_scale     = cnv_size.get_scale_factor();
 
     GLToolbar& collapse_toolbar = wxGetApp().plater()->get_collapse_toolbar();
+#if ENABLE_HACK_GCODEVIEWER_SLOW_ON_MAC
+    // When the application is run as GCodeViewer the collapse toolbar is enabled but invisible, as it is renderer
+    // outside of the screen
+    const bool  is_collapse_btn_shown = wxGetApp().is_editor() ? collapse_toolbar.is_enabled() : false;
+#else
     const bool  is_collapse_btn_shown = collapse_toolbar.is_enabled();
+#endif // ENABLE_HACK_GCODEVIEWER_SLOW_ON_MAC
 
     if (m_layers_slider)
         m_layers_slider->Render(canvas_width, canvas_height, extra_scale, is_collapse_btn_shown ? collapse_toolbar.get_height() : 0.f);
@@ -402,7 +408,7 @@ void Preview::create_sliders()
 
     m_layers_slider->set_callback_on_thumb_move( [this]() -> void { Preview::on_layers_slider_scroll_changed(); } );
 
-    m_layers_slider->set_callback_on_change_app_config([this](const std::string& key, const std::string& val)   -> void {
+    m_layers_slider->set_callback_on_change_app_config([](const std::string& key, const std::string& val)   -> void {
         wxGetApp().app_config->set(key, val);
     });
 

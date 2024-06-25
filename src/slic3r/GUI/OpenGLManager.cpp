@@ -539,25 +539,27 @@ wxGLCanvas* OpenGLManager::create_wxglcanvas(wxWindow& parent, bool enable_auto_
     if (platform_flavor() != PlatformFlavor::LinuxOnChromium) {
         for (int i = enable_auto_aa_samples ? 16 : 4; i >= 4; i /= 2) {
             attribList.Reset();
-            attribList.PlatformDefaults().RGBA().DoubleBuffer().MinRGBA(8, 8, 8, 8).Depth(24).SampleBuffers(1).Samplers(i).EndList();
+            attribList.PlatformDefaults().RGBA().DoubleBuffer().MinRGBA(8, 8, 8, 8).Depth(24).SampleBuffers(1).Samplers(i);
+#ifdef __APPLE__
+            // on MAC the method RGBA() has no effect
+            attribList.SetNeedsARB(true);
+#endif // __APPLE__
+            attribList.EndList();
             if (wxGLCanvas::IsDisplaySupported(attribList)) {
                 s_multisample = EMultisampleState::Enabled;
                 break;
             }
         }
     }
-#ifdef __APPLE__
-    // on MAC the method RGBA() has no effect
-    attribList.SetNeedsARB(true);
-#endif // __APPLE__
 
     if (s_multisample != EMultisampleState::Enabled) {
         attribList.Reset();
-        attribList.PlatformDefaults().RGBA().DoubleBuffer().MinRGBA(8, 8, 8, 8).Depth(24).EndList();
+        attribList.PlatformDefaults().RGBA().DoubleBuffer().MinRGBA(8, 8, 8, 8).Depth(24);
 #ifdef __APPLE__
         // on MAC the method RGBA() has no effect
         attribList.SetNeedsARB(true);
 #endif // __APPLE__
+        attribList.EndList();
     }
 
     return new wxGLCanvas(&parent, attribList, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS);

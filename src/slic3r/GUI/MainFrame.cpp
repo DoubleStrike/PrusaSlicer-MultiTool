@@ -311,7 +311,13 @@ DPIFrame(NULL, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_S
     update_ui_from_settings();    // FIXME (?)
 
     if (m_plater != nullptr) {
+#if ENABLE_HACK_GCODEVIEWER_SLOW_ON_MAC
+        // When the application is run as GCodeViewer the collapse toolbar is set as enabled, but rendered outside of the screen
+        m_plater->get_collapse_toolbar().set_enabled(wxGetApp().is_gcode_viewer() ?
+            true : wxGetApp().app_config->get_bool("show_collapse_button"));
+#else
         m_plater->get_collapse_toolbar().set_enabled(wxGetApp().app_config->get_bool("show_collapse_button"));
+#endif // ENABLE_HACK_GCODEVIEWER_SLOW_ON_MAC
         m_plater->show_action_buttons(true);
 
         preferences_dialog = new PreferencesDialog(this);
@@ -433,7 +439,11 @@ void MainFrame::update_layout()
     {
         m_main_sizer->Add(m_plater, 1, wxEXPAND);
         m_plater->set_default_bed_shape();
+#if ENABLE_HACK_GCODEVIEWER_SLOW_ON_MAC
+        m_plater->get_collapse_toolbar().set_enabled(true);
+#else
         m_plater->get_collapse_toolbar().set_enabled(false);
+#endif // !ENABLE_HACK_GCODEVIEWER_SLOW_ON_MAC
         m_plater->collapse_sidebar(true);
         m_plater->Show();
         break;
@@ -1626,7 +1636,7 @@ void MainFrame::init_menubar_as_editor()
     if (viewMenu) 
         m_bar_menus.AppendMenuItem(viewMenu, _L("&View"));
     
-    m_bar_menus.AppendMenuItem(wxGetApp().get_config_menu(), _L("&Configuration"));
+    m_bar_menus.AppendMenuItem(wxGetApp().get_config_menu(this), _L("&Configuration"));
 
     m_bar_menus.AppendMenuSeparaorItem();
 
@@ -1644,7 +1654,7 @@ void MainFrame::init_menubar_as_editor()
     m_menubar->Append(windowMenu, _L("&Window"));
     if (viewMenu) m_menubar->Append(viewMenu, _L("&View"));
     // Add additional menus from C++
-    m_menubar->Append(wxGetApp().get_config_menu(), _L("&Configuration"));
+    m_menubar->Append(wxGetApp().get_config_menu(this), _L("&Configuration"));
     m_menubar->Append(helpMenu, _L("&Help"));
 
     SetMenuBar(m_menubar);
@@ -1737,7 +1747,7 @@ void MainFrame::init_menubar_as_gcodeviewer()
     m_menubar->Append(fileMenu, _L("&File"));
     if (viewMenu != nullptr) m_menubar->Append(viewMenu, _L("&View"));
     // Add additional menus from C++
-    m_menubar->Append(wxGetApp().get_config_menu(), _L("&Configuration"));
+    m_menubar->Append(wxGetApp().get_config_menu(this), _L("&Configuration"));
     m_menubar->Append(helpMenu, _L("&Help"));
     SetMenuBar(m_menubar);
 

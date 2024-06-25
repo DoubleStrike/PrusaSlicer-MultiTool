@@ -1965,7 +1965,7 @@ wxSize GUI_App::get_min_size(wxWindow* display_win) const
     return min_size;
 }
 
-float GUI_App::toolbar_icon_scale(const bool is_limited/* = false*/) const
+float GUI_App::toolbar_icon_scale(bool& is_custom) const
 {
 #ifdef __APPLE__
     const float icon_sc = 1.0f; // for Retina display will be used its own scale
@@ -1980,12 +1980,11 @@ float GUI_App::toolbar_icon_scale(const bool is_limited/* = false*/) const
     if (val.empty() || auto_val.empty() || use_val.empty())
         return icon_sc;
 
+    is_custom  = app_config->get_bool("use_custom_toolbar_size");
+
     int int_val = use_val == "0" ? 100 : atoi(val.c_str());
     // correct value in respect to auto_toolbar_size
     int_val = std::min(atoi(auto_val.c_str()), int_val);
-
-    if (is_limited && int_val < 50)
-        int_val = 50;
 
     return 0.01f * int_val;
 }
@@ -2599,7 +2598,7 @@ void GUI_App::update_mode()
     plater()->canvas3D()->update_gizmos_on_off_state();
 }
 
-wxMenu* GUI_App::get_config_menu()
+wxMenu* GUI_App::get_config_menu(MainFrame* main_frame)
 {
     auto local_menu = new wxMenu();
     wxWindowID config_id_base = wxWindow::NewControlId(int(ConfigMenuCnt));
@@ -2619,13 +2618,12 @@ wxMenu* GUI_App::get_config_menu()
 #endif //(__linux__) && defined(SLIC3R_DESKTOP_INTEGRATION)        
         local_menu->AppendSeparator();
     }
-    local_menu->Append(config_id_base + ConfigMenuPreferences, _L("&Preferences") + dots +
 #ifdef __APPLE__
-        "\tCtrl+,",
+    local_menu->Append(config_id_base + ConfigMenuPreferences, _L("&Preferences") + dots + "\tCtrl+,", _L("Application preferences"));
 #else
-        "\tCtrl+P",
+    append_menu_item(local_menu, config_id_base + ConfigMenuPreferences, _L("&Preferences") + "\tCtrl+P", _L("Application preferences"),
+                    [](wxCommandEvent&) { wxGetApp().open_preferences(); }, "", nullptr, []() {return true; }, main_frame);
 #endif
-        _L("Application preferences"));
 
     local_menu->AppendSeparator();
     local_menu->Append(config_id_base + ConfigMenuLanguage, _L("&Language"));
@@ -3370,14 +3368,10 @@ void GUI_App::gcode_thumbnails_debug()
     boost::nowide::ifstream in_file(in_filename.c_str());
     std::vector<std::string> rows;
     std::string row;
-    if (in_file.good())
-    {
-        while (std::getline(in_file, gcode_line))
-        {
-            if (in_file.good())
-            {
-                if (boost::starts_with(gcode_line, BEGIN_MASK))
-                {
+    if (in_file.good()) {
+        while (std::getline(in_file, gcode_line)) {
+            if (in_file.good()) {
+                if (boost::starts_with(gcode_line, BEGIN_MASK)) {
                     reading_image = true;
                     gcode_line = gcode_line.substr(BEGIN_MASK.length() + 1);
                     std::string::size_type x_pos = gcode_line.find('x');
@@ -3387,12 +3381,10 @@ void GUI_App::gcode_thumbnails_debug()
                     height = (unsigned int)::atoi(height_str.c_str());
                     row.clear();
                 }
-                else if (reading_image && boost::starts_with(gcode_line, END_MASK))
-                {
+                else if (reading_image && boost::starts_with(gcode_line, END_MASK)) {
                     std::string out_filename = out_path + std::to_string(width) + "x" + std::to_string(height) + ".png";
                     boost::nowide::ofstream out_file(out_filename.c_str(), std::ios::binary);
-                    if (out_file.good())
-                    {
+                    if (out_file.good()) {
                         std::string decoded;
                         decoded.resize(boost::beast::detail::base64::decoded_size(row.size()));
                         decoded.resize(boost::beast::detail::base64::decode((void*)&decoded[0], row.data(), row.size()).first);
@@ -3901,7 +3893,7 @@ void GUI_App::search_and_select_filaments(const std::string& material, size_t ex
         {
             out_message += /*(extruder_count == 1)
                 ? GUI::format(_L("Selected Filament:\n%1%"), filament_preset.preset->name)
-                : */GUI::format(_L("Extruder %1%: Selected filament %2%\n"), extruder_index + 1, filament.preset->name);
+                : */GUI::format(_L("Extruder %1%: Selected filament %2%"), extruder_index + 1, filament.preset->name) + "\n";
             return;
         }
     }
@@ -3918,7 +3910,7 @@ void GUI_App::search_and_select_filaments(const std::string& material, size_t ex
         {
             out_message += /*(extruder_count == 1)
                 ? GUI::format(_L("Selected Filament:\n%1%"), filament_preset.preset->name) 
-                : */GUI::format(_L("Extruder %1%: Selected filament %2%\n"), extruder_index + 1, filament.preset->name);
+                : */GUI::format(_L("Extruder %1%: Selected filament %2%"), extruder_index + 1, filament.preset->name) + "\n";
             return;
         }
     }
@@ -3933,11 +3925,11 @@ void GUI_App::search_and_select_filaments(const std::string& material, size_t ex
             && filament.preset->name.compare(0, 9, "Prusament") == 0
             && select_filament_preset(filament.preset, extruder_index))
         {
-            out_message += GUI::format(_L("Extruder %1%: Installed and selected filament %2%\n"), extruder_index + 1, filament.preset->name);
+            out_message += GUI::format(_L("Extruder %1%: Installed and selected filament %2%"), extruder_index + 1, filament.preset->name) + "\n";
             return;
         }
     }
-    out_message += GUI::format(_L("Extruder %2%: Failed to find and select filament type: %1%\n"), material, extruder_index + 1);
+    out_message += GUI::format(_L("Extruder %2%: Failed to find and select filament type: %1%"), material, extruder_index + 1) + "\n";
 }
 
 void GUI_App::select_filament_from_connect(const std::string& msg)

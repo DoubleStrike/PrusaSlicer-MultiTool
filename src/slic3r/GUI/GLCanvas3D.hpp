@@ -1053,7 +1053,7 @@ private:
     void _render_gcode_cog() { m_gcode_viewer.render_cog(); }
     void _render_selection();
     void _render_sequential_clearance();
-    bool check_toolbar_icon_size(float init_scale, float& new_scale_to_save, int counter = 3);
+    bool check_toolbar_icon_size(float init_scale, float& new_scale_to_save, bool is_custom, int counter = 3);
 #if ENABLE_RENDER_SELECTION_CENTER
     void _render_selection_center() { m_selection.render_center(m_gizmos.is_dragging()); }
 #endif // ENABLE_RENDER_SELECTION_CENTER

@@ -1133,9 +1133,9 @@ void ImGuiWrapper::init_font(bool compress)
     io.Fonts->Clear();
 
     // Create ranges of characters from m_glyph_ranges, possibly adding some OS specific special characters.
-	ImVector<ImWchar> ranges;
+    ImVector<ImWchar> ranges;
     ImFontGlyphRangesBuilder builder;
-	builder.AddRanges(m_glyph_ranges);
+    builder.AddRanges(m_glyph_ranges);
 
     builder.AddChar(ImWchar(0x2026)); // …
 
@@ -1243,6 +1243,7 @@ void ImGuiWrapper::init_font(bool compress)
 
     // Upload texture to graphics system
     GLint last_texture;
+    glsafe(::glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
     glsafe(::glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture));
     glsafe(::glGenTextures(1, &m_font_texture));
     glsafe(::glBindTexture(GL_TEXTURE_2D, m_font_texture));

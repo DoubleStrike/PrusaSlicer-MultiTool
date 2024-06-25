@@ -279,6 +279,12 @@ void PresetBundle::import_newer_configs(const std::string& from)
     for (const boost::filesystem::path& from_dir : from_dirs) {
         copy_dir(from_dir, data_dir / from_dir.filename());
     }
+    // copy ArchiveRepositoryManifest.json file in main directory
+    std::string em;
+    CopyFileResult cfr = copy_file((from_data_dir / "ArchiveRepositoryManifest.json").string(), (data_dir / "ArchiveRepositoryManifest.json").string(), em, false);
+    if (cfr != SUCCESS) {
+        BOOST_LOG_TRIVIAL(error) << "Error when copying files from " << from_data_dir << " to " << data_dir << ": " << em;
+    }
 }
 
 PresetsConfigSubstitutions PresetBundle::load_presets(AppConfig &config, ForwardCompatibilitySubstitutionRule substitution_rule, 

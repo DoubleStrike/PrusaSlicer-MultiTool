@@ -244,8 +244,7 @@ void GLToolbar::set_gap_size(float size)
 
 void GLToolbar::set_icons_size(float size)
 {
-    if (m_layout.icons_size != size)
-    {
+    if (m_layout.icons_size != size) {
         m_layout.icons_size = size;
         m_layout.dirty = true;
         m_icons_texture_dirty = true;

@@ -745,8 +745,9 @@ GCodeInputData convert(const Slic3r::Print& print, const std::vector<std::string
     }
 
     // collect color print colors
-    ret.color_print_colors.reserve(str_color_print_colors.size());
-    for (const std::string& color : str_color_print_colors) {
+    const std::vector<std::string>& str_colors = str_color_print_colors.empty() ? str_tool_colors : str_color_print_colors;
+    ret.color_print_colors.reserve(str_colors.size());
+    for (const std::string& color : str_colors) {
         ret.color_print_colors.emplace_back(convert(color));
     }
 

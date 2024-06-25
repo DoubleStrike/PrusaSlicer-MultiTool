@@ -55,4 +55,9 @@
 // Enable extension of tool position imgui dialog to show actual speed profile
 #define ENABLE_ACTUAL_SPEED_DEBUG 1
 
+// This technology enables a hack which resolves the slow down on MAC when running the application as GCodeViewer.
+// For yet unknow reason the slow down disappears if any of the toolbars is renderered.
+// This hack keeps the collapse toolbar enabled and renders it outside of the screen.
+#define ENABLE_HACK_GCODEVIEWER_SLOW_ON_MAC 1
+
 #endif // _prusaslicer_technologies_h_

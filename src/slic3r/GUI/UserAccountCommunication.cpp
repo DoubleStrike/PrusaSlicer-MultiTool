@@ -4,11 +4,15 @@
 #include "format.hpp"
 #include "../Utils/Http.hpp"
 #include "slic3r/GUI/I18N.hpp"
+#include "libslic3r/Utils.hpp"
 
 #include <boost/algorithm/string/split.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/beast/core/detail/base64.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/nowide/cstdio.hpp>
+#include <boost/nowide/fstream.hpp>
 #include <curl/curl.h>
 #include <string>
 
@@ -163,7 +167,17 @@ UserAccountCommunication::UserAccountCommunication(wxEvtHandler* evt_handler, Ap
         shared_session_key = key0;
 
     } else {
-        // Do nothing.
+#ifdef __linux__
+        // Load refresh token from UserAcountData.txt
+        boost::filesystem::path source(boost::filesystem::path(Slic3r::data_dir()) / "UserAcountData.dat") ;
+        boost::nowide::ifstream stream(source.generic_string(), std::ios::in | std::ios::binary);
+        if (stream) {
+            std::getline(stream, refresh_token);
+            stream.close();
+        } else {
+            BOOST_LOG_TRIVIAL(error) << "UserAccount: Failed to read token from " << source;
+        } 
+#endif
     }
     long long next = next_timeout.empty() ? 0 : std::stoll(next_timeout);
     long long remain_time = next - std::time(nullptr);
@@ -213,7 +227,31 @@ void UserAccountCommunication::set_username(const std::string& username)
             save_secret("tokens", m_session->get_shared_session_key(), tokens);
         }
         else {
-            // If we can't store the tokens securely, don't store them at all.
+#ifdef __linux__
+            // If we can't store the tokens in secret store, store them in file with chmod 600
+            boost::filesystem::path target(boost::filesystem::path(Slic3r::data_dir()) / "UserAcountData.dat") ;
+            std::string data = m_session->get_refresh_token();
+            FILE* file; 
+            static const auto perms = boost::filesystem::owner_read | boost::filesystem::owner_write;   // aka 600
+            
+            boost::system::error_code ec;
+            boost::filesystem::permissions(target, perms, ec);
+            if (ec)
+                BOOST_LOG_TRIVIAL(debug) << "UserAccount: boost::filesystem::permisions before write error message (this could be irrelevant message based on file system): " << ec.message();
+            ec.clear();
+
+            file = boost::nowide::fopen(target.generic_string().c_str(), "wb");
+            if (file == NULL) {
+                BOOST_LOG_TRIVIAL(error) << "UserAccount: Failed to open file to store token: " << target;
+                return;
+            }
+            fwrite(data.c_str(), 1, data.size(), file);
+            fclose(file);
+
+            boost::filesystem::permissions(target, perms, ec);
+            if (ec)
+                BOOST_LOG_TRIVIAL(debug) << "UserAccount: boost::filesystem::permisions after write error message (this could be irrelevant message based on file system): " << ec.message();
+#endif
         }
     }
 }
