@@ -312,7 +312,7 @@ void GCodeViewer::SequentialView::Marker::render_position_window(const libvgcode
         ImGuiPureWrap::set_next_window_pos(viewport.GetCenter().x, viewport.Size.y - preview->get_moves_slider_height(), ImGuiCond_Always, 0.5f, 1.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::SetNextWindowBgAlpha(properties_shown ? 0.8f : 0.25f);
-        ImGuiPureWrap::begin(std::string("ToolPosition"), ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+        ImGuiPureWrap::begin(std::string("ToolPosition"), ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoFocusOnAppearing);
         ImGui::AlignTextToFramePadding();
         ImGuiPureWrap::text_colored(ImGuiPureWrap::COL_ORANGE_LIGHT, _u8L("Position") + ":");
         ImGui::SameLine();
@@ -760,7 +760,7 @@ void GCodeViewer::SequentialView::GCodeWindow::render(float top, float bottom, s
     ImGuiPureWrap::set_next_window_size(0.0f, wnd_height, ImGuiCond_Always);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::SetNextWindowBgAlpha(0.6f);
-    ImGuiPureWrap::begin(std::string("G-code"), ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+    ImGuiPureWrap::begin(std::string("G-code"), ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoFocusOnAppearing);
 
     // center the text in the window by pushing down the first line
     const float f_lines_count = static_cast<float>(visible_lines_count);

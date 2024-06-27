@@ -28,8 +28,8 @@ else ()
 endif ()
 
 add_cmake_project(wxWidgets
-    URL https://github.com/prusa3d/wxWidgets/archive/78aa2dc0ea7ce99dc19adc1140f74c3e2e3f3a26.zip
-    URL_HASH SHA256=94b7d972373503e380e5a8b0ca63b1ccb956da4006402298dd89a0c5c7041b1e
+    URL https://github.com/prusa3d/wxWidgets/archive/323a465e577e03f330e2e6a4c78e564d125340cb.zip
+    URL_HASH SHA256=B538E4AD3CC93117932F4DED70C476D6650F9C70A9D4055A08F3693864C47465
     CMAKE_ARGS
         "-DCMAKE_DEBUG_POSTFIX:STRING="
         -DwxBUILD_PRECOMP=ON

@@ -523,16 +523,21 @@ private:
     uint8_t color_print_color_id(double print_z, size_t extruder_id) const {
         auto it = std::find_if(m_color_print_values.begin(), m_color_print_values.end(),
             [print_z](const Slic3r::CustomGCode::Item& code) {
-                return std::fabs(code.print_z - print_z) < EPSILON;
-            });
-          if (it != m_color_print_values.end()) {
+            return std::fabs(code.print_z - print_z) < EPSILON;
+        });
+        if (it != m_color_print_values.end()) {
             Slic3r::CustomGCode::Type type = it->type;
             // pause print or custom Gcode
-            if (type == Slic3r::CustomGCode::PausePrint || type == Slic3r::CustomGCode::Custom || type == Slic3r::CustomGCode::Template)
+            if (type == Slic3r::CustomGCode::PausePrint || (type != Slic3r::CustomGCode::ColorChange && type != Slic3r::CustomGCode::Template))
                 return static_cast<uint8_t>(m_color_print_colors_count - 1); // last color item is a gray color for pause print or custom G-code
             switch (it->type) {
             // change color for current extruder
-            case Slic3r::CustomGCode::ColorChange: { return color_change_color_id(it, extruder_id); }
+            case Slic3r::CustomGCode::ColorChange: {
+                const int c = color_change_color_id(it, extruder_id);
+                if (c >= 0)
+                    return static_cast<uint8_t>(c);
+                break;
+            }
             // change tool (extruder) 
             case Slic3r::CustomGCode::ToolChange:  { return tool_change_color_id(it, extruder_id); }
             default:                               { break; }
@@ -545,7 +550,12 @@ private:
             --it;
             switch (it->type) {
             // change color for current extruder
-            case Slic3r::CustomGCode::ColorChange: { return color_change_color_id(it, extruder_id); }
+            case Slic3r::CustomGCode::ColorChange: {
+                const int c = color_change_color_id(it, extruder_id);
+                if (c >= 0)
+                    return static_cast<uint8_t>(c);
+                break;
+            }
             // change tool (extruder) 
             case Slic3r::CustomGCode::ToolChange:  { return tool_change_color_id(it, extruder_id); }
             default:                               { break; }
@@ -555,7 +565,7 @@ private:
         return std::min<uint8_t>(m_extruders_count - 1, static_cast<uint8_t>(extruder_id));
     }
 
-    uint8_t color_change_color_id(std::vector<Slic3r::CustomGCode::Item>::const_iterator it, size_t extruder_id) const {
+    int color_change_color_id(std::vector<Slic3r::CustomGCode::Item>::const_iterator it, size_t extruder_id) const {
         if (m_extruders_count == 1)
             return m600_color_id(it);
 
@@ -573,7 +583,7 @@ private:
         if (!is_tool_change && it->extruder == static_cast<int>(extruder_id + 1))
             return m600_color_id(it);
 
-        return 0;
+        return -1;
     }
 
     uint8_t tool_change_color_id(std::vector<Slic3r::CustomGCode::Item>::const_iterator it, size_t extruder_id) const {
@@ -591,14 +601,14 @@ private:
         return std::min<uint8_t>(m_extruders_count - 1, std::max<uint8_t>(current_extruder - 1, 0));
     }
 
-    uint8_t m600_color_id(std::vector<Slic3r::CustomGCode::Item>::const_iterator it) const {
-        uint8_t shift = 0;
+    int m600_color_id(std::vector<Slic3r::CustomGCode::Item>::const_iterator it) const {
+        int shift = 0;
         while (it != m_color_print_values.begin()) {
             --it;
             if (it->type == Slic3r::CustomGCode::ColorChange)
                 ++shift;
         }
-        return m_extruders_count + shift;
+        return static_cast<int>(m_extruders_count) + shift;
     }
 };
 

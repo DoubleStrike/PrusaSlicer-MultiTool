@@ -8,6 +8,7 @@
 #include "slic3r/GUI/format.hpp"
 #include "slic3r/GUI/WebView.hpp"
 #include "slic3r/GUI/MsgDialog.hpp"
+#include "slic3r/GUI/Field.hpp"
 
 #include <wx/webview.h>
 
@@ -635,7 +636,7 @@ wxString ConnectWebViewPanel::get_login_script(bool refresh)
             console.error('Login error occurred', msg);
             window._prusaSlicer.postMessage(msg);
         };
-        window.fetch('/slicer/loginx', {method: 'POST', headers: {Authorization: 'Bearer %s'}})
+        window.fetch('/slicer/login', {method: 'POST', headers: {Authorization: 'Bearer %s'}})
             .then(function (resp) {
                 console.log('Login resp', resp);
                 resp.text()
@@ -820,7 +821,7 @@ void PrinterWebViewPanel::sys_color_changed()
 }
 
 WebViewDialog::WebViewDialog(wxWindow* parent, const wxString& url, const wxString& dialog_name, const wxSize& size, const std::vector<std::string>& message_handler_names, const std::string& loading_html/* = "loading"*/)
-    : wxDialog(parent, wxID_ANY, dialog_name, wxDefaultPosition, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+    : DPIDialog(parent, wxID_ANY, dialog_name, wxDefaultPosition, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
     , m_loading_html(loading_html)
     , m_script_message_hadler_names (message_handler_names)
 {
@@ -1276,7 +1277,9 @@ void PrinterPickWebViewDialog::request_compatible_printers_FFF()
     //}
     const Preset& selected_printer = wxGetApp().preset_bundle->printers.get_selected_preset();
     const Preset& selected_filament = wxGetApp().preset_bundle->filaments.get_selected_preset();
-    std::string nozzle_diameter_serialized = selected_printer.config.opt_string("printer_variant");
+    double nozzle_diameter = static_cast<const ConfigOptionFloats*>(selected_printer.config.option("nozzle_diameter"))->values[0];
+    wxString nozzle_diameter_serialized = double_to_string(nozzle_diameter);
+    nozzle_diameter_serialized.Replace(L",", L".");
     // Sending only first filament type for now. This should change to array of values
     const std::string filament_type_serialized = selected_filament.config.option("filament_type")->serialize();
     const std::string printer_model_serialized = selected_printer.config.option("printer_model")->serialize();
@@ -1313,11 +1316,23 @@ void PrinterPickWebViewDialog::request_compatible_printers_SLA()
     wxString script = GUI::format_wxstr("window._prusaConnect_v1.requestCompatiblePrinter(%1%)", request);
     run_script(script);
 }
+void PrinterPickWebViewDialog::on_dpi_changed(const wxRect &suggested_rect) 
+{
+    wxWindow *parent = GetParent();
+    const wxSize &size = wxSize(
+        std::max(parent->GetClientSize().x / 2, 100 * wxGetApp().em_unit()),
+        std::max(parent->GetClientSize().y / 2, 50 * wxGetApp().em_unit())
+    );
+    SetMinSize(size);
+    Fit();
+    Refresh();
+}
+
 LoginWebViewDialog::LoginWebViewDialog(wxWindow *parent, std::string &ret_val, const wxString& url) 
     : WebViewDialog(parent
         , url
-        , _L("Log in dialog")
-        , wxSize(parent->GetClientSize().x / 3, parent->GetClientSize().y / 4 * 3)
+        , _L("Log in dialog"),
+          wxSize(50 * wxGetApp().em_unit(), 80 * wxGetApp().em_unit())
         , {})
     , m_ret_val(ret_val)
 {
@@ -1332,6 +1347,13 @@ void LoginWebViewDialog::on_navigation_request(wxWebViewEvent &evt)
         EndModal(wxID_OK);
     }
 }
+void LoginWebViewDialog::on_dpi_changed(const wxRect &suggested_rect) 
+{
+    const wxSize &size = wxSize(50 * wxGetApp().em_unit(), 80 * wxGetApp().em_unit());
+    SetMinSize(size);
+    Fit();
+    Refresh();
+}
 
 LogoutWebViewDialog::LogoutWebViewDialog(wxWindow *parent)
     : WebViewDialog(parent
@@ -1342,6 +1364,7 @@ LogoutWebViewDialog::LogoutWebViewDialog(wxWindow *parent)
 {
     Centre();
 }
+
 void LogoutWebViewDialog::on_loaded(wxWebViewEvent &evt)
 {
      EndModal(wxID_OK);

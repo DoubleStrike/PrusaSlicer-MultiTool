@@ -15,6 +15,7 @@
 
 #include "Widgets/CheckBox.hpp"
 #include <wx/wupdlock.h>
+#include <wx/html/htmlwin.h>
 
 namespace fs = boost::filesystem;
 
@@ -27,23 +28,57 @@ RepositoryUpdateUIManager::RepositoryUpdateUIManager(wxWindow* parent, PresetArc
     ,m_main_sizer(new wxBoxSizer(wxVERTICAL))
 {
     auto online_label = new wxStaticText(m_parent, wxID_ANY, _L("Online sources"));
-    online_label->SetFont(wxGetApp().bold_font());
+    online_label->SetFont(wxGetApp().bold_font().Scaled(1.3f));
 
-    m_main_sizer->Add(online_label, 0, wxTOP | wxLEFT, 2 * em);
+    m_main_sizer->Add(online_label, 0, wxTOP | wxLEFT | wxBOTTOM, 2 * em);
+
+    auto online_info = new wxStaticText(m_parent, wxID_ANY, _L("Please, select online sources you want to update profiles from") + ":");
+    online_info->SetFont(wxGetApp().normal_font());
+
+    m_main_sizer->Add(online_info, 0, wxLEFT, 3 * em);
 
     m_online_sizer = new wxFlexGridSizer(4, 0.75 * em, 1.5 * em);
     m_online_sizer->AddGrowableCol(2);
     m_online_sizer->AddGrowableCol(3);
-    m_online_sizer->SetFlexibleDirection(/*wxHORIZONTAL*/wxBOTH);
+    m_online_sizer->SetFlexibleDirection(wxBOTH);
 
     m_main_sizer->Add(m_online_sizer, 0, wxALL, 2 * em);
 
     m_main_sizer->AddSpacer(em);
 
     auto offline_label = new wxStaticText(m_parent, wxID_ANY, _L("Local sources"));
-    offline_label->SetFont(wxGetApp().bold_font());
+    offline_label->SetFont(wxGetApp().bold_font().Scaled(1.3f));
 
-    m_main_sizer->Add(offline_label, 0, wxTOP | wxLEFT, 2 * em);
+    m_main_sizer->Add(offline_label, 0, wxTOP | wxLEFT | wxBOTTOM, 2 * em);
+
+    // append info line with link on printables.com
+    {
+        wxHtmlWindow* offline_info = new wxHtmlWindow(m_parent, wxID_ANY, wxDefaultPosition, wxSize(60 * em, 5 * em), wxHW_SCROLLBAR_NEVER);
+        offline_info->SetBorders(0);
+
+        offline_info->Bind(wxEVT_HTML_LINK_CLICKED, [](wxHtmlLinkEvent& event) {
+            wxGetApp().open_browser_with_warning_dialog(event.GetLinkInfo().GetHref());
+            event.Skip(false);
+        });
+
+        const auto text_clr = wxGetApp().get_label_clr_default();
+        const auto bgr_clr_str = wxGetApp().get_html_bg_color(m_parent->GetParent()->GetParent());
+        const auto text_clr_str = encode_color(ColorRGB(text_clr.Red(), text_clr.Green(), text_clr.Blue()));
+
+        wxString message = format_wxstr(_L("As an alternative to online sources, profiles can also be updated by manually loading files containing the updates. "
+           "This is mostly useful on computers that are not connected to the internet. "
+           "Files containing the configuration updates can be downloaded from <a href=%1%>our website</a>."), "https://prusa.io/prusaslicer-profiles");
+
+        const wxFont& font = m_parent->GetFont();
+        const int fs = font.GetPointSize();
+        int size[] = { fs,fs,fs,fs,fs,fs,fs };
+        offline_info->SetFonts(font.GetFaceName(), font.GetFaceName(), size);
+
+        offline_info->SetPage(format_wxstr("<html><body bgcolor=%1% link=%2%><font color=%2%>%3%</font></body></html>",
+                             bgr_clr_str , text_clr_str , message ));
+
+        m_main_sizer->Add(offline_info, 0, wxLEFT, 3 * em);
+    }
 
     m_offline_sizer = new wxFlexGridSizer(7, 0.75 * em, 1.5 * em);
     m_offline_sizer->AddGrowableCol(1);

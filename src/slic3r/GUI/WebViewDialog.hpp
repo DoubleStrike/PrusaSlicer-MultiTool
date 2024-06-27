@@ -7,6 +7,7 @@
 #include <wx/wx.h>
 #include <wx/event.h>
 
+#include "GUI_Utils.hpp"
 #include "UserAccountSession.hpp"
 
 #ifdef DEBUG_URL_PANEL
@@ -102,7 +103,7 @@ protected:
 }; 
 
 
-class WebViewDialog : public wxDialog
+class WebViewDialog : public DPIDialog
 {
 public:
     WebViewDialog(wxWindow* parent, const wxString& url, const wxString& dialog_name, const wxSize& size, const std::vector<std::string>& message_handler_names, const std::string& loading_html = "loading");
@@ -247,6 +248,7 @@ protected:
     void request_compatible_printers_FFF();
     void request_compatible_printers_SLA();
     void run_script_bridge(const wxString& script) override { run_script(script); }
+    void on_dpi_changed(const wxRect &suggested_rect) override;
 
 private:
     std::string& m_ret_val;
@@ -263,6 +265,7 @@ class LoginWebViewDialog : public WebViewDialog
 public:
     LoginWebViewDialog(wxWindow *parent, std::string &ret_val, const wxString& url);
     void on_navigation_request(wxWebViewEvent &evt) override;
+    void on_dpi_changed(const wxRect &suggested_rect) override;
 
 private:
     std::string &m_ret_val;
@@ -273,6 +276,7 @@ class LogoutWebViewDialog : public WebViewDialog
 public:
     LogoutWebViewDialog(wxWindow* parent);
     void on_loaded(wxWebViewEvent &evt) override;
+    void on_dpi_changed(const wxRect &suggested_rect) override {}
 };
 
 } // GUI

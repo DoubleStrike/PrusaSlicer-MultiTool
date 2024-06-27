@@ -199,12 +199,12 @@ msgstr ""
 "(Les autres éléments que les informations d'identification Wi-Fi resteront "
 "inchangés)"
 
-#: src/libslic3r/Utils.cpp:1034 src/slic3r/GUI/DoubleSliderForLayers.cpp:1006
+#: src/libslic3r/Utils.cpp:1034 src/slic3r/GUI/DoubleSliderForLayers.cpp:1005
 #, boost-format
 msgid "%1%d"
 msgstr "%1%j"
 
-#: src/libslic3r/Utils.cpp:1035 src/slic3r/GUI/DoubleSliderForLayers.cpp:1007
+#: src/libslic3r/Utils.cpp:1035 src/slic3r/GUI/DoubleSliderForLayers.cpp:1006
 #, boost-format
 msgid "%1%h"
 msgstr "%1%h"
@@ -223,7 +223,7 @@ msgid "1 (light)"
 msgstr "1 (léger)"
 
 #. TRN "m" means "minutes"
-#: src/libslic3r/Utils.cpp:1037 src/slic3r/GUI/DoubleSliderForLayers.cpp:1008
+#: src/libslic3r/Utils.cpp:1037 src/slic3r/GUI/DoubleSliderForLayers.cpp:1007
 #, boost-format
 msgid "%1%m"
 msgstr "%1%m"
@@ -242,7 +242,7 @@ msgstr ""
 msgid "1 mm"
 msgstr "1 mm"
 
-#: src/slic3r/GUI/Plater.cpp:4433
+#: src/slic3r/GUI/Plater.cpp:4441
 #, boost-format
 msgid "%1% - Multiple projects file"
 msgstr "%1% - Fichier de plusieurs projets"
@@ -265,7 +265,7 @@ msgstr "%1% Préréglage"
 msgid "%1% : read only"
 msgstr "%1% : lecture seule"
 
-#: src/libslic3r/Utils.cpp:1045 src/slic3r/GUI/DoubleSliderForLayers.cpp:1009
+#: src/libslic3r/Utils.cpp:1045 src/slic3r/GUI/DoubleSliderForLayers.cpp:1008
 #, boost-format
 msgid "%1%s"
 msgstr "%1%s"
@@ -299,7 +299,7 @@ msgstr "2 mm"
 msgid "%3.2f mm³/s at filament speed %3.2f mm/s."
 msgstr "%3.2f mm³/s à une vitesse de filament de %3.2f mm/s."
 
-#: src/slic3r/GUI/MainFrame.cpp:1556
+#: src/slic3r/GUI/MainFrame.cpp:1566
 msgid "3&D"
 msgstr "3&D"
 
@@ -355,7 +355,7 @@ msgstr ""
 msgid "Abort"
 msgstr "Annuler"
 
-#: src/slic3r/GUI/MainFrame.cpp:1213 src/slic3r/GUI/MainFrame.cpp:1216
+#: src/slic3r/GUI/MainFrame.cpp:1223 src/slic3r/GUI/MainFrame.cpp:1226
 #, c-format, boost-format
 msgid "&About %s"
 msgstr "&Au sujet de %s"
@@ -408,7 +408,7 @@ msgstr ""
 "Une copie du préréglage système actuel sera créé, et il sera détaché du "
 "préréglage système."
 
-#: src/slic3r/GUI/Plater.cpp:4448 src/slic3r/GUI/Plater.cpp:4845
+#: src/slic3r/GUI/Plater.cpp:4456 src/slic3r/GUI/Plater.cpp:4853
 msgid "Action"
 msgstr "Action"
 
@@ -469,7 +469,7 @@ msgstr ""
 msgid "Add"
 msgstr "Ajouter"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5036
+#: src/slic3r/GUI/GLCanvas3D.cpp:5004
 msgid "Add..."
 msgstr "Ajouter..."
 
@@ -479,11 +479,11 @@ msgid "Add \"%1%\" as a next preset for the the physical printer \"%2%\""
 msgstr ""
 "Ajouter \"%1%\" comme préréglage suivant pour l'imprimante physique \"%2%\""
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1140
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1139
 msgid "Add another code - Ctrl + Left click"
 msgstr "Ajouter un autre code - Ctr + Clic gauche"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1141
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1140
 msgid "Add another code - Right click"
 msgstr "Ajouter un autre code - Clic droit"
 
@@ -510,11 +510,11 @@ msgstr "Ajouter un changement de couleur"
 msgid "Add color change (%1%) for:"
 msgstr "Ajouter le changement de couleur (%1%) pour :"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1137
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1136
 msgid "Add color change - Left click"
 msgstr "Ajouter un changement de couleur - Clic gauche"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1135
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1134
 msgid ""
 "Add color change - Left click for predefined color or Shift + Left click for "
 "custom color selection"
@@ -563,7 +563,7 @@ msgstr "Ajouter un objet de texte embossé"
 msgid "Add Emboss text Volume"
 msgstr "Ajouter un volume de texte embossé"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1133
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1132
 msgid "Add extruder change - Left click"
 msgstr "Ajouter un changement d'extrudeur - Clic gauche"
 
@@ -581,7 +581,7 @@ msgstr "Ajouter un Sous-objet Générique"
 msgid "Add Height Range"
 msgstr "Ajouter une Zone de Hauteur"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5103 src/slic3r/GUI/GUI_Factories.cpp:1394
+#: src/slic3r/GUI/GLCanvas3D.cpp:5071 src/slic3r/GUI/GUI_Factories.cpp:1394
 #: src/slic3r/GUI/GUI_Factories.cpp:1418 src/slic3r/GUI/GUI_Factories.cpp:1429
 msgid "Add instance"
 msgstr "Ajouter l'instance"
@@ -961,7 +961,7 @@ msgstr "Toutes les pièces non solides (modificateurs) ont été supprimées"
 msgid "All objects are outside of the print volume."
 msgstr "Tous les objets sont en dehors du volume d'impression."
 
-#: src/slic3r/GUI/Plater.cpp:5052
+#: src/slic3r/GUI/Plater.cpp:5060
 msgid "All objects will be removed, continue?"
 msgstr "Tous les objets seront supprimés, continuer ?"
 
@@ -1169,11 +1169,11 @@ msgstr ""
 "La compensation de taille XY ne peut pas être combinée avec la peinture "
 "multi-matériaux."
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6654
+#: src/slic3r/GUI/GLCanvas3D.cpp:6639
 msgid "An object outside the print area was detected."
 msgstr "Un objet en dehors de la zone d'impression a été détecté."
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6659
+#: src/slic3r/GUI/GLCanvas3D.cpp:6644
 msgid ""
 "An object outside the print area was detected.\n"
 "Resolve the current problem to continue slicing."
@@ -1213,7 +1213,7 @@ msgstr "Clé API / Mot de Passe"
 msgid "Application font size"
 msgstr "Taille de la police de l'application"
 
-#: src/slic3r/GUI/GUI_App.cpp:2628
+#: src/slic3r/GUI/GUI_App.cpp:2622 src/slic3r/GUI/GUI_App.cpp:2624
 msgid "Application preferences"
 msgstr "Préférences de l'application"
 
@@ -1232,7 +1232,7 @@ msgstr "Appliquer le réglage ci-dessous aux autres extrudeurs"
 msgid "Apply changes"
 msgstr "Appliquer les modifications"
 
-#: src/slic3r/GUI/GUI_Preview.cpp:712
+#: src/slic3r/GUI/GUI_Preview.cpp:718
 msgid "Apply color change automatically"
 msgstr "Appliquer le changement de couleur automatiquement"
 
@@ -1284,7 +1284,7 @@ msgstr "l'archive est trop volumineuse"
 msgid "Archive preview"
 msgstr "Aperçu de l'archive"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6280
+#: src/slic3r/GUI/GLCanvas3D.cpp:6265
 #, boost-format
 msgid "Area fill: %1% %%"
 msgstr "Remplissage de la zone : %1% %%"
@@ -1346,7 +1346,7 @@ msgstr "Êtes-vous certain de vouloir le faire ?"
 msgid "Are you sure you want to permanently remove the \"%1%\" style?"
 msgstr "Voulez-vous vraiment supprimer définitivement le style \"%1%\" ?"
 
-#: src/slic3r/GUI/Plater.cpp:5737
+#: src/slic3r/GUI/Plater.cpp:5745
 msgid ""
 "Are you sure you want to store original SVGs with their local paths into the "
 "3MF file?\n"
@@ -1362,12 +1362,12 @@ msgid "Around object"
 msgstr "Autour de l'objet"
 
 #: src/slic3r/GUI/ArrangeSettingsDialogImgui.cpp:134
-#: src/slic3r/GUI/GLCanvas3D.cpp:5062 src/slic3r/GUI/KBShortcutsDialog.cpp:146
-#: src/slic3r/GUI/Plater.cpp:6550
+#: src/slic3r/GUI/GLCanvas3D.cpp:5030 src/slic3r/GUI/KBShortcutsDialog.cpp:146
+#: src/slic3r/GUI/Plater.cpp:6558
 msgid "Arrange"
 msgstr "Agencer"
 
-#: src/slic3r/GUI/Jobs/ArrangeJob.cpp:363 src/slic3r/GUI/Plater.cpp:6573
+#: src/slic3r/GUI/Jobs/ArrangeJob.cpp:363 src/slic3r/GUI/Plater.cpp:6581
 #, c-format, boost-format
 msgid ""
 "Arrangement ignored the following objects which can't fit into a single "
@@ -1382,7 +1382,7 @@ msgstr ""
 msgid "Arrange options"
 msgstr "Options d'agencement"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5062 src/slic3r/GUI/KBShortcutsDialog.cpp:147
+#: src/slic3r/GUI/GLCanvas3D.cpp:5030 src/slic3r/GUI/KBShortcutsDialog.cpp:147
 msgid "Arrange selection"
 msgstr "Agencer la sélection"
 
@@ -1459,6 +1459,20 @@ msgstr ""
 "La règle générale est 60 °C pour le PLA et 110 °C pour l'ABS. Laissez à zéro "
 "si vous n'avez pas de plateau chauffant."
 
+#: src/slic3r/GUI/UpdatesUIManager.cpp:68
+#, boost-format
+msgid ""
+"As an alternative to online sources, profiles can also be updated by "
+"manually loading files containing the updates. This is mostly useful on "
+"computers that are not connected to the internet. Files containing the "
+"configuration updates can be downloaded from <a href=%1%>our website</a>."
+msgstr ""
+"Au lieu des sources en ligne, les profils peuvent également être mis à jour "
+"en chargeant manuellement les fichiers contenant les mises à jour. Ceci est "
+"surtout utile sur les ordinateurs qui ne sont pas connectés à Internet. Les "
+"fichiers contenant les mises à jour de configuration peuvent être "
+"téléchargés depuis <a href=%1%>notre site web</a>."
+
 #: src/slic3r/GUI/OpenGLManager.cpp:393
 msgid ""
 "As a workaround, you may run PrusaSlicer with a software rendered 3D "
@@ -1533,11 +1547,11 @@ msgstr ""
 msgid "Associate .stl files to PrusaSlicer"
 msgstr "Associer les fichiers .stl à PrusaSlicer"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6655
+#: src/slic3r/GUI/GLCanvas3D.cpp:6640
 msgid "A toolpath outside the print area was detected."
 msgstr "Un parcours d'outil en dehors de la zone d'impression a été détecté."
 
-#: src/slic3r/GUI/Jobs/SLAImportJob.cpp:154 src/slic3r/GUI/MainFrame.cpp:1847
+#: src/slic3r/GUI/Jobs/SLAImportJob.cpp:154 src/slic3r/GUI/MainFrame.cpp:1857
 #: src/slic3r/GUI/Plater.cpp:1251 src/slic3r/GUI/Plater.cpp:1283
 msgid "Attention!"
 msgstr "Attention !"
@@ -1575,7 +1589,7 @@ msgstr "Autogénérer les points de support"
 msgid "Autogeneration will erase all manually edited points."
 msgstr "L'autogénération va effacer tous les points édités manuellement."
 
-#: src/slic3r/GUI/MainFrame.cpp:1461
+#: src/slic3r/GUI/MainFrame.cpp:1471
 msgid "Automatically repair an STL file"
 msgstr "Réparer automatiquement un fichier STL"
 
@@ -1712,7 +1726,7 @@ msgstr "Intégrer dans le modèle en tant que pièce non modifiable"
 msgid "Balanced"
 msgstr "Équilibré"
 
-#: src/slic3r/GUI/MainFrame.cpp:588
+#: src/slic3r/GUI/MainFrame.cpp:598
 msgid "based on Slic3r"
 msgstr "basé sur Slic3r"
 
@@ -1841,7 +1855,7 @@ msgid "Bottle weight"
 msgstr "Poids de la bouteille"
 
 #. TRN Main menu: View->Bottom
-#: src/slic3r/GUI/MainFrame.cpp:1299
+#: src/slic3r/GUI/MainFrame.cpp:1309
 msgid "Bottom"
 msgstr "Bas"
 
@@ -1880,7 +1894,7 @@ msgstr ""
 msgid "Bottom solid layers"
 msgstr "Couches solides inférieures"
 
-#: src/slic3r/GUI/MainFrame.cpp:1299
+#: src/slic3r/GUI/MainFrame.cpp:1309
 msgid "Bottom View"
 msgstr "Vue du Dessous"
 
@@ -2053,7 +2067,7 @@ msgstr "Renflement"
 msgid "Bulge proportion related to radius"
 msgstr "Proportion du renflement liée au rayon"
 
-#: src/slic3r/GUI/GUI_App.cpp:2010
+#: src/slic3r/GUI/GUI_App.cpp:2009
 msgid ""
 "But since this version of PrusaSlicer we don't show this information in "
 "Printer Settings anymore.\n"
@@ -2067,7 +2081,7 @@ msgstr ""
 msgid "Buttons And Text Colors Description"
 msgstr "Description des Boutons et des Couleurs de Texte"
 
-#: src/slic3r/GUI/GUI_App.cpp:2012
+#: src/slic3r/GUI/GUI_App.cpp:2011
 msgid ""
 "By default new Printer devices will be named as \"Printer N\" during its "
 "creation.\n"
@@ -2210,7 +2224,7 @@ msgstr ""
 "Ajoutez des points de support ou désactivez la génération de support."
 
 #. TRN The placeholder %1% is the file extension the user has selected.
-#: src/slic3r/GUI/Plater.cpp:5352
+#: src/slic3r/GUI/Plater.cpp:5360
 #, boost-format
 msgid ""
 "Cannot save ASCII G-code with %1% extension.\n"
@@ -2224,7 +2238,7 @@ msgstr ""
 "code binaire</a> dans les Réglages de l'imprimante."
 
 #. TRN The placeholder %1% is the file extension the user has selected.
-#: src/slic3r/GUI/Plater.cpp:5346
+#: src/slic3r/GUI/Plater.cpp:5354
 #, boost-format
 msgid ""
 "Cannot save binary G-code with %1% extension.\n"
@@ -2294,7 +2308,7 @@ msgstr "Impossible de renommer le style temporaire."
 msgid "Capabilities"
 msgstr "Fonctionnalités"
 
-#: src/slic3r/GUI/GUI_App.cpp:2613
+#: src/slic3r/GUI/GUI_App.cpp:2612
 msgid "Capture a configuration snapshot"
 msgstr "Capturer un instantané de la configuration"
 
@@ -2349,7 +2363,7 @@ msgstr "Température de la chambre"
 msgid "Change \"%1%\" to \"%2%\" for this physical printer \"%3%\""
 msgstr "Changer \"%1%\" par \"%2%\" pour cette imprimante physique \"%3%\""
 
-#: src/slic3r/GUI/GUI_App.cpp:2576
+#: src/slic3r/GUI/GUI_App.cpp:2575
 msgid "Change application mode"
 msgstr "Modifier le mode de l'application"
 
@@ -2440,7 +2454,7 @@ msgstr "Passer à un autre fichier .svg"
 msgid "Change type"
 msgstr "Changer le type"
 
-#: src/slic3r/GUI/GUI_App.cpp:2233
+#: src/slic3r/GUI/GUI_App.cpp:2232
 msgid "Changing of an application language"
 msgstr "Changer la langue d'une application"
 
@@ -2469,7 +2483,7 @@ msgstr ""
 msgid "Char gap"
 msgstr "Espacement caractères"
 
-#: src/slic3r/GUI/GUI_App.cpp:3666
+#: src/slic3r/GUI/GUI_App.cpp:3658
 msgid "Check for application update has failed."
 msgstr "La recherche de mise à jour de l'application a échoué."
 
@@ -2477,19 +2491,19 @@ msgstr "La recherche de mise à jour de l'application a échoué."
 msgid "Check for application updates"
 msgstr "Vérifier les mises à jour de l'application"
 
-#: src/slic3r/GUI/GUI_App.cpp:2615
+#: src/slic3r/GUI/GUI_App.cpp:2614
 msgid "Check for Application Updates"
 msgstr "Rechercher les Mises à Jour de l'Application"
 
-#: src/slic3r/GUI/GUI_App.cpp:2614
+#: src/slic3r/GUI/GUI_App.cpp:2613
 msgid "Check for configuration updates"
 msgstr "Vérifier les mises à jour de configuration"
 
-#: src/slic3r/GUI/GUI_App.cpp:2614
+#: src/slic3r/GUI/GUI_App.cpp:2613
 msgid "Check for Configuration Updates"
 msgstr "Vérifier les mises à jour de configuration"
 
-#: src/slic3r/GUI/GUI_App.cpp:2615
+#: src/slic3r/GUI/GUI_App.cpp:2614
 msgid "Check for new version of application"
 msgstr "Rechercher une nouvelle version de l'application"
 
@@ -2516,15 +2530,15 @@ msgstr "Choisir une imprimante"
 msgid "Choose folder"
 msgstr "Choisir un dossier"
 
-#: src/slic3r/GUI/GUI_App.cpp:2187
+#: src/slic3r/GUI/GUI_App.cpp:2186
 msgid "Choose one file (3MF/AMF):"
 msgstr "Choisir un fichier (3MF/AMF) :"
 
-#: src/slic3r/GUI/GUI_App.cpp:2222
+#: src/slic3r/GUI/GUI_App.cpp:2221
 msgid "Choose one file (GCODE/GCO/G/BGCODE/BGC/NGC):"
 msgstr "Choisissez un fichier (GCODE/GCO/G/BGCODE/BGC/NGC) :"
 
-#: src/slic3r/GUI/GUI_App.cpp:2199
+#: src/slic3r/GUI/GUI_App.cpp:2198
 msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/SVG):"
 msgstr "Choisissez un ou plusieurs fichiers (STL/3MF/STEP/OBJ/AMF/SVG) :"
 
@@ -2532,7 +2546,7 @@ msgstr "Choisissez un ou plusieurs fichiers (STL/3MF/STEP/OBJ/AMF/SVG) :"
 msgid "Choose one or more files (STL, OBJ):"
 msgstr "Choisissez un ou plusieurs fichiers (STL, OBJ) :"
 
-#: src/slic3r/GUI/UpdatesUIManager.cpp:243
+#: src/slic3r/GUI/UpdatesUIManager.cpp:278
 msgid "Choose one or more ZIP files"
 msgstr "Choisissez un ou plusieurs fichiers ZIP"
 
@@ -2552,7 +2566,7 @@ msgstr "Choisissez le fichier SVG pour l'embossage :"
 msgid "Choose the type of firmware used by your printer."
 msgstr "Choisissez le type de firmware utilisé par votre imprimante."
 
-#: src/slic3r/GUI/GUI_App.cpp:2210
+#: src/slic3r/GUI/GUI_App.cpp:2209
 msgid "Choose ZIP file"
 msgstr "Choisissez un fichier ZIP"
 
@@ -2611,12 +2625,12 @@ msgstr ""
 "cliquer sur cette icône ouvre une boîte de dialogue permettant de modifier "
 "cette valeur."
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5222 src/slic3r/GUI/GLCanvas3D.cpp:5259
+#: src/slic3r/GUI/GLCanvas3D.cpp:5193 src/slic3r/GUI/GLCanvas3D.cpp:5230
 msgid "Click right mouse button to open/close History"
 msgstr ""
 "Cliquez avec le bouton droit de la souris pour ouvrir/fermer l'historique"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5062
+#: src/slic3r/GUI/GLCanvas3D.cpp:5030
 msgid "Click right mouse button to show arrangement options"
 msgstr "Faites un clic droit pour afficher les options d'agencement"
 
@@ -2714,11 +2728,11 @@ msgstr "Rayon de fermeture"
 msgid "Collapse/Expand the sidebar"
 msgstr "Réduire/développer la barre latérale"
 
-#: src/slic3r/GUI/MainFrame.cpp:1600 src/slic3r/GUI/Plater.cpp:1083
+#: src/slic3r/GUI/MainFrame.cpp:1610 src/slic3r/GUI/Plater.cpp:1083
 msgid "Collapse sidebar"
 msgstr "Réduire la barre latérale"
 
-#: src/slic3r/GUI/MainFrame.cpp:1600
+#: src/slic3r/GUI/MainFrame.cpp:1610
 msgid "&Collapse Sidebar"
 msgstr "&Réduire la barre latérale"
 
@@ -2746,12 +2760,12 @@ msgstr "Changement de couleur"
 msgid "Color Change"
 msgstr "Changement de couleur"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1173
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1172
 #, boost-format
 msgid "Color change (\"%1%\")"
 msgstr "Changement de couleur (\"%1%\")"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1174
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1173
 #, boost-format
 msgid "Color change (\"%1%\") for Extruder %2%"
 msgstr "Changement de couleur (\"%1%\") pour l'extrudeur %2%"
@@ -2827,11 +2841,11 @@ msgstr "Commentaire :"
 msgid "Compared presets has different printer technology"
 msgstr "Les préréglages comparés ont une technologie d'imprimante différente"
 
-#: src/slic3r/GUI/MainFrame.cpp:1584
+#: src/slic3r/GUI/MainFrame.cpp:1594
 msgid "Compare presets"
 msgstr "Comparer les Préréglages"
 
-#: src/slic3r/GUI/MainFrame.cpp:1584
+#: src/slic3r/GUI/MainFrame.cpp:1594
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:1786
 msgid "Compare Presets"
 msgstr "Comparer les préréglages"
@@ -2879,8 +2893,8 @@ msgstr "échec de la compression"
 msgid "Concentric"
 msgstr "Concentrique"
 
-#: src/slic3r/GUI/MainFrame.cpp:1629 src/slic3r/GUI/MainFrame.cpp:1647
-#: src/slic3r/GUI/MainFrame.cpp:1740
+#: src/slic3r/GUI/MainFrame.cpp:1639 src/slic3r/GUI/MainFrame.cpp:1657
+#: src/slic3r/GUI/MainFrame.cpp:1750
 msgid "&Configuration"
 msgstr "&Configuration"
 
@@ -2913,7 +2927,7 @@ msgstr ""
 msgid "Configuration is edited in ConfigWizard"
 msgstr "La configuration est éditée dans l'Assistant de Configuration"
 
-#: src/slic3r/GUI/GUI_App.cpp:3308
+#: src/slic3r/GUI/GUI_App.cpp:3306
 msgid "Configuration is editing from ConfigWizard"
 msgstr "La configuration est modifiée dans l'Assistant de Configuration"
 
@@ -2921,7 +2935,7 @@ msgstr "La configuration est modifiée dans l'Assistant de Configuration"
 msgid "Configuration notes"
 msgstr "Notes de configuration"
 
-#: src/slic3r/GUI/GUI_App.cpp:2612
+#: src/slic3r/GUI/GUI_App.cpp:2611
 msgid "&Configuration Snapshots"
 msgstr "Instantanés de &Configuration"
 
@@ -3000,7 +3014,7 @@ msgid "Confirm connectors"
 msgstr "Confirmer les connecteurs"
 
 #. TRN %3% is name of Object1, %4% is name of Object2
-#: src/slic3r/GUI/GLCanvas3D.cpp:6671
+#: src/slic3r/GUI/GLCanvas3D.cpp:6656
 #, boost-format
 msgid ""
 "Conflicts in G-code paths have been detected at layer %1%, z=%2$.2f mm. "
@@ -3139,7 +3153,7 @@ msgstr ""
 "Contient le levage de l'axe Z présent au début du bloc de G-code "
 "personnalisé."
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1165
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1164
 msgid "continue"
 msgstr "continuer"
 
@@ -3156,7 +3170,7 @@ msgstr "Continuer et importer une configuration plus récente ?"
 msgid "Continue and install configuration updates?"
 msgstr "Continuer et installer les mises à jour de configuration ?"
 
-#: src/slic3r/GUI/GUI_App.cpp:2685
+#: src/slic3r/GUI/GUI_App.cpp:2683
 #, boost-format
 msgid "Continue to activate a configuration snapshot %1%?"
 msgstr "Continuer à activer un instantané de configuration %1% ?"
@@ -3182,39 +3196,39 @@ msgstr ""
 "automatiquement entre les deux premiers en fonction de la distance entre les "
 "deux piliers."
 
-#: src/slic3r/GUI/MainFrame.cpp:1449
+#: src/slic3r/GUI/MainFrame.cpp:1459
 msgid "&Convert"
 msgstr "&Convertir"
 
-#: src/slic3r/GUI/MainFrame.cpp:1443 src/slic3r/GUI/MainFrame.cpp:1704
+#: src/slic3r/GUI/MainFrame.cpp:1453 src/slic3r/GUI/MainFrame.cpp:1714
 msgid "Convert a G-code file from ASCII to binary format"
 msgstr "Convertir un fichier G-code d'ASCII au format binaire"
 
-#: src/slic3r/GUI/MainFrame.cpp:1446 src/slic3r/GUI/MainFrame.cpp:1707
+#: src/slic3r/GUI/MainFrame.cpp:1456 src/slic3r/GUI/MainFrame.cpp:1717
 msgid "Convert a G-code file from binary to ASCII format"
 msgstr "Convertir un fichier G-code du format binaire au format ASCII"
 
-#: src/slic3r/GUI/MainFrame.cpp:1443 src/slic3r/GUI/MainFrame.cpp:1704
+#: src/slic3r/GUI/MainFrame.cpp:1453 src/slic3r/GUI/MainFrame.cpp:1714
 msgid "Convert ASCII G-code to &binary"
 msgstr "Convertir le G-code ASCII en &binaire"
 
-#: src/slic3r/GUI/MainFrame.cpp:1446 src/slic3r/GUI/MainFrame.cpp:1707
+#: src/slic3r/GUI/MainFrame.cpp:1456 src/slic3r/GUI/MainFrame.cpp:1717
 msgid "Convert binary G-code to &ASCII"
 msgstr "Convertir le G-code binaire en &ASCII"
 
-#: src/slic3r/GUI/GUI_Factories.cpp:1016 src/slic3r/GUI/Plater.cpp:5279
+#: src/slic3r/GUI/GUI_Factories.cpp:1016 src/slic3r/GUI/Plater.cpp:5287
 msgid "Convert from imperial units"
 msgstr "Convertir à partir des unités impériales"
 
-#: src/slic3r/GUI/GUI_Factories.cpp:1018 src/slic3r/GUI/Plater.cpp:5281
+#: src/slic3r/GUI/GUI_Factories.cpp:1018 src/slic3r/GUI/Plater.cpp:5289
 msgid "Convert from meters"
 msgstr "Convertir à partir de mètres"
 
-#: src/slic3r/GUI/Plater.cpp:4297
+#: src/slic3r/GUI/Plater.cpp:4305
 msgid "Convert G-code file to ASCII format"
 msgstr "Convertir le fichier G-code au format ASCII"
 
-#: src/slic3r/GUI/Plater.cpp:4376
+#: src/slic3r/GUI/Plater.cpp:4384
 msgid "Convert G-code file to binary format"
 msgstr "Convertir le fichier G-code au format binaire"
 
@@ -3246,15 +3260,15 @@ msgstr "Longueur du tube de refroidissement"
 msgid "Cooling tube position"
 msgstr "Position du tube de refroidissement"
 
-#: src/slic3r/GUI/Plater.cpp:5187
+#: src/slic3r/GUI/Plater.cpp:5195
 msgid "Copies of the selected object"
 msgstr "Copies de l'objet sélectionné"
 
-#: src/slic3r/GUI/MainFrame.cpp:1510
+#: src/slic3r/GUI/MainFrame.cpp:1520
 msgid "&Copy"
 msgstr "&Copier"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5082
+#: src/slic3r/GUI/GLCanvas3D.cpp:5050
 #: src/slic3r/GUI/PhysicalPrinterDialog.cpp:443
 msgid "Copy"
 msgstr "Copie"
@@ -3311,7 +3325,7 @@ msgstr ""
 msgid "Copyright"
 msgstr "Droits d'auteur"
 
-#: src/slic3r/GUI/MainFrame.cpp:1511
+#: src/slic3r/GUI/MainFrame.cpp:1521
 msgid "Copy selection to clipboard"
 msgstr "Copier la sélection dans le presse-papier"
 
@@ -3419,7 +3433,7 @@ msgstr "Impossible d'obtenir une référence d'Hôte d'Imprimante valide"
 msgid "Could not get resources to create a new connection"
 msgstr "Impossible d'obtenir les ressources pour créer une nouvelle connexion"
 
-#: src/slic3r/GUI/GUI_App.cpp:3769
+#: src/slic3r/GUI/GUI_App.cpp:3761
 msgid ""
 "Could not start URL download. Destination folder is not set. Please choose "
 "destination folder in Configuration Wizard."
@@ -3483,16 +3497,16 @@ msgstr "Échec du test CRC-32"
 msgid "Create pad around object and ignore the support elevation"
 msgstr "Créer un socle autour de l'objet et ignorer l'élévation du support"
 
-#: src/slic3r/GUI/Plater.cpp:4005
+#: src/slic3r/GUI/Plater.cpp:4013
 msgid "Creating a new project"
 msgstr "Création d'un nouveau projet"
 
-#: src/slic3r/GUI/Plater.cpp:3998
+#: src/slic3r/GUI/Plater.cpp:4006
 msgid "Creating a new project while some presets are modified."
 msgstr ""
 "Création d'un nouveau projet alors que certains préréglages sont modifiés."
 
-#: src/slic3r/GUI/Plater.cpp:3995
+#: src/slic3r/GUI/Plater.cpp:4003
 msgid "Creating a new project while the current project is modified."
 msgstr "Création d'un nouveau projet alors que le projet en cours est modifié."
 
@@ -3599,7 +3613,7 @@ msgstr ""
 msgid "Custom G-code"
 msgstr "G-code personnalisé"
 
-#: src/slic3r/GUI/GUI_Preview.cpp:439
+#: src/slic3r/GUI/GUI_Preview.cpp:445
 #, boost-format
 msgid "Custom G-code on current layer (%1% mm)."
 msgstr "G-code personnalisé sur la couche actuelle actuel (%1% mm)."
@@ -3656,7 +3670,7 @@ msgstr ""
 "Les supports et jointures personnalisés et la peinture multi-matériaux ont "
 "été supprimés après le découpage de l'objet."
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1178
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1177
 #, boost-format
 msgid "Custom template (\"%1%\")"
 msgstr "Modèle personnalisé (\"%1%\")"
@@ -3744,7 +3758,7 @@ msgstr "Rapport de décimation"
 msgid "decompression failed or archive is corrupted"
 msgstr "la décompression a échoué ou l'archive est corrompue"
 
-#: src/slic3r/GUI/Plater.cpp:5128
+#: src/slic3r/GUI/Plater.cpp:5136
 msgid "Decrease Instances"
 msgstr "Diminuer les Instances"
 
@@ -3899,7 +3913,7 @@ msgid "delete"
 msgstr "supprimer"
 
 #: src/slic3r/GUI/GalleryDialog.cpp:120 src/slic3r/GUI/GalleryDialog.cpp:537
-#: src/slic3r/GUI/GLCanvas3D.cpp:5044 src/slic3r/GUI/GUI_Factories.cpp:531
+#: src/slic3r/GUI/GLCanvas3D.cpp:5012 src/slic3r/GUI/GUI_Factories.cpp:531
 #: src/slic3r/GUI/Tab.cpp:4449
 msgid "Delete"
 msgstr "Supprimer"
@@ -3909,12 +3923,12 @@ msgstr "Supprimer"
 msgid "Delete \"%1%\" style."
 msgstr "Supprimer le style \"%1%\"."
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5053 src/slic3r/GUI/KBShortcutsDialog.cpp:110
-#: src/slic3r/GUI/Plater.cpp:5052 src/slic3r/GUI/Tab.cpp:4887
+#: src/slic3r/GUI/GLCanvas3D.cpp:5021 src/slic3r/GUI/KBShortcutsDialog.cpp:110
+#: src/slic3r/GUI/Plater.cpp:5060 src/slic3r/GUI/Tab.cpp:4887
 msgid "Delete all"
 msgstr "Tout Supprimer"
 
-#: src/slic3r/GUI/MainFrame.cpp:1497
+#: src/slic3r/GUI/MainFrame.cpp:1507
 msgid "Delete &All"
 msgstr "Tout &Supprimer"
 
@@ -4015,7 +4029,7 @@ msgstr "Supprimer l'imprimante physique"
 msgid "Delete preset"
 msgstr "Supprimer le préréglage"
 
-#: src/slic3r/GUI/MainFrame.cpp:1498
+#: src/slic3r/GUI/MainFrame.cpp:1508
 msgid "Deletes all objects"
 msgstr "Supprimer tous les objets"
 
@@ -4023,7 +4037,7 @@ msgstr "Supprimer tous les objets"
 msgid "Delete selected"
 msgstr "Supprimer la sélection"
 
-#: src/slic3r/GUI/MainFrame.cpp:1494
+#: src/slic3r/GUI/MainFrame.cpp:1504
 msgid "&Delete Selected"
 msgstr "Supprimer la sélection"
 
@@ -4031,7 +4045,7 @@ msgstr "Supprimer la sélection"
 msgid "Delete Selected"
 msgstr "Supprimer la Sélection"
 
-#: src/slic3r/GUI/Plater.cpp:5063
+#: src/slic3r/GUI/Plater.cpp:5071
 msgid "Delete Selected Objects"
 msgstr "Supprimer les Objets Sélectionnés"
 
@@ -4043,7 +4057,7 @@ msgstr "Supprimer les Réglages"
 msgid "Delete solid part from object which is a part of cut"
 msgstr "Supprimer la partie solide de l'objet qui fait partie de la coupe"
 
-#: src/slic3r/GUI/MainFrame.cpp:1495
+#: src/slic3r/GUI/MainFrame.cpp:1505
 msgid "Deletes the current selection"
 msgstr "Supprime la sélection en cours"
 
@@ -4059,7 +4073,7 @@ msgstr "Supprimer un point de support"
 msgid "Delete this preset from this printer device"
 msgstr "Supprimer ce préréglage de cette imprimante"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1203
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1202
 msgid "Delete tick mark - Left click or press \"-\" key"
 msgstr ""
 "Supprimer la coche - Faites un clic gauche ou appuyez sur la touche \"-\""
@@ -4108,8 +4122,8 @@ msgstr "Réinsertions"
 msgid "Deretraction Speed"
 msgstr "Vitesse de réinsertion"
 
-#: src/slic3r/GUI/UpdatesUIManager.cpp:108
-#: src/slic3r/GUI/UpdatesUIManager.cpp:149
+#: src/slic3r/GUI/UpdatesUIManager.cpp:143
+#: src/slic3r/GUI/UpdatesUIManager.cpp:184
 msgid "Description"
 msgstr "Description"
 
@@ -4121,7 +4135,7 @@ msgstr "Nom descriptif de l'imprimante"
 msgid "Deselect all"
 msgstr "Désélectionner tout"
 
-#: src/slic3r/GUI/MainFrame.cpp:1490
+#: src/slic3r/GUI/MainFrame.cpp:1500
 msgid "D&eselect All"
 msgstr "Tout &Déselectionner"
 
@@ -4129,12 +4143,12 @@ msgstr "Tout &Déselectionner"
 msgid "Deselect by rectangle"
 msgstr "Désélectionner par rectangle"
 
-#: src/slic3r/GUI/MainFrame.cpp:1491
+#: src/slic3r/GUI/MainFrame.cpp:1501
 msgid "Deselects all objects"
 msgstr "Désélectionner tous les objets"
 
 #: src/slic3r/GUI/DesktopIntegrationDialog.cpp:632
-#: src/slic3r/GUI/GUI_App.cpp:2618
+#: src/slic3r/GUI/GUI_App.cpp:2617
 msgid "Desktop Integration"
 msgstr "Intégration au bureau"
 
@@ -4345,7 +4359,7 @@ msgstr ""
 msgid "Discard"
 msgstr "Ignorer"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1091
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1090
 msgid "Discard all custom changes"
 msgstr "Éliminer toutes les modifications personnalisées"
 
@@ -4370,7 +4384,7 @@ msgstr "Afficher la symétrie horizontale"
 msgid "Display orientation"
 msgstr "Orientation de l'affichage"
 
-#: src/slic3r/GUI/MainFrame.cpp:1576
+#: src/slic3r/GUI/MainFrame.cpp:1586
 msgid "Display the Print Host Upload Queue window"
 msgstr ""
 "Afficher la fenêtre de la File d'Attente de Téléchargement de l'Hôte "
@@ -4463,7 +4477,7 @@ msgstr "Diviser par zéro"
 msgid "%d lines: %.2f mm"
 msgstr "%d lignes : %.2f mm"
 
-#: src/slic3r/GUI/Plater.cpp:4171 src/slic3r/GUI/Plater.cpp:4181
+#: src/slic3r/GUI/Plater.cpp:4179 src/slic3r/GUI/Plater.cpp:4189
 msgid "does not contain valid gcode."
 msgstr "ne contient pas de gcode valide."
 
@@ -4512,7 +4526,7 @@ msgstr "Ne plus me notifier au sujet des nouvelles publications"
 msgid "Don't save"
 msgstr "Ne pas enregistrer"
 
-#: src/slic3r/GUI/Plater.cpp:4861 src/slic3r/GUI/Plater.cpp:5387
+#: src/slic3r/GUI/Plater.cpp:4869 src/slic3r/GUI/Plater.cpp:5395
 msgid "Don't show again"
 msgstr "Ne plus afficher"
 
@@ -4549,7 +4563,7 @@ msgstr ""
 msgid "Download from %1% couldn't start:"
 msgstr "Le téléchargement depuis %1% n'a pas pu démarrer :"
 
-#: src/slic3r/GUI/GUI_App.cpp:3731
+#: src/slic3r/GUI/GUI_App.cpp:3723
 #, boost-format
 msgid "Downloading %1%"
 msgstr "Téléchargement de %1%"
@@ -4563,7 +4577,7 @@ msgstr ""
 "Le téléchargement du nouveau %1% a échoué :\n"
 "%2%"
 
-#: src/slic3r/GUI/GUI_App.cpp:3741
+#: src/slic3r/GUI/GUI_App.cpp:3733
 msgid "Downloading of the new version is in progress. Do you want to continue?"
 msgstr ""
 "Le téléchargement de la nouvelle version est en cours. Voulez-vous "
@@ -4620,7 +4634,7 @@ msgstr "Voulez-vous continuer à modifier la configuration ?"
 msgid "Do you want to delete all saved tool changes?"
 msgstr "Voulez-vous supprimer tous les changements d'outils enregistrés ?"
 
-#: src/slic3r/GUI/GUI_App.cpp:2724 src/slic3r/GUI/Preferences.cpp:770
+#: src/slic3r/GUI/GUI_App.cpp:2722 src/slic3r/GUI/Preferences.cpp:770
 #: src/slic3r/GUI/Selection.cpp:1496
 msgid "Do you want to proceed?"
 msgstr "Voulez-vous poursuivre?"
@@ -4650,7 +4664,7 @@ msgstr ""
 "Voulez-vous sélectionner les matériaux SLA par défaut pour ces modèles "
 "d'imprimantes ?"
 
-#: src/slic3r/GUI/GUI_App.cpp:3335
+#: src/slic3r/GUI/GUI_App.cpp:3333
 #, boost-format
 msgid ""
 "Do you wish to register downloads from <b>Printables.com</b>\n"
@@ -4665,7 +4679,7 @@ msgstr ""
 "Les téléchargements peuvent être enregistrés pour un seul exécutable à la "
 "fois."
 
-#: src/slic3r/GUI/MainFrame.cpp:1983
+#: src/slic3r/GUI/MainFrame.cpp:1993
 #, c-format, boost-format
 msgid "%d presets successfully imported."
 msgstr "%d préréglages importés avec succès."
@@ -4681,7 +4695,7 @@ msgstr "Bouclier contre les flux d'air"
 msgid "Drag"
 msgstr "Faites glisser"
 
-#: src/slic3r/GUI/Plater.cpp:4903
+#: src/slic3r/GUI/Plater.cpp:4911
 msgid "Drag and drop G-code file"
 msgstr "Glisser et déposer un fichier G-code"
 
@@ -4758,7 +4772,7 @@ msgstr "Vitesse de surplomb dynamique"
 msgid "Edge"
 msgstr "Arrête"
 
-#: src/slic3r/GUI/MainFrame.cpp:1621 src/slic3r/GUI/MainFrame.cpp:1643
+#: src/slic3r/GUI/MainFrame.cpp:1631 src/slic3r/GUI/MainFrame.cpp:1653
 msgid "&Edit"
 msgstr "&Editer"
 
@@ -4774,7 +4788,7 @@ msgstr "Éditer la couleur"
 msgid "Edit connectors"
 msgstr "Modifier les connecteurs"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1103
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1102
 msgid "Edit current color - Right click the colored slider segment"
 msgstr ""
 "Modifier la couleur actuelle - Cliquez avec le bouton droit sur le segment "
@@ -4827,11 +4841,11 @@ msgstr "Modifier le SVG"
 msgid "Edit text"
 msgstr "Modifier le texte"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1205
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1204
 msgid "Edit tick mark - Ctrl + Left click"
 msgstr "Modifier la coche - Ctrl + Clic gauche"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1206
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1205
 msgid "Edit tick mark - Right click"
 msgstr "Modifier la coche - Clic droit"
 
@@ -4864,11 +4878,11 @@ msgstr "L'éjection de l'appareil %s(%s) a échoué."
 msgid "Eject SD card / Flash drive"
 msgstr "Éjecter la carte SD / la clef USB"
 
-#: src/slic3r/GUI/MainFrame.cpp:1451
+#: src/slic3r/GUI/MainFrame.cpp:1461
 msgid "Ejec&t SD Card / Flash Drive"
 msgstr "Éje&cter la carte SD / la clé USB"
 
-#: src/slic3r/GUI/MainFrame.cpp:1451
+#: src/slic3r/GUI/MainFrame.cpp:1461
 msgid "Eject SD card / Flash drive after the G-code was exported to it."
 msgstr ""
 "Éjecter la carte SD / la clef USB une fois que la G-code y a été exporté."
@@ -5131,7 +5145,7 @@ msgstr "Assurer le contact avec le plateau"
 msgid "Enter a search term"
 msgstr "Entrer un terme de recherche"
 
-#: src/slic3r/GUI/GUI_Preview.cpp:438
+#: src/slic3r/GUI/GUI_Preview.cpp:444
 msgid "Enter custom G-code used on current layer"
 msgstr "Entrez le G-code personnalisé utilisé sur la couche actuelle"
 
@@ -5167,7 +5181,7 @@ msgstr "Accès aux point de support SLA"
 msgid "Enter new name"
 msgstr "Entrer de nouveaux noms"
 
-#: src/slic3r/GUI/GUI_Preview.cpp:460
+#: src/slic3r/GUI/GUI_Preview.cpp:466
 msgid "Enter short message shown on Printer display when a print is paused"
 msgstr ""
 "Entrez un court message affiché sur l'écran de l'imprimante lorsqu'une "
@@ -5198,7 +5212,7 @@ msgstr ""
 msgid "Enter the height you want to jump to"
 msgstr "Entrez la hauteur à laquelle vous souhaitez sauter"
 
-#: src/slic3r/GUI/Plater.cpp:5186
+#: src/slic3r/GUI/Plater.cpp:5194
 msgid "Enter the number of copies:"
 msgstr "Saisissez le nombre de copies :"
 
@@ -5285,9 +5299,9 @@ msgstr ""
 
 #: src/slic3r/GUI/GCodeViewer.cpp:849
 #: src/slic3r/GUI/Gizmos/GLGizmoSimplify.cpp:181
-#: src/slic3r/GUI/MainFrame.cpp:1340 src/slic3r/GUI/Plater.cpp:4234
-#: src/slic3r/GUI/Plater.cpp:4272 src/slic3r/GUI/Plater.cpp:4312
-#: src/slic3r/GUI/Plater.cpp:4350 src/slic3r/GUI/PrintHostDialogs.cpp:429
+#: src/slic3r/GUI/MainFrame.cpp:1350 src/slic3r/GUI/Plater.cpp:4242
+#: src/slic3r/GUI/Plater.cpp:4280 src/slic3r/GUI/Plater.cpp:4320
+#: src/slic3r/GUI/Plater.cpp:4358 src/slic3r/GUI/PrintHostDialogs.cpp:429
 msgid "Error"
 msgstr "Erreur"
 
@@ -5301,7 +5315,7 @@ msgstr "Erreur!"
 msgid "ERROR"
 msgstr "ERREUR"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6704
+#: src/slic3r/GUI/GLCanvas3D.cpp:6689
 #: src/slic3r/GUI/NotificationManager.cpp:2111
 #: src/slic3r/GUI/NotificationManager.cpp:2118
 #: src/slic3r/GUI/NotificationManager.cpp:2134
@@ -5315,7 +5329,7 @@ msgstr "ERREUR :"
 msgid "Error accessing port at %s: %s"
 msgstr "Erreur d'accès au port sur %s : %s"
 
-#: src/slic3r/GUI/Plater.cpp:4288 src/slic3r/GUI/Plater.cpp:4367
+#: src/slic3r/GUI/Plater.cpp:4296 src/slic3r/GUI/Plater.cpp:4375
 msgid "Error converting G-code file"
 msgstr "Erreur lors de la conversion du fichier G-code"
 
@@ -5355,7 +5369,7 @@ msgstr "Erreurs détectées après l'opération de coupe"
 msgid "Error uploading to print host"
 msgstr "Erreur lors du téléchargement vers l'hôte d'impression"
 
-#: src/slic3r/GUI/Plater.cpp:4172 src/slic3r/GUI/Plater.cpp:4182
+#: src/slic3r/GUI/Plater.cpp:4180 src/slic3r/GUI/Plater.cpp:4190
 msgid "Error while loading .gcode file"
 msgstr "Erreur lors du chargement du fichier .gcode"
 
@@ -5454,11 +5468,11 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/slic3r/GUI/MainFrame.cpp:1469
+#: src/slic3r/GUI/MainFrame.cpp:1479
 msgid "E&xit"
 msgstr "&Quitter"
 
-#: src/slic3r/GUI/MainFrame.cpp:1469 src/slic3r/GUI/UpdateDialogs.cpp:395
+#: src/slic3r/GUI/MainFrame.cpp:1479 src/slic3r/GUI/UpdateDialogs.cpp:395
 #: src/slic3r/GUI/UpdateDialogs.cpp:442
 #, c-format, boost-format
 msgid "Exit %s"
@@ -5504,15 +5518,15 @@ msgstr "Expert"
 msgid "Expert mode"
 msgstr "Mode expert"
 
-#: src/slic3r/GUI/MainFrame.cpp:1440
+#: src/slic3r/GUI/MainFrame.cpp:1450
 msgid "&Export"
 msgstr "&Exporter"
 
-#: src/slic3r/GUI/MainFrame.cpp:1756
+#: src/slic3r/GUI/MainFrame.cpp:1766
 msgid "E&xport"
 msgstr "E&xporter"
 
-#: src/slic3r/GUI/Plater.cpp:6623
+#: src/slic3r/GUI/Plater.cpp:6631
 msgid "Export"
 msgstr "Exporter"
 
@@ -5524,13 +5538,13 @@ msgstr "Exporter."
 msgid "Export 3MF"
 msgstr "Exporter 3MF"
 
-#: src/slic3r/GUI/MainFrame.cpp:1437
+#: src/slic3r/GUI/MainFrame.cpp:1447
 msgid "Export all presets including physical printers to file"
 msgstr ""
 "Exporter tous les préréglage y compris les imprimantes physiques vers un "
 "fichier"
 
-#: src/slic3r/GUI/MainFrame.cpp:1434
+#: src/slic3r/GUI/MainFrame.cpp:1444
 msgid "Export all presets to file"
 msgstr "Exporter tous les préréglage vers un fichier"
 
@@ -5550,36 +5564,36 @@ msgstr "Exporter en STL/OBJ"
 msgid "Export config"
 msgstr "Exporter la configuration"
 
-#: src/slic3r/GUI/MainFrame.cpp:1431
+#: src/slic3r/GUI/MainFrame.cpp:1441
 msgid "Export &Config"
 msgstr "Exporter la &Configuration"
 
-#: src/slic3r/GUI/MainFrame.cpp:1434
+#: src/slic3r/GUI/MainFrame.cpp:1444
 msgid "Export Config &Bundle"
 msgstr "Exporter le &Lot de Configuration"
 
-#: src/slic3r/GUI/MainFrame.cpp:1437
+#: src/slic3r/GUI/MainFrame.cpp:1447
 msgid "Export Config Bundle With Physical Printers"
 msgstr "Exporter le Lot de Configurations Avec les Imprimantes Physiques"
 
-#: src/slic3r/GUI/MainFrame.cpp:1431
+#: src/slic3r/GUI/MainFrame.cpp:1441
 msgid "Export current configuration to file"
 msgstr "Exporter la configuration actuelle vers un fichier"
 
-#: src/slic3r/GUI/MainFrame.cpp:1408
+#: src/slic3r/GUI/MainFrame.cpp:1418
 msgid "Export current plate as G-code"
 msgstr "Exporter le plateau courant en G-code"
 
-#: src/slic3r/GUI/MainFrame.cpp:1416
+#: src/slic3r/GUI/MainFrame.cpp:1426
 msgid "Export current plate as G-code to SD card / Flash drive"
 msgstr ""
 "Exporter le plateau actuel en tant que G-code vers la carte SD / la clef USB"
 
-#: src/slic3r/GUI/MainFrame.cpp:1420
+#: src/slic3r/GUI/MainFrame.cpp:1430
 msgid "Export current plate as STL/OBJ"
 msgstr "Exporter le plateau actuel en STL/OBJ"
 
-#: src/slic3r/GUI/MainFrame.cpp:1423
+#: src/slic3r/GUI/MainFrame.cpp:1433
 msgid "Export current plate as STL/OBJ including supports"
 msgstr "Exporter le plateau actuel en STL/OBJ y compris les supports"
 
@@ -5590,12 +5604,12 @@ msgstr ""
 "Exportez les chemins d'accès complets des modèles et des sources de pièces "
 "dans des fichiers 3mf et amf"
 
-#: src/slic3r/GUI/MainFrame.cpp:1408 src/slic3r/GUI/MainFrame.cpp:1756
+#: src/slic3r/GUI/MainFrame.cpp:1418 src/slic3r/GUI/MainFrame.cpp:1766
 msgid "Export &G-code"
 msgstr "Exporter le &G-code"
 
 #: src/libslic3r/PrintConfig.cpp:5446 src/slic3r/GUI/KBShortcutsDialog.cpp:101
-#: src/slic3r/GUI/Plater.cpp:6623 src/slic3r/GUI/Sidebar.cpp:497
+#: src/slic3r/GUI/Plater.cpp:6631 src/slic3r/GUI/Sidebar.cpp:497
 msgid "Export G-code"
 msgstr "Exporter le G-code"
 
@@ -5603,7 +5617,7 @@ msgstr "Exporter le G-code"
 msgid "Export G-Code."
 msgstr "Exporter le G-code."
 
-#: src/slic3r/GUI/MainFrame.cpp:1416
+#: src/slic3r/GUI/MainFrame.cpp:1426
 msgid "Export G-code to SD Card / Flash Drive"
 msgstr "Exporter le G-code vers la carte SD / la clé USB"
 
@@ -5611,7 +5625,7 @@ msgstr "Exporter le G-code vers la carte SD / la clé USB"
 msgid "Exporting."
 msgstr "Exportation."
 
-#: src/slic3r/GUI/MainFrame.cpp:1875
+#: src/slic3r/GUI/MainFrame.cpp:1885
 msgid "Exporting configuration bundle"
 msgstr "Exportation du lot de configuration"
 
@@ -5636,11 +5650,11 @@ msgstr "Exporter OBJ"
 msgid "Export OBJ file:"
 msgstr "Exporter le fichier OBJ :"
 
-#: src/slic3r/GUI/MainFrame.cpp:1420
+#: src/slic3r/GUI/MainFrame.cpp:1430
 msgid "Export Plate as &STL/OBJ"
 msgstr "Exporter la plateau en &STL/OBJ"
 
-#: src/slic3r/GUI/MainFrame.cpp:1423
+#: src/slic3r/GUI/MainFrame.cpp:1433
 msgid "Export Plate as STL/OBJ &Including Supports"
 msgstr "Exporter le plateau en STL/OBJ y compris les &supports"
 
@@ -5676,11 +5690,11 @@ msgstr "Exporter le(s) modèle(s) en tant que OBJ."
 msgid "Export the model(s) as STL."
 msgstr "Exporter le(s) modèle(s) en tant que STL."
 
-#: src/slic3r/GUI/MainFrame.cpp:1427 src/slic3r/GUI/MainFrame.cpp:1711
+#: src/slic3r/GUI/MainFrame.cpp:1437 src/slic3r/GUI/MainFrame.cpp:1721
 msgid "Export toolpaths as OBJ"
 msgstr "Exporter le parcours en tant que OBJ"
 
-#: src/slic3r/GUI/MainFrame.cpp:1427 src/slic3r/GUI/MainFrame.cpp:1711
+#: src/slic3r/GUI/MainFrame.cpp:1437 src/slic3r/GUI/MainFrame.cpp:1721
 msgid "Export &Toolpaths as OBJ"
 msgstr "Exporter les &Parcours d'outils en OBJ"
 
@@ -5772,17 +5786,17 @@ msgstr "Extruder"
 msgid "Extruder"
 msgstr "Extrudeur"
 
-#: src/slic3r/GUI/GUI_App.cpp:3936
+#: src/slic3r/GUI/GUI_App.cpp:3928
 #, boost-format
 msgid "Extruder %1%: Installed and selected filament %2%"
 msgstr "Extrudeur %1% : Filament %2% installé et sélectionné"
 
-#: src/slic3r/GUI/GUI_App.cpp:3904 src/slic3r/GUI/GUI_App.cpp:3921
+#: src/slic3r/GUI/GUI_App.cpp:3896 src/slic3r/GUI/GUI_App.cpp:3913
 #, boost-format
 msgid "Extruder %1%: Selected filament %2%"
 msgstr "Extrudeur %1% : Filament %2% sélectionné"
 
-#: src/slic3r/GUI/GUI_App.cpp:3940
+#: src/slic3r/GUI/GUI_App.cpp:3932
 #, boost-format
 msgid "Extruder %2%: Failed to find and select filament type: %1%"
 msgstr ""
@@ -5825,7 +5839,7 @@ msgstr "Extrudeurs"
 msgid "Extruders count"
 msgstr "Nombre d'extrudeurs"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1180
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1179
 #, boost-format
 msgid "Extruder (tool) is changed to Extruder \"%1%\""
 msgstr "L'extrudeur (outil) est remplacée par l'extrudeur \"%1%\""
@@ -5881,7 +5895,7 @@ msgstr ""
 msgid "Failed processing of the output_filename_format template."
 msgstr "Échec du traitement du modèle output_filename_format."
 
-#: src/slic3r/GUI/GUI_App.cpp:2699
+#: src/slic3r/GUI/GUI_App.cpp:2697
 msgid "Failed to activate configuration snapshot."
 msgstr "L'activation de l'instantané de configuration a échoué."
 
@@ -5907,7 +5921,7 @@ msgstr "Échec du perçage de certains trous dans le modèle"
 msgid "Failed to extract local archive %1%."
 msgstr "Échec de l'extraction de l'archive locale %1%."
 
-#: src/slic3r/GUI/Plater.cpp:4624
+#: src/slic3r/GUI/Plater.cpp:4632
 #, boost-format
 msgid "Failed to find unzipped file at %1%. Unzipping of file has failed."
 msgstr ""
@@ -5918,15 +5932,22 @@ msgstr ""
 msgid "Failed to load a web browser."
 msgstr "Échec du chargement d'un navigateur web."
 
-#: src/slic3r/GUI/MainFrame.cpp:1916
-#: src/slic3r/GUI/PhysicalPrinterDialog.cpp:218 src/slic3r/GUI/Plater.cpp:5966
-#: src/slic3r/GUI/UserAccountCommunication.cpp:122
+#. TRN Config wizard page with a log in page.
+#: src/slic3r/GUI/ConfigWizardWebViewPage.cpp:29
+msgid "Failed to load a web browser. Logging in is not possible in the moment."
+msgstr ""
+"Échec du chargement d'un navigateur web. La connexion n'est pas possible "
+"pour le moment."
+
+#: src/slic3r/GUI/MainFrame.cpp:1926
+#: src/slic3r/GUI/PhysicalPrinterDialog.cpp:218 src/slic3r/GUI/Plater.cpp:5974
+#: src/slic3r/GUI/UserAccountCommunication.cpp:126
 msgid "Failed to load credentials from the system password store."
 msgstr ""
 "Échec du chargement des informations d'identification à partir du trousseau "
 "de mots de passe du système."
 
-#: src/slic3r/GUI/MainFrame.cpp:1927
+#: src/slic3r/GUI/MainFrame.cpp:1937
 #, boost-format
 msgid ""
 "Failed to load credentials from the system password store for printer %1%."
@@ -5942,14 +5963,14 @@ msgstr "Échec de l'ouverture du fichier en écriture."
 msgid "Failed to parse a Connect reply"
 msgstr "Échec de l'analyse d'une réponse Connect"
 
-#: src/slic3r/GUI/Plater.cpp:6012
+#: src/slic3r/GUI/Plater.cpp:6020
 msgid "Failed to read response from Prusa Connect server. Upload is cancelled."
 msgstr ""
 "Échec de la lecture de la réponse du serveur Prusa Connect. Le "
 "téléchargement est annulé."
 
 #: src/slic3r/GUI/PhysicalPrinterDialog.cpp:192
-#: src/slic3r/GUI/UserAccountCommunication.cpp:96
+#: src/slic3r/GUI/UserAccountCommunication.cpp:100
 msgid "Failed to save credentials to the system password store."
 msgstr ""
 "Échec de l'enregistrement des informations d'identification dans le "
@@ -5962,7 +5983,7 @@ msgstr ""
 "Échec de l'analyse des réseaux sans fil. Veuillez remplir le SSID "
 "manuellement."
 
-#: src/slic3r/GUI/Plater.cpp:5991
+#: src/slic3r/GUI/Plater.cpp:5999
 msgid "Failed to select a printer."
 msgstr "Échec de la sélection d'une imprimante."
 
@@ -5971,7 +5992,7 @@ msgid "Failed to select printer from Prusa Connect."
 msgstr "Échec de la sélection de l'imprimante depuis Prusa Connect."
 
 #. TRN: First argument = path to file, second argument = error description
-#: src/slic3r/GUI/Plater.cpp:4614
+#: src/slic3r/GUI/Plater.cpp:4622
 #, boost-format
 msgid "Failed to unzip file to %1%: %2%"
 msgstr "Impossible de décompresser le fichier vers %1% : %2%"
@@ -6133,15 +6154,15 @@ msgstr "Filaments"
 msgid "Filament settings"
 msgstr "Réglages du filaments"
 
-#: src/slic3r/GUI/MainFrame.cpp:2178 src/slic3r/GUI/MainFrame.cpp:2179
+#: src/slic3r/GUI/MainFrame.cpp:2188 src/slic3r/GUI/MainFrame.cpp:2189
 msgid "Filament Settings"
 msgstr "Réglages du filament"
 
-#: src/slic3r/GUI/MainFrame.cpp:1546 src/slic3r/GUI/MainFrame.cpp:1759
+#: src/slic3r/GUI/MainFrame.cpp:1556 src/slic3r/GUI/MainFrame.cpp:1769
 msgid "&Filament Settings Tab"
 msgstr "Onglet des Réglages du &Filament"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:4357 src/slic3r/GUI/MainFrame.cpp:596
+#: src/slic3r/GUI/GLCanvas3D.cpp:4357 src/slic3r/GUI/MainFrame.cpp:606
 msgid "Filament Settings Tab"
 msgstr "Onglet de réglages du filament"
 
@@ -6165,12 +6186,12 @@ msgstr "Type de filament"
 msgid "Filament unload time"
 msgstr "Temps de déchargement du filament"
 
-#: src/slic3r/GUI/MainFrame.cpp:1619 src/slic3r/GUI/MainFrame.cpp:1642
-#: src/slic3r/GUI/MainFrame.cpp:1737
+#: src/slic3r/GUI/MainFrame.cpp:1629 src/slic3r/GUI/MainFrame.cpp:1652
+#: src/slic3r/GUI/MainFrame.cpp:1747
 msgid "&File"
 msgstr "&Fichier"
 
-#: src/slic3r/GUI/Plater.cpp:4264 src/slic3r/GUI/Plater.cpp:4342
+#: src/slic3r/GUI/Plater.cpp:4272 src/slic3r/GUI/Plater.cpp:4350
 #: src/slic3r/GUI/UpdateDialogs.cpp:234
 #, boost-format
 msgid "File %1% already exists. Do you wish to overwrite it?"
@@ -6184,7 +6205,7 @@ msgstr "échec de la fermeture du fichier"
 msgid "file create failed"
 msgstr "échec de création du fichier"
 
-#: src/slic3r/GUI/UpdatesUIManager.cpp:176
+#: src/slic3r/GUI/UpdatesUIManager.cpp:211
 msgid "File does NOT exist"
 msgstr "Le fichier n'existe PAS"
 
@@ -6193,7 +6214,7 @@ msgstr "Le fichier n'existe PAS"
 msgid "File does NOT exist (%1%)."
 msgstr "Le fichier n'existe PAS (%1%)."
 
-#: src/slic3r/GUI/UpdatesUIManager.cpp:176
+#: src/slic3r/GUI/UpdatesUIManager.cpp:211
 msgid "File exists"
 msgstr "Le fichier existe"
 
@@ -6248,7 +6269,7 @@ msgstr "échec d'écriture du fichier"
 msgid "Fill angle"
 msgstr "Angle du remplissage"
 
-#: src/slic3r/GUI/Plater.cpp:5214
+#: src/slic3r/GUI/Plater.cpp:5222
 msgid "Fill bed"
 msgstr "Remplir le plateau"
 
@@ -6468,7 +6489,7 @@ msgstr ""
 msgid "Flashing succeeded!"
 msgstr "Flash effectué avec succès !"
 
-#: src/slic3r/GUI/GUI_App.cpp:2634
+#: src/slic3r/GUI/GUI_App.cpp:2632
 msgid "Flash Printer &Firmware"
 msgstr "Flasher le &Firmware de l'Imprimante"
 
@@ -6657,7 +6678,7 @@ msgstr ""
 msgid "For more information please visit our wiki page:"
 msgstr "Pour plus d'informations, merci de visiter notre page wiki :"
 
-#: src/slic3r/GUI/GUI_App.cpp:2927
+#: src/slic3r/GUI/GUI_App.cpp:2925
 msgid "For new project all modifications will be reseted"
 msgstr "Pour un nouveau projet, toutes les modifications seront réinitialisées"
 
@@ -6737,7 +6758,7 @@ msgstr ""
 msgid "From surface"
 msgstr "Depuis la surface"
 
-#: src/slic3r/GUI/MainFrame.cpp:1301
+#: src/slic3r/GUI/MainFrame.cpp:1311
 msgid "Front"
 msgstr "Avant"
 
@@ -6749,7 +6770,7 @@ msgstr "Avant gauche"
 msgid "Front right"
 msgstr "Avant droit"
 
-#: src/slic3r/GUI/MainFrame.cpp:1301
+#: src/slic3r/GUI/MainFrame.cpp:1311
 msgid "Front View"
 msgstr "Vue Avant"
 
@@ -6765,11 +6786,11 @@ msgstr "Ventilateur à pleine vitesse pour la couche"
 msgid "full profile name"
 msgstr "nom de profil complet"
 
-#: src/slic3r/GUI/MainFrame.cpp:1605
+#: src/slic3r/GUI/MainFrame.cpp:1615
 msgid "&Fullscreen"
 msgstr "&Plein écran"
 
-#: src/slic3r/GUI/MainFrame.cpp:1605
+#: src/slic3r/GUI/MainFrame.cpp:1615
 msgid "Fullscreen"
 msgstr "Plein écran"
 
@@ -6851,7 +6872,7 @@ msgstr "Remplissage des trous"
 msgid "g/cm³"
 msgstr "g/cm³"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1189
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1188
 msgid ""
 "G-code associated to this tick mark is in a conflict with print mode.\n"
 "Editing it will cause changes of Slider data."
@@ -6877,7 +6898,7 @@ msgstr "La version du G-code est modifiée"
 msgid "G-code preview"
 msgstr "Aperçu du G-code"
 
-#: src/slic3r/GUI/MainFrame.cpp:1465
+#: src/slic3r/GUI/MainFrame.cpp:1475
 msgid "&G-code Preview"
 msgstr "&Aperçu du G-code"
 
@@ -6905,7 +6926,7 @@ msgid "General"
 msgstr "Général"
 
 #. TRN Wifi config dialog explanation line 1.
-#: src/slic3r/GUI/GUI_App.cpp:2638 src/slic3r/GUI/WifiConfigDialog.cpp:50
+#: src/slic3r/GUI/GUI_App.cpp:2636 src/slic3r/GUI/WifiConfigDialog.cpp:50
 msgid ""
 "Generate a file to be loaded by a Prusa printer to configure its Wi-Fi "
 "connection."
@@ -7239,8 +7260,8 @@ msgstr ""
 "configuration initiale ; juste quelques paramètres et vous serez prêt à "
 "imprimer."
 
-#: src/slic3r/GUI/MainFrame.cpp:1633 src/slic3r/GUI/MainFrame.cpp:1648
-#: src/slic3r/GUI/MainFrame.cpp:1741
+#: src/slic3r/GUI/MainFrame.cpp:1643 src/slic3r/GUI/MainFrame.cpp:1658
+#: src/slic3r/GUI/MainFrame.cpp:1751
 msgid "&Help"
 msgstr "&Aide"
 
@@ -7520,9 +7541,8 @@ msgid ""
 "each letter(glyph) has an independent orthogonal projection,\n"
 "otherwise, the whole text has the same orthogonal projection."
 msgstr ""
-"Si cette case est cochée, \n"
-"chaque lettre (glyphe) a une projection orthogonale indépendante,\n"
-"sinon, le texte entier a la même projection orthogonale."
+"Si cochée, chaque lettre (glyphe) a une projection orthogonale indépendante, "
+"sinon, tout le texte a la même projection orthogonale."
 
 #: src/slic3r/GUI/Gizmos/GLGizmoEmboss.cpp:2817
 msgid ""
@@ -7530,9 +7550,9 @@ msgid ""
 "model surface under the text's shape is shift in the embossing direction,\n"
 "otherwise text is flat and you have to deal with distance from surface."
 msgstr ""
-"Si cette option est cochée, la surface du modèle sous la forme du texte est "
-"décalée dans le sens du gaufrage, sinon le texte est plat et vous devez "
-"tenir compte de la distance par rapport à la surface."
+"Si cochée, la surface du modèle sous la forme du texte est décalée dans le "
+"sens de l'embossage, sinon le texte est plat et vous devez gérer la distance "
+"par rapport à la surface."
 
 #: src/libslic3r/PrintConfig.cpp:2920
 msgid ""
@@ -8110,7 +8130,7 @@ msgstr "Ignore les facettes opposées à la caméra."
 msgid "Illegal instruction"
 msgstr "Instruction illégale"
 
-#: src/slic3r/GUI/MainFrame.cpp:1405
+#: src/slic3r/GUI/MainFrame.cpp:1415
 msgid "&Import"
 msgstr "&Importer"
 
@@ -8118,19 +8138,19 @@ msgstr "&Importer"
 msgid "Import"
 msgstr "Importer"
 
-#: src/slic3r/GUI/Plater.cpp:4469
+#: src/slic3r/GUI/Plater.cpp:4477
 msgid "Import 3D models"
 msgstr "Importer des modèles 3D"
 
-#: src/slic3r/GUI/Plater.cpp:4834
+#: src/slic3r/GUI/Plater.cpp:4842
 msgid "Import 3D models only"
 msgstr "Importer uniquement des modèles 3D"
 
-#: src/slic3r/GUI/MainFrame.cpp:1395
+#: src/slic3r/GUI/MainFrame.cpp:1405
 msgid "Import &Config"
 msgstr "Importer la &Configuration"
 
-#: src/slic3r/GUI/MainFrame.cpp:1402
+#: src/slic3r/GUI/MainFrame.cpp:1412
 msgid "Import Config &Bundle"
 msgstr "Importer le &Lot de Configuration"
 
@@ -8138,11 +8158,11 @@ msgstr "Importer le &Lot de Configuration"
 msgid "Import Config from ini/amf/3mf/gcode"
 msgstr "Importer une Configuration depuis ini/amf/3mf/gcode"
 
-#: src/slic3r/GUI/MainFrame.cpp:1398
+#: src/slic3r/GUI/MainFrame.cpp:1408
 msgid "Import Config from &Project"
 msgstr "Importer la Configuration à partir du &Projet"
 
-#: src/slic3r/GUI/Plater.cpp:4835
+#: src/slic3r/GUI/Plater.cpp:4843
 msgid "Import config only"
 msgstr "Importer la configuration uniquement"
 
@@ -8174,11 +8194,11 @@ msgstr "Importer le modèle et le profil"
 msgid "Import model only"
 msgstr "Importer le modèle uniquement"
 
-#: src/slic3r/GUI/Plater.cpp:4069
+#: src/slic3r/GUI/Plater.cpp:4077
 msgid "Import Object"
 msgstr "Importer l'Objet"
 
-#: src/slic3r/GUI/Plater.cpp:4073
+#: src/slic3r/GUI/Plater.cpp:4081
 msgid "Import Objects"
 msgstr "Importer les Objets"
 
@@ -8186,15 +8206,15 @@ msgstr "Importer les Objets"
 msgid "Import profile only"
 msgstr "Importer le profil uniquement"
 
-#: src/slic3r/GUI/Plater.cpp:4103
+#: src/slic3r/GUI/Plater.cpp:4111
 msgid "Import SLA archive"
 msgstr "Importer l'archive SLA"
 
-#: src/slic3r/GUI/MainFrame.cpp:1386
+#: src/slic3r/GUI/MainFrame.cpp:1396
 msgid "Import SLA Archive"
 msgstr "Importer une archive SLA"
 
-#: src/slic3r/GUI/MainFrame.cpp:1378
+#: src/slic3r/GUI/MainFrame.cpp:1388
 msgid "Import STL/3MF/STEP/OBJ/AM&F"
 msgstr "Importer STL/3MF/STEP/OBJ/AM&F"
 
@@ -8203,11 +8223,11 @@ msgid "Import STL/3MF/STEP/OBJ/AMF without config, keep plater"
 msgstr ""
 "Importer un STL/3MF/STEP/OBJ/AMF sans configuration, conserver le plateau"
 
-#: src/slic3r/GUI/MainFrame.cpp:1382
+#: src/slic3r/GUI/MainFrame.cpp:1392
 msgid "Import STL (Imperial Units)"
 msgstr "Importer le STL (unités impériales)"
 
-#: src/slic3r/GUI/MainFrame.cpp:1390
+#: src/slic3r/GUI/MainFrame.cpp:1400
 msgid "Import ZIP Archive"
 msgstr "Importer une archive ZIP"
 
@@ -8249,7 +8269,7 @@ msgstr "Incompatible avec ce %s"
 msgid "Increase/decrease edit area"
 msgstr "Augmenter/diminuer la zone d'édition"
 
-#: src/slic3r/GUI/Plater.cpp:5072
+#: src/slic3r/GUI/Plater.cpp:5080
 msgid "Increase Instances"
 msgstr "Augmenter les Instances"
 
@@ -8346,7 +8366,7 @@ msgstr "Chevauchement remplissage/périmètres"
 msgid "Info"
 msgstr "Info"
 
-#: src/slic3r/GUI/GUI_App.cpp:2016 src/slic3r/GUI/PhysicalPrinterDialog.cpp:992
+#: src/slic3r/GUI/GUI_App.cpp:2015 src/slic3r/GUI/PhysicalPrinterDialog.cpp:992
 msgid "Information"
 msgstr "Information"
 
@@ -8439,7 +8459,7 @@ msgstr ""
 "poids ou des écrous dans vos impressions. Lire la suite dans la "
 "documentation."
 
-#: src/slic3r/GUI/GUI_App.cpp:2612
+#: src/slic3r/GUI/GUI_App.cpp:2611
 msgid "Inspect / activate configuration snapshots"
 msgstr "Inspecter / activer les instantanés de configuration"
 
@@ -8447,7 +8467,7 @@ msgstr "Inspecter / activer les instantanés de configuration"
 msgid "Install"
 msgstr "Installer"
 
-#: src/slic3r/GUI/GUI_App.cpp:3858
+#: src/slic3r/GUI/GUI_App.cpp:3850
 #, boost-format
 msgid ""
 "Installed and selected printer:\n"
@@ -8670,15 +8690,15 @@ msgstr "Is it safe?"
 msgid "is licensed under the"
 msgstr "est sous licence"
 
-#: src/slic3r/GUI/MainFrame.cpp:1292
+#: src/slic3r/GUI/MainFrame.cpp:1302
 msgid "Iso"
 msgstr "Isométrique"
 
-#: src/slic3r/GUI/MainFrame.cpp:1292
+#: src/slic3r/GUI/MainFrame.cpp:1302
 msgid "Iso View"
 msgstr "Vue Isométrique"
 
-#: src/slic3r/GUI/Plater.cpp:6169
+#: src/slic3r/GUI/Plater.cpp:6177
 msgid "Is the printer ready? Is the print sheet in place, empty and clean?"
 msgstr ""
 "L'imprimante est-elle prête ? La plaque d'impression est-elle en place, vide "
@@ -8722,7 +8742,7 @@ msgstr ""
 msgid "It's a last preset for this physical printer."
 msgstr "C'est le dernier préréglage pour cette imprimante physique."
 
-#: src/slic3r/GUI/GUI_App.cpp:3241
+#: src/slic3r/GUI/GUI_App.cpp:3239
 msgid ""
 "It's impossible to print object(s) which contains parameter modifiers with "
 "SLA technology."
@@ -8737,7 +8757,7 @@ msgstr ""
 "l'imprimante."
 
 #. TRN: %1% contains paths from which loading failed. They are separated by \n, there is no \n at the end.
-#: src/slic3r/GUI/GUI_App.cpp:3523
+#: src/slic3r/GUI/GUI_App.cpp:3515
 #, boost-format
 msgid ""
 "It was not possible to extract data from %1%. The source will not be updated."
@@ -8769,7 +8789,7 @@ msgstr "Gigue"
 msgid "Join"
 msgstr "Joindre"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6701
+#: src/slic3r/GUI/GLCanvas3D.cpp:6686
 msgid "Jump to"
 msgstr "Sauter à"
 
@@ -8778,7 +8798,7 @@ msgstr "Sauter à"
 msgid "Jump to height"
 msgstr "Sauter à la hauteur"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1098
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1097
 #, c-format, boost-format
 msgid ""
 "Jump to height %s\n"
@@ -8787,7 +8807,7 @@ msgstr ""
 "Sauter à la hauteur %s\n"
 "ou Définir le mode règle"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1095
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1094
 #, c-format, boost-format
 msgid ""
 "Jump to height %s\n"
@@ -8834,7 +8854,7 @@ msgstr "Continuez"
 msgid "Keyboard shortcuts"
 msgstr "Raccourcis clavier"
 
-#: src/slic3r/GUI/KBShortcutsDialog.cpp:22 src/slic3r/GUI/MainFrame.cpp:1278
+#: src/slic3r/GUI/KBShortcutsDialog.cpp:22 src/slic3r/GUI/MainFrame.cpp:1288
 msgid "Keyboard Shortcuts"
 msgstr "Raccourcis Clavier"
 
@@ -8850,15 +8870,15 @@ msgstr "Marquer les objets"
 msgid "Landscape"
 msgstr "Paysage"
 
-#: src/slic3r/GUI/GUI_App.cpp:2631
+#: src/slic3r/GUI/GUI_App.cpp:2629
 msgid "&Language"
 msgstr "&Langue"
 
-#: src/slic3r/GUI/GUI_App.cpp:2377
+#: src/slic3r/GUI/GUI_App.cpp:2376
 msgid "Language"
 msgstr "Langue"
 
-#: src/slic3r/GUI/GUI_App.cpp:2719
+#: src/slic3r/GUI/GUI_App.cpp:2717
 msgid "Language selection"
 msgstr "Sélection de la langue"
 
@@ -8870,7 +8890,7 @@ msgstr "La dernière instance d'un objet ne peut être supprimée."
 msgid "Layer"
 msgstr "Couche"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6278
+#: src/slic3r/GUI/GLCanvas3D.cpp:6263
 #, boost-format
 msgid "Layer area: %1% mm²"
 msgstr "Surface de la couche : %1% mm²"
@@ -8945,7 +8965,7 @@ msgctxt "Layers"
 msgid "Bottom"
 msgstr "Dessous"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6277
+#: src/slic3r/GUI/GLCanvas3D.cpp:6262
 msgid "Layer statistics"
 msgstr "Statistiques de couche"
 
@@ -8955,7 +8975,7 @@ msgctxt "Layers"
 msgid "Top"
 msgstr "Dessus"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6282
+#: src/slic3r/GUI/GLCanvas3D.cpp:6267
 #, boost-format
 msgid "Layer time: %1%"
 msgstr "Temps de couche : %1%"
@@ -9013,7 +9033,7 @@ msgstr "Sortie de la peinture de jointure"
 msgid "Leaving SLA support points"
 msgstr "Sortie des point de support SLA"
 
-#: src/slic3r/GUI/MainFrame.cpp:1305
+#: src/slic3r/GUI/MainFrame.cpp:1315
 msgid "Left"
 msgstr "Gauche"
 
@@ -9045,7 +9065,7 @@ msgstr "Bouton gauche de la souris :"
 msgid "Left Preset Value"
 msgstr "Valeur du Préréglage gauche"
 
-#: src/slic3r/GUI/MainFrame.cpp:1305
+#: src/slic3r/GUI/MainFrame.cpp:1315
 msgid "Left View"
 msgstr "Vue Gauche"
 
@@ -9136,7 +9156,7 @@ msgstr "Dégradé linéaire"
 msgid "Line gap"
 msgstr "Espacement lignes"
 
-#: src/slic3r/GUI/GUI_Factories.cpp:546 src/slic3r/GUI/UpdatesUIManager.cpp:59
+#: src/slic3r/GUI/GUI_Factories.cpp:546 src/slic3r/GUI/UpdatesUIManager.cpp:94
 msgid "Load"
 msgstr "Charger"
 
@@ -9144,7 +9164,7 @@ msgstr "Charger"
 msgid "Load..."
 msgstr "Charger..."
 
-#: src/slic3r/GUI/MainFrame.cpp:1378
+#: src/slic3r/GUI/MainFrame.cpp:1388
 msgid "Load a model"
 msgstr "Charger un modèle"
 
@@ -9158,15 +9178,15 @@ msgstr ""
 "pour conserver différents profils ou inclure des configurations depuis un "
 "stockage réseau."
 
-#: src/slic3r/GUI/MainFrame.cpp:1382
+#: src/slic3r/GUI/MainFrame.cpp:1392
 msgid "Load an model saved with imperial units"
 msgstr "Charger un modèle enregistré avec des unités impériales"
 
-#: src/slic3r/GUI/MainFrame.cpp:1386
+#: src/slic3r/GUI/MainFrame.cpp:1396
 msgid "Load an SLA archive"
 msgstr "Charger une archive SLA"
 
-#: src/slic3r/GUI/MainFrame.cpp:1390
+#: src/slic3r/GUI/MainFrame.cpp:1400
 msgid "Load a ZIP archive"
 msgstr "Charger une archive ZIP"
 
@@ -9193,7 +9213,7 @@ msgstr ""
 msgid "Load Config from ini/amf/3mf/gcode and merge"
 msgstr "Charger une configuration à partir d'un ini/amf/3mf/gcode et fusionner"
 
-#: src/slic3r/GUI/MainFrame.cpp:1398
+#: src/slic3r/GUI/MainFrame.cpp:1408
 msgid "Load configuration from project file"
 msgstr "Charger la configuration depuis le fichier du projet"
 
@@ -9205,15 +9225,15 @@ msgstr ""
 "Charger la configuration depuis le fichier spécifié. Ceci peut être utilisé "
 "plusieurs fois afin de charger des options depuis plusieurs fichiers."
 
-#: src/slic3r/GUI/MainFrame.cpp:1395
+#: src/slic3r/GUI/MainFrame.cpp:1405
 msgid "Load exported configuration file"
 msgstr "Charger le fichier de configuration exporté"
 
-#: src/slic3r/GUI/Plater.cpp:4997
+#: src/slic3r/GUI/Plater.cpp:5005
 msgid "Load File"
 msgstr "Charger le Fichier"
 
-#: src/slic3r/GUI/Plater.cpp:5002
+#: src/slic3r/GUI/Plater.cpp:5010
 msgid "Load Files"
 msgstr "Charger les Fichiers"
 
@@ -9222,11 +9242,11 @@ msgstr "Charger les Fichiers"
 msgid "Loading"
 msgstr "Chargement"
 
-#: src/slic3r/GUI/GUI_App.cpp:2676
+#: src/slic3r/GUI/GUI_App.cpp:2674
 msgid "Loading a configuration snapshot"
 msgstr "Chargement d'un instantané de configuration"
 
-#: src/slic3r/GUI/GUI_App.cpp:2965
+#: src/slic3r/GUI/GUI_App.cpp:2963
 msgid "Loading a new project while the current project is modified."
 msgstr ""
 "Chargement d'un nouveau projet pendant que le projet en cours est modifié."
@@ -9236,7 +9256,7 @@ msgid "Loading configuration"
 msgstr "Chargement de la configuration"
 
 #. TRN: Text showing while the ConfigWizard is loading, so the user knows something is happening.
-#: src/slic3r/GUI/GUI_App.cpp:3272
+#: src/slic3r/GUI/GUI_App.cpp:3270
 msgid "Loading Configuration Wizard..."
 msgstr "Chargement de l'Assistant de Configuration..."
 
@@ -9244,25 +9264,25 @@ msgstr "Chargement de l'Assistant de Configuration..."
 msgid "Loading file"
 msgstr "Chargement du fichier"
 
-#: src/slic3r/GUI/MainFrame.cpp:1953
+#: src/slic3r/GUI/MainFrame.cpp:1963
 msgid "Loading of a configuration bundle"
 msgstr "Chargement d'un lot de configuration"
 
-#: src/slic3r/GUI/MainFrame.cpp:1828
+#: src/slic3r/GUI/MainFrame.cpp:1838
 msgid "Loading of a configuration file"
 msgstr "Chargement d'un fichier de configuration"
 
-#: src/slic3r/GUI/GUI_App.cpp:2048
+#: src/slic3r/GUI/GUI_App.cpp:2047
 msgid "Loading of a mode view"
 msgstr "Chargement d'un mode de vue"
 
 #. TRN %1% is archive path
-#: src/slic3r/GUI/Plater.cpp:4554
+#: src/slic3r/GUI/Plater.cpp:4562
 #, boost-format
 msgid "Loading of a ZIP archive on path %1% has failed."
 msgstr "Le chargement d'une archive ZIP dans le chemin %1% a échoué."
 
-#: src/slic3r/GUI/GUI_App.cpp:2043
+#: src/slic3r/GUI/GUI_App.cpp:2042
 msgid "Loading of current presets"
 msgstr "Chargement de préréglages actuels"
 
@@ -9292,15 +9312,15 @@ msgstr "Charger le Modificateur"
 msgid "Load Part"
 msgstr "Charger une Partie"
 
-#: src/slic3r/GUI/MainFrame.cpp:1402
+#: src/slic3r/GUI/MainFrame.cpp:1412
 msgid "Load presets from a bundle"
 msgstr "Charger les préréglages à partir d'un lot"
 
-#: src/slic3r/GUI/Plater.cpp:4039
+#: src/slic3r/GUI/Plater.cpp:4047
 msgid "Load Project"
 msgstr "Charger le Projet"
 
-#: src/slic3r/GUI/Plater.cpp:4824
+#: src/slic3r/GUI/Plater.cpp:4832
 msgid "Load project file"
 msgstr "Charger le fichier de projet"
 
@@ -9308,7 +9328,7 @@ msgstr "Charger le fichier de projet"
 msgid "Load shape from STL..."
 msgstr "Charger une forme depuis un STL..."
 
-#: src/slic3r/GUI/UpdatesUIManager.cpp:43
+#: src/slic3r/GUI/UpdatesUIManager.cpp:49
 msgid "Local sources"
 msgstr "Sources locales"
 
@@ -9373,6 +9393,30 @@ msgstr "Connexion"
 #: src/slic3r/GUI/WebViewDialog.cpp:1319
 msgid "Log in dialog"
 msgstr "Boîte de dialogue de connexion"
+
+#: src/slic3r/GUI/ConfigWizardWebViewPage.cpp:18
+msgid "Log in (optional)"
+msgstr "Connexion (facultatif)"
+
+#. TRN Config wizard page with a log in web. first line of text.
+#: src/slic3r/GUI/ConfigWizardWebViewPage.cpp:38
+#: src/slic3r/GUI/ConfigWizardWebViewPage.cpp:63
+msgid ""
+"Log in to control your printers remotely through the built-in Connect in "
+"PrusaSlicer."
+msgstr ""
+"Connectez-vous pour contrôler vos imprimantes à distance via la connexion "
+"intégrée à PrusaSlicer."
+
+#. TRN Config wizard page headline.
+#: src/slic3r/GUI/ConfigWizardWebViewPage.cpp:18
+msgid "Log into the Prusa Account (optional)"
+msgstr "Connectez-vous au Prusa Account (facultatif)"
+
+#. TRN Config wizard page headline.
+#: src/slic3r/GUI/ConfigWizardWebViewPage.cpp:18
+msgid "Log in with Your Prusa Account (optional)"
+msgstr "Connectez-vous avec votre Prusa Account (facultatif)"
 
 #: src/slic3r/GUI/TopBarMenus.cpp:101
 msgid "Log out"
@@ -9468,7 +9512,7 @@ msgstr ""
 msgid "Making infill"
 msgstr "Définition du remplissage"
 
-#: src/slic3r/GUI/UpdatesUIManager.cpp:308
+#: src/slic3r/GUI/UpdatesUIManager.cpp:343
 msgid "Manage Updates"
 msgstr "Gérer les mises à jour"
 
@@ -9516,15 +9560,15 @@ msgstr "Profil d'impression du matériau"
 msgid "Materials"
 msgstr "Matériaux"
 
-#: src/slic3r/GUI/MainFrame.cpp:2178 src/slic3r/GUI/MainFrame.cpp:2179
+#: src/slic3r/GUI/MainFrame.cpp:2188 src/slic3r/GUI/MainFrame.cpp:2189
 msgid "Material Settings"
 msgstr "Réglages Matériau"
 
-#: src/slic3r/GUI/MainFrame.cpp:1759
+#: src/slic3r/GUI/MainFrame.cpp:1769
 msgid "Mate&rial Settings Tab"
 msgstr "Onglet Réglage&s Matériau"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:4357 src/slic3r/GUI/MainFrame.cpp:596
+#: src/slic3r/GUI/GLCanvas3D.cpp:4357 src/slic3r/GUI/MainFrame.cpp:606
 msgid "Material Settings Tab"
 msgstr "Onglet de réglages du matériau"
 
@@ -9910,7 +9954,7 @@ msgstr ""
 msgid "Message"
 msgstr "Message"
 
-#: src/slic3r/GUI/GUI_Preview.cpp:461
+#: src/slic3r/GUI/GUI_Preview.cpp:467
 #, boost-format
 msgid "Message for pause print on current layer (%1% mm)."
 msgstr ""
@@ -10336,7 +10380,7 @@ msgstr "MODERNE"
 msgid "Modifications to the current profile will be saved."
 msgstr "Les modifications du profil actuel vont être sauvegardées."
 
-#: src/slic3r/GUI/GUI_App.cpp:2534
+#: src/slic3r/GUI/GUI_App.cpp:2533
 msgid "modified"
 msgstr "modifié"
 
@@ -10572,8 +10616,8 @@ msgstr "N/A"
 #. TRN: This string appears in Configuration Wizard in the 'Configuration Manager' step.
 #: src/slic3r/GUI/GUI_ObjectList.cpp:340
 #: src/slic3r/GUI/GUI_ObjectManipulation.cpp:181
-#: src/slic3r/GUI/UpdatesUIManager.cpp:108
-#: src/slic3r/GUI/UpdatesUIManager.cpp:149
+#: src/slic3r/GUI/UpdatesUIManager.cpp:143
+#: src/slic3r/GUI/UpdatesUIManager.cpp:184
 msgid "Name"
 msgstr "Nom"
 
@@ -10682,11 +10726,11 @@ msgstr[2] ""
 msgid "New printer preset selected"
 msgstr "Nouveau préréglage d'imprimante sélectionné"
 
-#: src/slic3r/GUI/MainFrame.cpp:1320
+#: src/slic3r/GUI/MainFrame.cpp:1330
 msgid "&New Project"
 msgstr "&Nouveau Projet"
 
-#: src/slic3r/GUI/Plater.cpp:841 src/slic3r/GUI/Plater.cpp:4010
+#: src/slic3r/GUI/Plater.cpp:841 src/slic3r/GUI/Plater.cpp:4018
 msgid "New Project"
 msgstr "Nouveau Projet"
 
@@ -10737,12 +10781,12 @@ msgstr "Suivant"
 msgid "Next extruder"
 msgstr "Extrudeur suivant"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5280
+#: src/slic3r/GUI/GLCanvas3D.cpp:5251
 #, boost-format
 msgid "Next Redo action: %1%"
 msgstr "Prochaine action Rétablir : %1%"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5244
+#: src/slic3r/GUI/GLCanvas3D.cpp:5215
 #, boost-format
 msgid "Next Undo action: %1%"
 msgstr "Prochaine action Annuler : %1%"
@@ -10845,11 +10889,11 @@ msgstr "Aucun symbole"
 msgid "not a ZIP archive"
 msgstr "n'est pas une archive ZIP"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1187
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1186
 msgid "Note"
 msgstr "Remarque"
 
-#: src/slic3r/GUI/GUI_Preview.cpp:710
+#: src/slic3r/GUI/GUI_Preview.cpp:716
 msgid "NOTE:"
 msgstr "REMARQUE :"
 
@@ -10969,8 +11013,8 @@ msgstr "Introuvable:"
 #: src/slic3r/GUI/ConfigWizard.cpp:1455 src/slic3r/GUI/ConfigWizard.cpp:1959
 #: src/slic3r/GUI/ConfigWizard.cpp:3058 src/slic3r/GUI/ConfigWizard.cpp:3235
 #: src/slic3r/GUI/ConfigWizard.cpp:3785 src/slic3r/GUI/GUI.cpp:131
-#: src/slic3r/GUI/GUI_App.cpp:3741 src/slic3r/GUI/GUI_Preview.cpp:493
-#: src/slic3r/GUI/Plater.cpp:4264 src/slic3r/GUI/Plater.cpp:4342
+#: src/slic3r/GUI/GUI_App.cpp:3733 src/slic3r/GUI/GUI_Preview.cpp:499
+#: src/slic3r/GUI/Plater.cpp:4272 src/slic3r/GUI/Plater.cpp:4350
 #: src/slic3r/GUI/UpdateDialogs.cpp:209 src/slic3r/GUI/UpdateDialogs.cpp:217
 #: src/slic3r/GUI/UpdateDialogs.cpp:222 src/slic3r/GUI/UpdateDialogs.cpp:227
 #: src/slic3r/GUI/UpdateDialogs.cpp:234 src/slic3r/GUI/UpdateDialogs.cpp:239
@@ -11307,7 +11351,7 @@ msgstr "OK"
 msgid "Old regular layout with the tab bar"
 msgstr "Ancienne disposition avec la barre d'onglets"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1089
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1088
 msgid "One layer mode"
 msgstr "Mode couche unique"
 
@@ -11322,11 +11366,11 @@ msgstr ""
 "Un ou plusieurs objets ont été affectés à un extrudeur que l'imprimante ne "
 "possède pas."
 
-#: src/slic3r/GUI/GUI_App.cpp:2991
+#: src/slic3r/GUI/GUI_App.cpp:2989
 msgid "Ongoing uploads"
 msgstr "Téléchargements en cours"
 
-#: src/slic3r/GUI/UpdatesUIManager.cpp:29
+#: src/slic3r/GUI/UpdatesUIManager.cpp:30
 msgid "Online sources"
 msgstr "Sources en ligne"
 
@@ -11478,20 +11522,20 @@ msgstr "Opacité (%1%)"
 msgid "Open"
 msgstr "Ouvrir"
 
-#: src/slic3r/GUI/KBShortcutsDialog.cpp:216 src/slic3r/GUI/MainFrame.cpp:1691
+#: src/slic3r/GUI/KBShortcutsDialog.cpp:216 src/slic3r/GUI/MainFrame.cpp:1701
 msgid "Open a G-code file"
 msgstr "Ouvrir un fichier G-code"
 
 #: src/slic3r/GUI/MainFrame.cpp:93 src/slic3r/GUI/MainFrame.cpp:107
-#: src/slic3r/GUI/MainFrame.cpp:1580
+#: src/slic3r/GUI/MainFrame.cpp:1590
 msgid "Open a new PrusaSlicer instance"
 msgstr "Ouvrir une nouvelle instance de PrusaSlicer"
 
-#: src/slic3r/GUI/MainFrame.cpp:1323
+#: src/slic3r/GUI/MainFrame.cpp:1333
 msgid "Open a project file"
 msgstr "Ouvrir un fichier de projet"
 
-#: src/slic3r/GUI/Plater.cpp:4833
+#: src/slic3r/GUI/Plater.cpp:4841
 msgid "Open as project"
 msgstr "Ouvrir en tant que projet"
 
@@ -11504,7 +11548,7 @@ msgstr "Ouvrir le fichier de certificat CA"
 msgid "Open changelog page"
 msgstr "Ouvrir la page du journal des modifications"
 
-#: src/slic3r/GUI/GUI_App.cpp:3598
+#: src/slic3r/GUI/GUI_App.cpp:3590
 msgid ""
 "Open default browser with Prusa Account Log in page?\n"
 "(If you select 'Yes', you will not be asked again.)"
@@ -11533,7 +11577,7 @@ msgstr ""
 msgid "Open filled path"
 msgstr "Ouvrir le tracé rempli"
 
-#: src/slic3r/GUI/UpdatesUIManager.cpp:188
+#: src/slic3r/GUI/UpdatesUIManager.cpp:223
 msgid "Open folder"
 msgstr "Ouvrir le répertoire"
 
@@ -11541,7 +11585,7 @@ msgstr "Ouvrir le répertoire"
 msgid "Open Folder."
 msgstr "Ouvrir un répertoire."
 
-#: src/slic3r/GUI/MainFrame.cpp:1691
+#: src/slic3r/GUI/MainFrame.cpp:1701
 msgid "&Open G-code"
 msgstr "&Ouvrir le G-code"
 
@@ -11549,7 +11593,7 @@ msgstr "&Ouvrir le G-code"
 msgid "Open G-code file:"
 msgstr "Ouvrir un fichier G-code :"
 
-#: src/slic3r/GUI/MainFrame.cpp:96 src/slic3r/GUI/MainFrame.cpp:1465
+#: src/slic3r/GUI/MainFrame.cpp:96 src/slic3r/GUI/MainFrame.cpp:1475
 msgid "Open G-code viewer"
 msgstr "Ouvrir la visionneuse de G-code"
 
@@ -11565,7 +11609,7 @@ msgstr "Sortie de débogage d'OpenGL"
 msgid "OpenGL version"
 msgstr "Version d'OpenGL"
 
-#: src/slic3r/GUI/GUI_App.cpp:3564 src/slic3r/GUI/GUI_App.cpp:3587
+#: src/slic3r/GUI/GUI_App.cpp:3556 src/slic3r/GUI/GUI_App.cpp:3579
 msgid "Open hyperlink in default browser?"
 msgstr "Ouvrir le lien hypertexte dans le navigateur par défaut ?"
 
@@ -11573,7 +11617,7 @@ msgstr "Ouvrir le lien hypertexte dans le navigateur par défaut ?"
 msgid "Opening Configuration Wizard"
 msgstr "Ouverture de l'Assistant de Configuration"
 
-#: src/slic3r/GUI/GUI_App.cpp:2968
+#: src/slic3r/GUI/GUI_App.cpp:2966
 msgid "Opening new project while some presets are unsaved."
 msgstr ""
 "Ouverture d'un nouveau projet alors que certains préréglages ne sont pas "
@@ -11587,7 +11631,7 @@ msgstr "Ouvrir une nouvelle visionneuse de G-code"
 msgid "Open new instance"
 msgstr "Ouvrir une nouvelle instance"
 
-#: src/slic3r/GUI/MainFrame.cpp:1580
+#: src/slic3r/GUI/MainFrame.cpp:1590
 msgid "Open New Instance"
 msgstr "Ouvrir une Nouvelle Instance"
 
@@ -11595,7 +11639,7 @@ msgstr "Ouvrir une Nouvelle Instance"
 msgid "Open Preferences."
 msgstr "Ouvrir les Préférences."
 
-#: src/slic3r/GUI/MainFrame.cpp:1323
+#: src/slic3r/GUI/MainFrame.cpp:1333
 msgid "&Open Project"
 msgstr "&Ouvrir Projet"
 
@@ -11603,15 +11647,15 @@ msgstr "&Ouvrir Projet"
 msgid "Open project AMF/3MF with config, clear plater"
 msgstr "Ouvrir un projet AMF/3MF avec configuration, libérer le plateau"
 
-#: src/slic3r/GUI/MainFrame.cpp:1714
+#: src/slic3r/GUI/MainFrame.cpp:1724
 msgid "Open &PrusaSlicer"
 msgstr "Ouvrir &PrusaSlicer"
 
-#: src/slic3r/GUI/MainFrame.cpp:107 src/slic3r/GUI/MainFrame.cpp:1714
+#: src/slic3r/GUI/MainFrame.cpp:107 src/slic3r/GUI/MainFrame.cpp:1724
 msgid "Open PrusaSlicer"
 msgstr "Ouvrir PrusaSlicer"
 
-#: src/slic3r/GUI/MainFrame.cpp:1275
+#: src/slic3r/GUI/MainFrame.cpp:1285
 msgid ""
 "Opens Tip of the day notification in bottom right corner or shows another "
 "tip if already opened."
@@ -11619,7 +11663,7 @@ msgstr ""
 "Ouvre la notification Astuce du jour dans le coin inférieur droit ou affiche "
 "une autre astuce si déjà ouverte."
 
-#: src/slic3r/GUI/MainFrame.cpp:1565
+#: src/slic3r/GUI/MainFrame.cpp:1575
 msgid "Open the dialog to modify shape gallery"
 msgstr "Ouvrir la boîte de dialogue pour modifier la galerie de formes"
 
@@ -11627,17 +11671,17 @@ msgstr "Ouvrir la boîte de dialogue pour modifier la galerie de formes"
 msgid "Open the physical printer URL"
 msgstr "Ouvrir l'URL de l'imprimante physique"
 
-#: src/slic3r/GUI/MainFrame.cpp:1250
+#: src/slic3r/GUI/MainFrame.cpp:1260
 msgid "Open the Prusa3D drivers download page in your browser"
 msgstr ""
 "Ouvrir la page de téléchargement des drivers Prusa3D dans votre navigateur"
 
-#: src/slic3r/GUI/MainFrame.cpp:1252
+#: src/slic3r/GUI/MainFrame.cpp:1262
 msgid "Open the software releases page in your browser"
 msgstr "Ouvrir la page des publications du logiciel dans votre navigateur"
 
-#: src/slic3r/GUI/MainFrame.cpp:1239 src/slic3r/GUI/MainFrame.cpp:1243
-#: src/slic3r/GUI/MainFrame.cpp:1247
+#: src/slic3r/GUI/MainFrame.cpp:1249 src/slic3r/GUI/MainFrame.cpp:1253
+#: src/slic3r/GUI/MainFrame.cpp:1257
 #, c-format, boost-format
 msgid "Open the %s website in your browser"
 msgstr "Ouvrir le site web de %s dans votre navigateur"
@@ -11759,7 +11803,7 @@ msgstr "Original"
 msgid "Original value"
 msgstr "Valeur d'origine"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1138
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1137
 msgid "or press \"+\" key"
 msgstr "ou appuyez sur la touche \"+\""
 
@@ -12106,15 +12150,15 @@ msgstr "Mot de passe"
 msgid "Passwords and API keys are stored in plain text."
 msgstr "Les mots de passe et les clés API sont stockés en texte brut."
 
-#: src/slic3r/GUI/MainFrame.cpp:1513
+#: src/slic3r/GUI/MainFrame.cpp:1523
 msgid "&Paste"
 msgstr "C&oller"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5091
+#: src/slic3r/GUI/GLCanvas3D.cpp:5059
 msgid "Paste"
 msgstr "Coller"
 
-#: src/slic3r/GUI/MainFrame.cpp:1514
+#: src/slic3r/GUI/MainFrame.cpp:1524
 msgid "Paste clipboard"
 msgstr "Coller le presse-papier"
 
@@ -12122,7 +12166,7 @@ msgstr "Coller le presse-papier"
 msgid "Paste from clipboard"
 msgstr "Coller depuis le presse-papier"
 
-#: src/slic3r/GUI/Plater.cpp:6796
+#: src/slic3r/GUI/Plater.cpp:6804
 msgid "Paste From Clipboard"
 msgstr "Coller Depuis le Presse-Papier"
 
@@ -12166,7 +12210,7 @@ msgstr "Pause"
 msgid "Pause Print"
 msgstr "Mettre en Pause l'Impression"
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1176
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1175
 #, boost-format
 msgid "Pause print (\"%1%\")"
 msgstr "Mettre en pause l'impression (\"%1%\")"
@@ -12346,8 +12390,8 @@ msgstr ""
 "Saviez-vous que vous pouvez utiliser la touche <b>K</b> pour basculer "
 "rapidement entre la vue orthographique et la vue en perspective ?"
 
-#: src/slic3r/GUI/GUI.cpp:219 src/slic3r/GUI/MainFrame.cpp:862
-#: src/slic3r/GUI/MainFrame.cpp:876
+#: src/slic3r/GUI/GUI.cpp:219 src/slic3r/GUI/MainFrame.cpp:872
+#: src/slic3r/GUI/MainFrame.cpp:886
 #: src/slic3r/GUI/PhysicalPrinterDialog.cpp:239
 msgid "Physical Printer"
 msgstr "Imprimante physique"
@@ -12442,23 +12486,29 @@ msgstr ""
 "la buse. Cette fonctionnalité ralentit l'impression et la génération du G-"
 "code."
 
-#: src/slic3r/GUI/KBShortcutsDialog.cpp:192 src/slic3r/GUI/MainFrame.cpp:474
+#: src/slic3r/GUI/KBShortcutsDialog.cpp:192 src/slic3r/GUI/MainFrame.cpp:484
 msgid "Plater"
 msgstr "Plateau"
 
-#: src/slic3r/GUI/MainFrame.cpp:1538
+#: src/slic3r/GUI/MainFrame.cpp:1548
 msgid "&Plater Tab"
 msgstr "Onglet du &Plateau"
 
-#: src/slic3r/GUI/GUI_App.cpp:2575
+#: src/slic3r/GUI/GUI_App.cpp:2574
 msgid "Please check your object list before mode changing."
 msgstr "Veuillez vérifier votre liste d'objets avant de changer de mode."
 
-#: src/slic3r/GUI/GUI_App.cpp:3242 src/slic3r/GUI/Jobs/SLAImportJob.cpp:153
+#: src/slic3r/GUI/GUI_App.cpp:3240 src/slic3r/GUI/Jobs/SLAImportJob.cpp:153
 #: src/slic3r/GUI/Plater.cpp:1250
 msgid "Please check your object list before preset changing."
 msgstr ""
 "Veuillez vérifier votre liste d'objet avant le changement de préréglage."
+
+#. TRN Config wizard page with a log in web. first line of text.
+#: src/slic3r/GUI/ConfigWizardWebViewPage.cpp:38
+#: src/slic3r/GUI/ConfigWizardWebViewPage.cpp:63
+msgid "Please log into your Prusa Account."
+msgstr "Veuillez vous connecter à votre Prusa Account."
 
 #: src/slic3r/GUI/Plater.cpp:2845 src/slic3r/GUI/Plater.cpp:2850
 msgid ""
@@ -12477,6 +12527,12 @@ msgid ""
 msgstr ""
 "Veuillez enregistrer votre projet et redémarrer PrusaSlicer. Nous serions "
 "heureux si vous signaliez le problème."
+
+#: src/slic3r/GUI/UpdatesUIManager.cpp:35
+msgid "Please, select online sources you want to update profiles from"
+msgstr ""
+"Veuillez sélectionner les sources en ligne à partir desquelles vous "
+"souhaitez mettre à jour les profils."
 
 #: src/slic3r/GUI/Plater.cpp:2514
 msgid "Please select the file to reload"
@@ -12572,7 +12628,7 @@ msgstr ""
 msgid "Prefer clockwise movements"
 msgstr "Préférez les mouvements dans le sens des aiguilles d’une montre"
 
-#: src/slic3r/GUI/GUI_App.cpp:2622
+#: src/slic3r/GUI/GUI_App.cpp:2622 src/slic3r/GUI/GUI_App.cpp:2624
 msgid "&Preferences"
 msgstr "&Préférences"
 
@@ -12732,7 +12788,7 @@ msgstr ""
 "pourcentage (par exemple 25%), elle sera calculée en fonction du diamètre de "
 "la buse."
 
-#: src/slic3r/GUI/MainFrame.cpp:1559
+#: src/slic3r/GUI/MainFrame.cpp:1569
 msgid "Pre&view"
 msgstr "Pré&visualisation"
 
@@ -12819,7 +12875,7 @@ msgid "Printer absolute correction"
 msgstr "Correction absolue de l'imprimante"
 
 #. TRN Text of notification when Slicer starts and usb stick with printer settings ini file is present
-#: src/slic3r/GUI/GUI_App.cpp:3791 src/slic3r/GUI/Plater.cpp:822
+#: src/slic3r/GUI/GUI_App.cpp:3783 src/slic3r/GUI/Plater.cpp:822
 msgid "Printer configuration file detected on removable media."
 msgstr ""
 "Fichier de configuration de l'imprimante détecté sur un support amovible."
@@ -12836,7 +12892,7 @@ msgstr "modèle de l'imprimante"
 msgid "Printer notes"
 msgstr "Notes de l'imprimante"
 
-#: src/slic3r/GUI/GUI_App.cpp:3860
+#: src/slic3r/GUI/GUI_App.cpp:3852
 #, boost-format
 msgid ""
 "Printer not found:\n"
@@ -12890,11 +12946,11 @@ msgstr "Correction de la mise à l'échelle de l'imprimante sur l'axe Z"
 msgid "Printer settings"
 msgstr "Réglages de l'imprimante"
 
-#: src/slic3r/GUI/MainFrame.cpp:1550
+#: src/slic3r/GUI/MainFrame.cpp:1560
 msgid "Print&er Settings Tab"
 msgstr "Onglet des Réglages de l'Imprimant&e"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:4358 src/slic3r/GUI/MainFrame.cpp:597
+#: src/slic3r/GUI/GLCanvas3D.cpp:4358 src/slic3r/GUI/MainFrame.cpp:607
 msgid "Printer Settings Tab"
 msgstr "Onglet Réglages de l'imprimante"
 
@@ -12928,7 +12984,7 @@ msgstr "Téléchargement de l'Hôte d'Impression"
 msgid "Print host upload queue"
 msgstr "File d'Attente de téléchargement de l'hôte d'impression"
 
-#: src/slic3r/GUI/MainFrame.cpp:1576
+#: src/slic3r/GUI/MainFrame.cpp:1586
 msgid "Print &Host Upload Queue"
 msgstr "File d'Attente de Téléchargement de l'&Hôte d'Impression"
 
@@ -12950,7 +13006,7 @@ msgstr ""
 "(support_material_extruder == 0 ou support_material_interface_extruder == "
 "0), toutes les buses doivent avoir le même diamètre."
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1119
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1118
 msgid "Print mode"
 msgstr "Mode d'impression"
 
@@ -12976,11 +13032,11 @@ msgstr "Réglages d'impression"
 msgid "Print Settings"
 msgstr "Réglages d'Impression"
 
-#: src/slic3r/GUI/MainFrame.cpp:1543
+#: src/slic3r/GUI/MainFrame.cpp:1553
 msgid "P&rint Settings Tab"
 msgstr "Onglet des &Réglages d'Impression"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:4356 src/slic3r/GUI/MainFrame.cpp:595
+#: src/slic3r/GUI/GLCanvas3D.cpp:4356 src/slic3r/GUI/MainFrame.cpp:605
 msgid "Print Settings Tab"
 msgstr "Onglet Réglages d'impression"
 
@@ -13008,7 +13064,7 @@ msgstr "Temps d'impression (mode silencieux"
 msgid "Prism"
 msgstr "Prisme"
 
-#: src/slic3r/GUI/Plater.cpp:5739
+#: src/slic3r/GUI/Plater.cpp:5747
 msgid "Private protection"
 msgstr "Protection privée"
 
@@ -13054,11 +13110,11 @@ msgstr "Progression"
 msgid "Progress:"
 msgstr "Progression :"
 
-#: src/slic3r/GUI/GUI_App.cpp:2968
+#: src/slic3r/GUI/GUI_App.cpp:2966
 msgid "Project is loading"
 msgstr "Le projet est en cours de chargement"
 
-#: src/slic3r/GUI/MainFrame.cpp:1250
+#: src/slic3r/GUI/MainFrame.cpp:1260
 msgid "Prusa 3D &Drivers"
 msgstr "&Drivers Prusa 3D"
 
@@ -13091,7 +13147,7 @@ msgid "PrusaSlicer detected system SSL certificate store in: %1%"
 msgstr ""
 "PrusaSlicer a détecté un stockage de certificats SSL système dans : %1%"
 
-#: src/slic3r/GUI/GUI_App.cpp:3575 src/slic3r/GUI/MainFrame.cpp:633
+#: src/slic3r/GUI/GUI_App.cpp:3567 src/slic3r/GUI/MainFrame.cpp:643
 #: src/slic3r/GUI/Plater.cpp:343 src/slic3r/GUI/UnsavedChangesDialog.cpp:961
 msgid "PrusaSlicer: Don't ask me again"
 msgstr "PrusaSlicer : Ne me demandez plus"
@@ -13152,11 +13208,11 @@ msgstr ""
 "L'assistant de configuration peut ne pas proposer les dernières imprimantes, "
 "filaments et matériaux SLA à installer."
 
-#: src/slic3r/GUI/GUI_App.cpp:3564 src/slic3r/GUI/GUI_App.cpp:3587
+#: src/slic3r/GUI/GUI_App.cpp:3556 src/slic3r/GUI/GUI_App.cpp:3579
 msgid "PrusaSlicer: Open hyperlink"
 msgstr "PrusaSlicer : Ouvrir le lien hypertexte"
 
-#: src/slic3r/GUI/GUI_App.cpp:3598
+#: src/slic3r/GUI/GUI_App.cpp:3590
 msgid "PrusaSlicer: Open Log in page"
 msgstr "PrusaSlicer : ouvrir la page de connexion"
 
@@ -13217,7 +13273,7 @@ msgstr "Version de PrusaSlicer"
 msgid "PrusaSlicer will remember your action."
 msgstr "PrusaSlicer se souviendra de votre action."
 
-#: src/slic3r/GUI/GUI_App.cpp:3571 src/slic3r/GUI/MainFrame.cpp:630
+#: src/slic3r/GUI/GUI_App.cpp:3563 src/slic3r/GUI/MainFrame.cpp:640
 #: src/slic3r/GUI/Plater.cpp:337
 msgid "PrusaSlicer will remember your choice."
 msgstr "PrusaSlicer se souviendra de votre choix."
@@ -13284,11 +13340,11 @@ msgid "Quick Add Settings (%s)"
 msgstr "Ajout de Réglages Rapide (%s)"
 
 #. TRN Item from "Help" menu
-#: src/slic3r/GUI/MainFrame.cpp:1242
+#: src/slic3r/GUI/MainFrame.cpp:1252
 msgid "&Quick Start"
 msgstr "&Démarrage Rapide"
 
-#: src/slic3r/GUI/MainFrame.cpp:1471 src/slic3r/GUI/MainFrame.cpp:1718
+#: src/slic3r/GUI/MainFrame.cpp:1481 src/slic3r/GUI/MainFrame.cpp:1728
 msgid "&Quit"
 msgstr "&Quitter"
 
@@ -13296,7 +13352,7 @@ msgstr "&Quitter"
 msgid "Quit, I will move my data now"
 msgstr "Quitter, je vais déplacer mes données maintenant"
 
-#: src/slic3r/GUI/MainFrame.cpp:1471 src/slic3r/GUI/MainFrame.cpp:1718
+#: src/slic3r/GUI/MainFrame.cpp:1481 src/slic3r/GUI/MainFrame.cpp:1728
 #, c-format, boost-format
 msgid "Quit %s"
 msgstr "Quitter %s"
@@ -13403,7 +13459,7 @@ msgstr "Lire écrire"
 msgid "Ready"
 msgstr "Prêt"
 
-#: src/libslic3r/PrintConfig.cpp:2616 src/slic3r/GUI/MainFrame.cpp:1303
+#: src/libslic3r/PrintConfig.cpp:2616 src/slic3r/GUI/MainFrame.cpp:1313
 msgid "Rear"
 msgstr "Arrière"
 
@@ -13415,11 +13471,11 @@ msgstr "Arrière gauche"
 msgid "Rear right"
 msgstr "Arrière droit"
 
-#: src/slic3r/GUI/MainFrame.cpp:1303
+#: src/slic3r/GUI/MainFrame.cpp:1313
 msgid "Rear View"
 msgstr "Vue Arrière"
 
-#: src/slic3r/GUI/MainFrame.cpp:1328
+#: src/slic3r/GUI/MainFrame.cpp:1338
 msgid "Recent projects"
 msgstr "Proj&ets récents"
 
@@ -13450,7 +13506,7 @@ msgstr ""
 msgid "Re-configure"
 msgstr "Reconfigurer"
 
-#: src/slic3r/GUI/GUI_App.cpp:2029 src/slic3r/GUI/GUI_App.cpp:2040
+#: src/slic3r/GUI/GUI_App.cpp:2028 src/slic3r/GUI/GUI_App.cpp:2039
 msgid "Recreating"
 msgstr "Re-création"
 
@@ -13467,12 +13523,12 @@ msgstr "Rectiligne"
 msgid "Rectilinear grid"
 msgstr "Grille rectiligne"
 
-#: src/slic3r/GUI/MainFrame.cpp:1505
+#: src/slic3r/GUI/MainFrame.cpp:1515
 msgid "&Redo"
 msgstr "&Rétablir"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5259 src/slic3r/GUI/KBShortcutsDialog.cpp:112
-#: src/slic3r/GUI/MainFrame.cpp:1506
+#: src/slic3r/GUI/GLCanvas3D.cpp:5230 src/slic3r/GUI/KBShortcutsDialog.cpp:112
+#: src/slic3r/GUI/MainFrame.cpp:1516
 msgid "Redo"
 msgstr "Rétablir"
 
@@ -13534,8 +13590,8 @@ msgstr "Recharger depuis :"
 msgid "Reload from disk"
 msgstr "Recharger à partir du disque"
 
-#: src/slic3r/GUI/MainFrame.cpp:1519 src/slic3r/GUI/MainFrame.cpp:1523
-#: src/slic3r/GUI/MainFrame.cpp:1695 src/slic3r/GUI/MainFrame.cpp:1699
+#: src/slic3r/GUI/MainFrame.cpp:1529 src/slic3r/GUI/MainFrame.cpp:1533
+#: src/slic3r/GUI/MainFrame.cpp:1705 src/slic3r/GUI/MainFrame.cpp:1709
 msgid "Re&load from Disk"
 msgstr "Re&charger à partir du disque"
 
@@ -13562,9 +13618,9 @@ msgstr "Recharger le plateau depuis le disque"
 msgid "Reload SVG file from disk."
 msgstr "Recharger le fichier SVG à partir du disque."
 
-#: src/slic3r/GUI/KBShortcutsDialog.cpp:218 src/slic3r/GUI/MainFrame.cpp:1520
-#: src/slic3r/GUI/MainFrame.cpp:1524 src/slic3r/GUI/MainFrame.cpp:1696
-#: src/slic3r/GUI/MainFrame.cpp:1700
+#: src/slic3r/GUI/KBShortcutsDialog.cpp:218 src/slic3r/GUI/MainFrame.cpp:1530
+#: src/slic3r/GUI/MainFrame.cpp:1534 src/slic3r/GUI/MainFrame.cpp:1706
+#: src/slic3r/GUI/MainFrame.cpp:1710
 msgid "Reload the plater from disk"
 msgstr "Recharger le plateau à partir du disque"
 
@@ -13580,7 +13636,7 @@ msgstr "Erreurs restantes"
 msgid "Remaining time"
 msgstr "Temps restant"
 
-#: src/slic3r/GUI/GUI_App.cpp:1351 src/slic3r/GUI/GUI_App.cpp:3565
+#: src/slic3r/GUI/GUI_App.cpp:1351 src/slic3r/GUI/GUI_App.cpp:3557
 #: src/slic3r/GUI/Plater.cpp:331 src/slic3r/GUI/UnsavedChangesDialog.cpp:944
 msgid "Remember my choice"
 msgstr "Se souvenir de mon choix"
@@ -13594,7 +13650,7 @@ msgid "remove"
 msgstr "retirer"
 
 #: src/slic3r/GUI/BedShapeDialog.cpp:310 src/slic3r/GUI/BedShapeDialog.cpp:382
-#: src/slic3r/GUI/Tab.cpp:4449 src/slic3r/GUI/UpdatesUIManager.cpp:196
+#: src/slic3r/GUI/Tab.cpp:4449 src/slic3r/GUI/UpdatesUIManager.cpp:231
 msgid "Remove"
 msgstr "Retirer"
 
@@ -13631,7 +13687,7 @@ msgstr "Supprimer les détails"
 msgid "Remove extruder from sequence"
 msgstr "Supprimer l'extrudeur de la séquence"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5114 src/slic3r/GUI/GUI_Factories.cpp:1397
+#: src/slic3r/GUI/GLCanvas3D.cpp:5082 src/slic3r/GUI/GUI_Factories.cpp:1397
 msgid "Remove instance"
 msgstr "Supprimer l'instance"
 
@@ -13769,7 +13825,7 @@ msgstr ""
 "Appliquer un rendu avec un logiciel de rendu. Le logiciel de rendu MESA qui "
 "est fourni est chargé à la place du pilote OpenGL présent par défaut."
 
-#: src/libslic3r/PrintConfig.cpp:5577 src/slic3r/GUI/MainFrame.cpp:1797
+#: src/libslic3r/PrintConfig.cpp:5577 src/slic3r/GUI/MainFrame.cpp:1807
 msgid "Repair"
 msgstr "Réparer"
 
@@ -13800,7 +13856,7 @@ msgstr "La réparation a été annulée"
 msgid "Repair operation finished"
 msgstr "Opération de réparation terminée"
 
-#: src/slic3r/GUI/MainFrame.cpp:1461
+#: src/slic3r/GUI/MainFrame.cpp:1471
 msgid "&Repair STL file"
 msgstr "&Réparer le fichier STL"
 
@@ -13828,11 +13884,11 @@ msgstr "Remplacer par un STL"
 msgid "Replacing of the PNG"
 msgstr "Remplacement du PNG"
 
-#: src/slic3r/GUI/MainFrame.cpp:1266
+#: src/slic3r/GUI/MainFrame.cpp:1276
 msgid "Report an I&ssue"
 msgstr "S&ignaler un Problème"
 
-#: src/slic3r/GUI/MainFrame.cpp:1266
+#: src/slic3r/GUI/MainFrame.cpp:1276
 #, c-format, boost-format
 msgid "Report an issue on %s"
 msgstr "Signaler un problème sur %s"
@@ -13948,7 +14004,7 @@ msgstr "Réinitialiser la Couleur du Filament"
 msgid "(Re)slice"
 msgstr "(Re)découper"
 
-#: src/slic3r/GUI/MainFrame.cpp:1457
+#: src/slic3r/GUI/MainFrame.cpp:1467
 msgid "(Re)Slice No&w"
 msgstr "(Re)Découper Main&tenant"
 
@@ -13956,7 +14012,7 @@ msgstr "(Re)Découper Main&tenant"
 msgid "RESOLVING ADDRESS"
 msgstr "RÉSOLUTION DE L'ADRESSE"
 
-#: src/slic3r/GUI/GUI_App.cpp:2763
+#: src/slic3r/GUI/GUI_App.cpp:2761
 msgid "Restart application"
 msgstr "Redémarrer l'application"
 
@@ -14053,11 +14109,11 @@ msgstr "Rétablir la couleur"
 msgid "Revert color to default"
 msgstr "Rétablir la couleur par défaut"
 
-#: src/slic3r/GUI/GUI_Factories.cpp:1017 src/slic3r/GUI/Plater.cpp:5280
+#: src/slic3r/GUI/GUI_Factories.cpp:1017 src/slic3r/GUI/Plater.cpp:5288
 msgid "Revert conversion from imperial units"
 msgstr "Annuler la conversion des unités impériales"
 
-#: src/slic3r/GUI/GUI_Factories.cpp:1019 src/slic3r/GUI/Plater.cpp:5281
+#: src/slic3r/GUI/GUI_Factories.cpp:1019 src/slic3r/GUI/Plater.cpp:5289
 msgid "Revert conversion from meters"
 msgstr "Rétablir la conversion des mètres"
 
@@ -14101,7 +14157,7 @@ msgstr "Rétablir l'utilisation de la surface du modèle."
 msgid "Review the substitutions and adjust them if needed."
 msgstr "Passez en revue les substitutions et ajustez-les si nécessaire."
 
-#: src/slic3r/GUI/MainFrame.cpp:1307
+#: src/slic3r/GUI/MainFrame.cpp:1317
 msgid "Right"
 msgstr "Droite"
 
@@ -14139,7 +14195,7 @@ msgstr "Clic droit souris :"
 msgid "Right Preset Value"
 msgstr "Valeur du Préréglage droit"
 
-#: src/slic3r/GUI/MainFrame.cpp:1307
+#: src/slic3r/GUI/MainFrame.cpp:1317
 msgid "Right View"
 msgstr "Vue Droite"
 
@@ -14243,7 +14299,7 @@ msgstr ""
 msgid "Running post-processing scripts"
 msgstr "Exécuter des scripts de post-traitement"
 
-#: src/slic3r/GUI/GUI_App.cpp:2608
+#: src/slic3r/GUI/GUI_App.cpp:2607
 #, c-format, boost-format
 msgid "Run %s"
 msgstr "Run %s"
@@ -14274,7 +14330,7 @@ msgid "Same as top"
 msgstr "Comme au-dessus"
 
 #. TRN Item from "Help" menu
-#: src/slic3r/GUI/MainFrame.cpp:1246
+#: src/slic3r/GUI/MainFrame.cpp:1256
 msgid "Sample &G-codes and Models"
 msgstr "&G-codes et Modèles d'Exemple"
 
@@ -14313,7 +14369,7 @@ msgstr "Enregistrer en tant que fichier '.svg'"
 msgid "Save config file"
 msgstr "Enregistrer le fichier de configuration"
 
-#: src/slic3r/GUI/MainFrame.cpp:1811
+#: src/slic3r/GUI/MainFrame.cpp:1821
 msgid "Save configuration as:"
 msgstr "Enregistrer la configuration sous :"
 
@@ -14321,11 +14377,11 @@ msgstr "Enregistrer la configuration sous :"
 msgid "Save configuration to the specified file."
 msgstr "Enregistrer la configuration dans le fichier spécifié."
 
-#: src/slic3r/GUI/MainFrame.cpp:1364
+#: src/slic3r/GUI/MainFrame.cpp:1374
 msgid "Save current project file"
 msgstr "Enregistrer le fichier du projet en cours"
 
-#: src/slic3r/GUI/MainFrame.cpp:1368 src/slic3r/GUI/MainFrame.cpp:1370
+#: src/slic3r/GUI/MainFrame.cpp:1378 src/slic3r/GUI/MainFrame.cpp:1380
 msgid "Save current project file as"
 msgstr "Enregistrer le fichier du projet en cours sous"
 
@@ -14337,7 +14393,7 @@ msgstr "Enregistrer les réglages du filament sous"
 msgid "Save file as:"
 msgstr "Enregistrer le fichier sous :"
 
-#: src/slic3r/GUI/Plater.cpp:5442
+#: src/slic3r/GUI/Plater.cpp:5450
 msgid "Save G-code file as:"
 msgstr "Enregistrer le fichier G-code sous :"
 
@@ -14345,7 +14401,7 @@ msgstr "Enregistrer le fichier G-code sous :"
 msgid "Save material settings as"
 msgstr "Enregistrer les réglages du matériau sous"
 
-#: src/slic3r/GUI/MainFrame.cpp:1786
+#: src/slic3r/GUI/MainFrame.cpp:1796
 msgid "Save OBJ file (less prone to coordinate errors than STL) as:"
 msgstr ""
 "Enregistrer le fichier OBJ (moins enclin aux erreurs de coordonnées que le "
@@ -14366,7 +14422,7 @@ msgstr ""
 msgid "Save presets"
 msgstr "Enregistrer les préréglages"
 
-#: src/slic3r/GUI/MainFrame.cpp:1885
+#: src/slic3r/GUI/MainFrame.cpp:1895
 msgid "Save presets bundle as:"
 msgstr "Enregistrer le lot de préréglages sous :"
 
@@ -14379,11 +14435,11 @@ msgstr "Enregistrer les réglages de l'imprimante sous"
 msgid "Save print settings as"
 msgstr "Enregistrer les réglages d'impression sous"
 
-#: src/slic3r/GUI/Plater.cpp:5768
+#: src/slic3r/GUI/Plater.cpp:5776
 msgid "Save project"
 msgstr "Enregistrer le projet"
 
-#: src/slic3r/GUI/MainFrame.cpp:1364
+#: src/slic3r/GUI/MainFrame.cpp:1374
 msgid "&Save Project"
 msgstr "&Enregistrer le Projet"
 
@@ -14391,7 +14447,7 @@ msgstr "&Enregistrer le Projet"
 msgid "Save project (3mf)"
 msgstr "Enregistrer le projet (3mf)"
 
-#: src/slic3r/GUI/MainFrame.cpp:1368 src/slic3r/GUI/MainFrame.cpp:1370
+#: src/slic3r/GUI/MainFrame.cpp:1378 src/slic3r/GUI/MainFrame.cpp:1380
 msgid "Save Project &as"
 msgstr "Enregistrer le Projet &sous"
 
@@ -14399,7 +14455,7 @@ msgstr "Enregistrer le Projet &sous"
 msgid "Save project as (3mf)"
 msgstr "Enregistrer le projet en (3mf)"
 
-#: src/slic3r/GUI/Plater.cpp:5442
+#: src/slic3r/GUI/Plater.cpp:5450
 msgid "Save SL1 / SL1S file as:"
 msgstr "Enregistrer le fichier SL1 / SL1S sous :"
 
@@ -14531,7 +14587,7 @@ msgstr "Gigue de la direction préférée de la jointure"
 msgid "Seams"
 msgstr "Jointures"
 
-#: src/slic3r/GUI/MainFrame.cpp:1529
+#: src/slic3r/GUI/MainFrame.cpp:1539
 msgid "Searc&h"
 msgstr "Recherc&her"
 
@@ -14566,7 +14622,7 @@ msgstr "Recherche de l'orientation optimale"
 msgid "Searching support spots"
 msgstr "Recherche des points de support"
 
-#: src/slic3r/GUI/MainFrame.cpp:1530
+#: src/slic3r/GUI/MainFrame.cpp:1540
 msgid "Search in settings"
 msgstr "Rechercher dans les réglages"
 
@@ -14596,11 +14652,11 @@ msgstr "Voir la page des versions."
 msgid "Select a file"
 msgstr "Sélectionner un fichier"
 
-#: src/slic3r/GUI/GUI_App.cpp:3363
+#: src/slic3r/GUI/GUI_App.cpp:3361
 msgid "Select a gcode file:"
 msgstr "Sélectionnez un fichier gcode :"
 
-#: src/slic3r/GUI/MainFrame.cpp:1487
+#: src/slic3r/GUI/MainFrame.cpp:1497
 msgid "&Select All"
 msgstr "&Tout sélectionner"
 
@@ -14620,11 +14676,11 @@ msgstr "Sélectionner tous les points"
 msgid "Select all standard printers"
 msgstr "Sélectionner toutes les imprimantes standard"
 
-#: src/slic3r/GUI/Plater.cpp:4443 src/slic3r/GUI/Plater.cpp:4446
+#: src/slic3r/GUI/Plater.cpp:4451 src/slic3r/GUI/Plater.cpp:4454
 msgid "Select an action to apply to all files."
 msgstr "Sélectionner une action à appliquer à tous les fichiers."
 
-#: src/slic3r/GUI/Plater.cpp:4840
+#: src/slic3r/GUI/Plater.cpp:4848
 msgid "Select an action to apply to the file"
 msgstr "Sélectionnez une action à appliquer au fichier"
 
@@ -14646,7 +14702,7 @@ msgstr "Sélectionner par rectangle"
 msgid "Select center"
 msgstr "Sélectionner le centre"
 
-#: src/slic3r/GUI/MainFrame.cpp:1830 src/slic3r/GUI/MainFrame.cpp:1956
+#: src/slic3r/GUI/MainFrame.cpp:1840 src/slic3r/GUI/MainFrame.cpp:1966
 msgid "Select configuration to load:"
 msgstr "Sélectionner la configuration à charger :"
 
@@ -14665,7 +14721,7 @@ msgstr "Sélectionner le répertoire"
 msgid "Selected path is not on removable media."
 msgstr "Le chemin sélectionné ne se trouve pas sur un support amovible."
 
-#: src/slic3r/GUI/GUI_App.cpp:3859
+#: src/slic3r/GUI/GUI_App.cpp:3851
 #, boost-format
 msgid ""
 "Selected printer:\n"
@@ -14708,7 +14764,7 @@ msgstr "Sélection-Ajouter Tout"
 msgid "Selection-Add from list"
 msgstr "Sélection-Ajouter depuis la liste"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6781
+#: src/slic3r/GUI/GLCanvas3D.cpp:6766
 msgid "Selection-Add from rectangle"
 msgstr "Sélection-Ajouter depuis le rectangle"
 
@@ -14732,7 +14788,7 @@ msgstr "Sélection-Retirer Tout"
 msgid "Selection-Remove from list"
 msgstr "Sélection-Retirer de la liste"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6796
+#: src/slic3r/GUI/GLCanvas3D.cpp:6781
 msgid "Selection-Remove from rectangle"
 msgstr "Sélection-Retirer du rectangle"
 
@@ -14744,11 +14800,11 @@ msgstr "Sélection-Supprimer l'Instance"
 msgid "Selection-Remove Object"
 msgstr "Sélection-Supprimer l'Objet"
 
-#: src/slic3r/GUI/Plater.cpp:4496
+#: src/slic3r/GUI/Plater.cpp:4504
 msgid "Select one to load as project"
 msgstr "Sélectionnez-en un à charger en tant que projet"
 
-#: src/slic3r/GUI/Plater.cpp:4507
+#: src/slic3r/GUI/Plater.cpp:4515
 msgid "Select only one file to load the configuration."
 msgstr "Sélectionnez un seul fichier pour charger la configuration."
 
@@ -14778,7 +14834,7 @@ msgstr "Sélectionner l'Onglet des Réglages de l'Imprimante"
 msgid "Select Print Settings Tab"
 msgstr "Sélectionner l'Onglet des Réglages d'Impression"
 
-#: src/slic3r/GUI/MainFrame.cpp:1488
+#: src/slic3r/GUI/MainFrame.cpp:1498
 msgid "Selects all objects"
 msgstr "Sélectionner tous les objets"
 
@@ -14810,7 +14866,7 @@ msgstr ""
 "Ce paramètre n'est PAS compatible avec la configuration Extrudeur Unique "
 "Multi-Matériaux et avec Nettoyer dans l'Objet / Nettoyer dans le Remplissage."
 
-#: src/slic3r/GUI/GUI_App.cpp:2377
+#: src/slic3r/GUI/GUI_App.cpp:2376
 msgid "Select the language"
 msgstr "Sélectionner la langue"
 
@@ -14827,7 +14883,7 @@ msgid "Select the print profiles this profile is compatible with."
 msgstr ""
 "Sélectionner les profils d'impression avec lesquels ce profil est compatible."
 
-#: src/slic3r/GUI/MainFrame.cpp:1776
+#: src/slic3r/GUI/MainFrame.cpp:1786
 msgid "Select the STL file to repair:"
 msgstr "Sélectionner le fichier STL à réparer :"
 
@@ -14861,11 +14917,11 @@ msgstr ""
 "des modifications de couleur, \n"
 "ou ANNULER pour ne pas les modifier."
 
-#: src/slic3r/GUI/MainFrame.cpp:1412 src/slic3r/GUI/MainFrame.cpp:1757
+#: src/slic3r/GUI/MainFrame.cpp:1422 src/slic3r/GUI/MainFrame.cpp:1767
 msgid "S&end G-code"
 msgstr "&Envoyer le G-code"
 
-#: src/slic3r/GUI/KBShortcutsDialog.cpp:102 src/slic3r/GUI/Plater.cpp:6624
+#: src/slic3r/GUI/KBShortcutsDialog.cpp:102 src/slic3r/GUI/Plater.cpp:6632
 msgid "Send G-code"
 msgstr "Envoyer le G-code"
 
@@ -14894,15 +14950,15 @@ msgstr "Envoyer les informations système"
 msgid "Send to Connect"
 msgstr "Envoyer sur Connect"
 
-#: src/slic3r/GUI/MainFrame.cpp:1757
+#: src/slic3r/GUI/MainFrame.cpp:1767
 msgid "S&end to print"
 msgstr "Envoyer pour imprimer"
 
-#: src/slic3r/GUI/MainFrame.cpp:1412
+#: src/slic3r/GUI/MainFrame.cpp:1422
 msgid "Send to print current plate as G-code"
 msgstr "Envoyer pour imprimer le plateau actuel en tant que G-code"
 
-#: src/slic3r/GUI/Plater.cpp:6624 src/slic3r/GUI/Sidebar.cpp:479
+#: src/slic3r/GUI/Plater.cpp:6632 src/slic3r/GUI/Sidebar.cpp:479
 msgid "Send to printer"
 msgstr "Envoyer à l'imprimante"
 
@@ -15013,7 +15069,7 @@ msgstr ""
 "définir un nombre exact d'instances au lieu de le copier-coller plusieurs "
 "fois ?"
 
-#: src/slic3r/GUI/Plater.cpp:5190
+#: src/slic3r/GUI/Plater.cpp:5198
 #, c-format, boost-format
 msgid "Set numbers of copies to %d"
 msgstr "Régler le nombre de copies sur %d"
@@ -15247,7 +15303,7 @@ msgstr ""
 "avant d'entrer en collision avec d'autres objets imprimés."
 
 #: src/slic3r/GUI/BedShapeDialog.cpp:266 src/slic3r/GUI/GCodeViewer.cpp:2677
-#: src/slic3r/GUI/MainFrame.cpp:2224 src/slic3r/GUI/TopBar.cpp:454
+#: src/slic3r/GUI/MainFrame.cpp:2234 src/slic3r/GUI/TopBar.cpp:454
 msgid "Settings"
 msgstr "Réglages"
 
@@ -15330,7 +15386,7 @@ msgstr ""
 msgid "Shape"
 msgstr "Forme"
 
-#: src/slic3r/GUI/GalleryDialog.cpp:71 src/slic3r/GUI/MainFrame.cpp:1565
+#: src/slic3r/GUI/GalleryDialog.cpp:71 src/slic3r/GUI/MainFrame.cpp:1575
 msgid "Shape Gallery"
 msgstr "Galerie de Formes"
 
@@ -15419,7 +15475,7 @@ msgstr "Maj + Clic droit souris :"
 msgid "Show"
 msgstr "Afficher"
 
-#: src/slic3r/GUI/MainFrame.cpp:1213 src/slic3r/GUI/MainFrame.cpp:1216
+#: src/slic3r/GUI/MainFrame.cpp:1223 src/slic3r/GUI/MainFrame.cpp:1226
 msgid "Show about dialog"
 msgstr "Afficher la boîte de dialogue à propos"
 
@@ -15439,7 +15495,7 @@ msgstr "Afficher après traitement"
 msgid "Show background"
 msgstr "Afficher l'arrière-plan"
 
-#: src/slic3r/GUI/MainFrame.cpp:1264
+#: src/slic3r/GUI/MainFrame.cpp:1274
 msgid "Show &Configuration Folder"
 msgstr "Afficher le Répertoire de &Configuration"
 
@@ -15491,19 +15547,19 @@ msgstr "Afficher les préréglages d'impression et de filament incompatibles"
 msgid "Show keyboard shortcuts list"
 msgstr "Afficher la liste des raccourcis clavier"
 
-#: src/slic3r/GUI/MainFrame.cpp:1594
+#: src/slic3r/GUI/MainFrame.cpp:1604
 msgid "Show &Labels"
 msgstr "Afficher les &Labels"
 
-#: src/slic3r/GUI/MainFrame.cpp:1728
+#: src/slic3r/GUI/MainFrame.cpp:1738
 msgid "Show legend"
 msgstr "Afficher la légende"
 
-#: src/slic3r/GUI/MainFrame.cpp:1597 src/slic3r/GUI/MainFrame.cpp:1728
+#: src/slic3r/GUI/MainFrame.cpp:1607 src/slic3r/GUI/MainFrame.cpp:1738
 msgid "Show Legen&d"
 msgstr "Afficher la Légen&de"
 
-#: src/slic3r/GUI/MainFrame.cpp:1597
+#: src/slic3r/GUI/MainFrame.cpp:1607
 msgid "Show legend in preview"
 msgstr "Afficher la légende dans l'aperçu"
 
@@ -15516,7 +15572,7 @@ msgid "Show \"Log in\" button in application top bar"
 msgstr ""
 "Afficher le bouton \"Connexion\" dans la barre supérieure de l'application"
 
-#: src/slic3r/GUI/MainFrame.cpp:628
+#: src/slic3r/GUI/MainFrame.cpp:638
 msgid "Show Log in button in application top bar"
 msgstr ""
 "Afficher le bouton de connexion dans la barre supérieure de l'application"
@@ -15529,7 +15585,7 @@ msgstr "Afficher les arêtes non manifold"
 msgid "Show normal mode"
 msgstr "Afficher le mode normal"
 
-#: src/slic3r/GUI/MainFrame.cpp:1594
+#: src/slic3r/GUI/MainFrame.cpp:1604
 msgid "Show object/instance labels in 3D scene"
 msgstr "Afficher les labels de l'objet /instance dans la scène 3D"
 
@@ -15553,7 +15609,7 @@ msgstr "Afficher le mode furtif"
 msgid "Show supports"
 msgstr "Afficher les supports"
 
-#: src/slic3r/GUI/MainFrame.cpp:1262
+#: src/slic3r/GUI/MainFrame.cpp:1272
 msgid "Show system information"
 msgstr "Afficher les informations système"
 
@@ -15561,15 +15617,15 @@ msgstr "Afficher les informations système"
 msgid "Show table"
 msgstr "Afficher le tableau"
 
-#: src/slic3r/GUI/MainFrame.cpp:1556
+#: src/slic3r/GUI/MainFrame.cpp:1566
 msgid "Show the 3D editing view"
 msgstr "Afficher la vue d'édition 3D"
 
-#: src/slic3r/GUI/MainFrame.cpp:1559
+#: src/slic3r/GUI/MainFrame.cpp:1569
 msgid "Show the 3D slices preview"
 msgstr "Afficher la prévisualisation des tranches 3D"
 
-#: src/slic3r/GUI/MainFrame.cpp:1546
+#: src/slic3r/GUI/MainFrame.cpp:1556
 msgid "Show the filament settings"
 msgstr "Afficher les réglages de filament"
 
@@ -15583,19 +15639,19 @@ msgid "Show the full list of SLA print configuration options."
 msgstr ""
 "Afficher la liste complète des options de configuration d'impression SLA."
 
-#: src/slic3r/GUI/MainFrame.cpp:1278
+#: src/slic3r/GUI/MainFrame.cpp:1288
 msgid "Show the list of the keyboard shortcuts"
 msgstr "Afficher la liste des raccourcis clavier"
 
-#: src/slic3r/GUI/MainFrame.cpp:1538
+#: src/slic3r/GUI/MainFrame.cpp:1548
 msgid "Show the plater"
 msgstr "Afficher le plateau"
 
-#: src/slic3r/GUI/MainFrame.cpp:1550
+#: src/slic3r/GUI/MainFrame.cpp:1560
 msgid "Show the printer settings"
 msgstr "Afficher les réglages de l'imprimante"
 
-#: src/slic3r/GUI/MainFrame.cpp:1543
+#: src/slic3r/GUI/MainFrame.cpp:1553
 msgid "Show the print settings"
 msgstr "Afficher les réglages d'impression"
 
@@ -15603,7 +15659,7 @@ msgstr "Afficher les réglages d'impression"
 msgid "Show this help."
 msgstr "Afficher cette aide."
 
-#: src/slic3r/GUI/MainFrame.cpp:1271
+#: src/slic3r/GUI/MainFrame.cpp:1281
 msgid "Show Tip of the Day"
 msgstr "Afficher l'Astuce du Jour"
 
@@ -15611,7 +15667,7 @@ msgstr "Afficher l'Astuce du Jour"
 msgid "Show \"Tip of the day\" notification after start"
 msgstr "Afficher la notification \"Astuce du jour\" après le démarrage"
 
-#: src/slic3r/GUI/MainFrame.cpp:1264
+#: src/slic3r/GUI/MainFrame.cpp:1274
 msgid "Show user configuration folder (datadir)"
 msgstr "Afficher le répertoire de configuration utilisateur (datadir)"
 
@@ -15643,7 +15699,7 @@ msgstr "Simple"
 msgid "Simple mode"
 msgstr "Mode simple"
 
-#: src/slic3r/GUI/GUI_App.cpp:2573
+#: src/slic3r/GUI/GUI_App.cpp:2572
 msgid ""
 "Simple mode supports manipulation with single-part object(s)\n"
 "or object(s) with support modifiers only."
@@ -15855,7 +15911,7 @@ msgstr "Réglages d'impression SLA"
 msgid "SLA Support Points"
 msgstr "Points de Support SLA"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6656
+#: src/slic3r/GUI/GLCanvas3D.cpp:6641
 msgid "SLA supports outside the print area were detected."
 msgstr "Des supports SLA en dehors de la zone d'impression ont été détectés."
 
@@ -15910,7 +15966,7 @@ msgstr "Découper"
 msgid "Sliced Info"
 msgstr "Informations de découpage"
 
-#: src/slic3r/GUI/GUI_Preview.cpp:711
+#: src/slic3r/GUI/GUI_Preview.cpp:717
 #, boost-format
 msgid "Sliced object \"%1%\" looks like a logo or a sign"
 msgstr "L'objet découpe \"%1%\" ressemble à un logo ou à un signe"
@@ -15919,7 +15975,7 @@ msgstr "L'objet découpe \"%1%\" ressemble à un logo ou à un signe"
 msgid "Slice gap closing radius"
 msgstr "Découper le rayon de fermeture de l'espacement"
 
-#: src/slic3r/GUI/Plater.cpp:2191 src/slic3r/GUI/Plater.cpp:5899
+#: src/slic3r/GUI/Plater.cpp:2191 src/slic3r/GUI/Plater.cpp:5907
 #: src/slic3r/GUI/Sidebar.cpp:498
 msgid "Slice now"
 msgstr "Découper maintenant"
@@ -15945,7 +16001,7 @@ msgstr ""
 "Découper le modèle en tant que FFF ou SLA en fonction de la valeur de "
 "configuration de la printer_technology."
 
-#: src/slic3r/GUI/Plater.cpp:2191 src/slic3r/GUI/Plater.cpp:5896
+#: src/slic3r/GUI/Plater.cpp:2191 src/slic3r/GUI/Plater.cpp:5904
 #: src/slic3r/GUI/Tab.cpp:1663 src/slic3r/GUI/Tab.cpp:5821
 msgid "Slicing"
 msgstr "Découpe"
@@ -16034,7 +16090,7 @@ msgstr "Lissage"
 msgid "Snap"
 msgstr "Aimanter"
 
-#: src/slic3r/GUI/GUI_App.cpp:2660
+#: src/slic3r/GUI/GUI_App.cpp:2658
 msgid "Snapshot name"
 msgstr "Nom de l'instantané"
 
@@ -16070,7 +16126,7 @@ msgstr ""
 msgid "Snug"
 msgstr "Ajusté"
 
-#: src/slic3r/GUI/MainFrame.cpp:1252
+#: src/slic3r/GUI/MainFrame.cpp:1262
 msgid "Software &Releases"
 msgstr "Publications du Softwa&re "
 
@@ -16159,7 +16215,7 @@ msgstr ""
 msgid "(Some lines not shown)"
 msgstr "(Certaines lignes ne sont pas représentées)"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6657
+#: src/slic3r/GUI/GLCanvas3D.cpp:6642
 msgid "Some objects are not visible during editing."
 msgstr "Certains objets ne sont pas visibles lors de l'édition."
 
@@ -16187,7 +16243,7 @@ msgstr ""
 "socles devrait se trouver. S'ils sont proches, ils seront fusionnés en un "
 "seul socle."
 
-#: src/slic3r/GUI/MainFrame.cpp:1904
+#: src/slic3r/GUI/MainFrame.cpp:1914
 msgid ""
 "Some of the exported printers contain passwords, which are stored in the "
 "system password store. Do you want to include the passwords in the plain "
@@ -16206,7 +16262,7 @@ msgstr ""
 "approximatifs. Cela n'affecte en rien la qualité du découpage ou de "
 "l'impression physique."
 
-#: src/slic3r/GUI/GUI_App.cpp:2659
+#: src/slic3r/GUI/GUI_App.cpp:2657
 msgid ""
 "Some presets are modified and the unsaved changes will not be captured by "
 "the configuration snapshot."
@@ -16214,7 +16270,7 @@ msgstr ""
 "Certains préréglages sont modifiés et les modifications non enregistrées ne "
 "seront pas capturées par l'instantané de configuration."
 
-#: src/slic3r/GUI/MainFrame.cpp:1876
+#: src/slic3r/GUI/MainFrame.cpp:1886
 msgid ""
 "Some presets are modified and the unsaved changes will not be exported into "
 "configuration bundle."
@@ -16239,7 +16295,7 @@ msgstr "Certaines imprimantes ont été désinstallées."
 msgid "Some SLA materials were uninstalled."
 msgstr "Certains matériaux SLA ont été désinstallés."
 
-#: src/slic3r/GUI/UpdatesUIManager.cpp:149
+#: src/slic3r/GUI/UpdatesUIManager.cpp:184
 msgid "Source file"
 msgstr "Fichier source"
 
@@ -16506,7 +16562,7 @@ msgstr "Scinder l'objet sélectionné en objets individuels"
 msgid "Split the selected object into individual parts"
 msgstr "Diviser l'objet sélectionné en parties individuelles"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5127
+#: src/slic3r/GUI/GLCanvas3D.cpp:5095
 msgid "Split to objects"
 msgstr "Diviser en objets"
 
@@ -16514,7 +16570,7 @@ msgstr "Diviser en objets"
 msgid "Split to Objects"
 msgstr "Diviser en Objets"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:5137
+#: src/slic3r/GUI/GLCanvas3D.cpp:5105
 msgid "Split to parts"
 msgstr "Scinder en pièces"
 
@@ -16574,11 +16630,11 @@ msgstr "Standard"
 msgid "Stars"
 msgstr "Étoiles"
 
-#: src/slic3r/GUI/Plater.cpp:4482
+#: src/slic3r/GUI/Plater.cpp:4490
 msgid "Start a new instance of PrusaSlicer"
 msgstr "Démarrer une nouvelle instance de PrusaSlicer"
 
-#: src/slic3r/GUI/MainFrame.cpp:1320
+#: src/slic3r/GUI/MainFrame.cpp:1330
 msgid "Start a new project"
 msgstr "Démarrer un nouveau projet"
 
@@ -16630,11 +16686,11 @@ msgstr ""
 "\n"
 "Que voulez-vous faire maintenant ?"
 
-#: src/slic3r/GUI/Plater.cpp:4837
+#: src/slic3r/GUI/Plater.cpp:4845
 msgid "Start new PrusaSlicer instance"
 msgstr "Démarrer une nouvelle instance de PrusaSlicer"
 
-#: src/slic3r/GUI/MainFrame.cpp:1457
+#: src/slic3r/GUI/MainFrame.cpp:1467
 msgid "Start new slicing process"
 msgstr "Démarrer un nouveau processus de découpe"
 
@@ -16671,7 +16727,7 @@ msgstr "Rampe plus raide avant les obstacles"
 msgid "Stop at height"
 msgstr "Hauteur d'arrêt"
 
-#: src/slic3r/GUI/GUI_App.cpp:2987
+#: src/slic3r/GUI/GUI_App.cpp:2985
 msgid "Stop them and continue anyway?"
 msgstr "Les arrêter et continuer malgré tout ?"
 
@@ -16730,11 +16786,11 @@ msgstr ""
 msgid "Success!"
 msgstr "Réussi !"
 
-#: src/slic3r/GUI/Plater.cpp:4296
+#: src/slic3r/GUI/Plater.cpp:4304
 msgid "Successfully created G-code ASCII file"
 msgstr "Fichier G-code ASCII créé avec succès"
 
-#: src/slic3r/GUI/Plater.cpp:4375
+#: src/slic3r/GUI/Plater.cpp:4383
 msgid "Successfully created G-code binary file"
 msgstr "Fichier G-code binaire créé avec succès"
 
@@ -16940,7 +16996,7 @@ msgstr ""
 "Supprimer les préréglages de filament \" Template \" dans l'assistant de "
 "configuration et la visibilité de la barre latérale."
 
-#: src/slic3r/GUI/GUI_App.cpp:3569 src/slic3r/GUI/Preferences.cpp:627
+#: src/slic3r/GUI/GUI_App.cpp:3561 src/slic3r/GUI/Preferences.cpp:627
 msgid "Suppress to open hyperlink in browser"
 msgstr "Supprimer pour ouvrir l'hyperlien dans le navigateur"
 
@@ -16982,7 +17038,7 @@ msgstr "Permuter les axes Y/Z"
 msgid "%s warning"
 msgstr "%s avertissement"
 
-#: src/slic3r/GUI/MainFrame.cpp:1238
+#: src/slic3r/GUI/MainFrame.cpp:1248
 #, c-format, boost-format
 msgid "%s &Website"
 msgstr "Site &Web de %s"
@@ -17027,7 +17083,7 @@ msgstr "Code de changement pour Changer de couleur (%1%) pour :"
 msgid "Switching Presets: Unsaved Changes"
 msgstr "Changement de préréglages : modifications non enregistrées"
 
-#: src/slic3r/GUI/GUI_App.cpp:2722
+#: src/slic3r/GUI/GUI_App.cpp:2720
 msgid ""
 "Switching the language will trigger application restart.\n"
 "You will lose content of the plater."
@@ -17035,7 +17091,7 @@ msgstr ""
 "Le changement de langue déclenchera le redémarrage de l’application. L'objet "
 "et tous les paramètres non enregistrés seront perdus."
 
-#: src/slic3r/GUI/Plater.cpp:3803
+#: src/slic3r/GUI/Plater.cpp:3811
 #, boost-format
 msgid ""
 "Switching the printer technology from %1% to %2%.\n"
@@ -17058,7 +17114,7 @@ msgstr "Basculer vers le mode édition"
 msgid "Switch to Preview"
 msgstr "Basculer vers la Prévisualisation"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:4355 src/slic3r/GUI/MainFrame.cpp:595
+#: src/slic3r/GUI/GLCanvas3D.cpp:4355 src/slic3r/GUI/MainFrame.cpp:605
 msgid "Switch to Settings"
 msgstr "Basculer dans le Réglages"
 
@@ -17082,7 +17138,7 @@ msgstr ""
 msgid "Synchronize with object layers"
 msgstr "Synchroniser avec les couches de l'objet"
 
-#: src/slic3r/GUI/MainFrame.cpp:1262
+#: src/slic3r/GUI/MainFrame.cpp:1272
 msgid "System &Info"
 msgstr "&Informations sur le Système"
 
@@ -17103,11 +17159,11 @@ msgstr "Informations système envoyées avec succès. Merci."
 msgid "System presets"
 msgstr "Préréglages système"
 
-#: src/slic3r/GUI/GUI_App.cpp:2613
+#: src/slic3r/GUI/GUI_App.cpp:2612
 msgid "Take Configuration &Snapshot"
 msgstr "Capturer un in&stantané de la configuration"
 
-#: src/slic3r/GUI/GUI_App.cpp:2658
+#: src/slic3r/GUI/GUI_App.cpp:2656
 msgid "Taking a configuration snapshot"
 msgstr "Prise d'un instantané de configuration"
 
@@ -17462,7 +17518,7 @@ msgstr ""
 msgid "the following characters are not allowed:"
 msgstr "les caractères suivant ne sont pas autorisés :"
 
-#: src/slic3r/GUI/Plater.cpp:5457
+#: src/slic3r/GUI/Plater.cpp:5465
 msgid "The following characters are not allowed by a FAT file system:"
 msgstr ""
 "Les caractères suivants ne sont pas autorisés par un système de fichiers "
@@ -17799,7 +17855,7 @@ msgstr ""
 "Les endroits où la bordure sera imprimée autour de chaque objet sur la "
 "première couche."
 
-#: src/slic3r/GUI/Plater.cpp:5768
+#: src/slic3r/GUI/Plater.cpp:5776
 msgid ""
 "The plater is empty.\n"
 "Do you want to save the project?"
@@ -17857,7 +17913,7 @@ msgstr ""
 "tour de nettoyage.\n"
 "Le volume de matériau utilisé pour la purge peut être configuré ici."
 
-#: src/slic3r/GUI/Plater.cpp:5456
+#: src/slic3r/GUI/Plater.cpp:5464
 msgid "The provided file name is not valid."
 msgstr "Le nom de fichier fourni n'est pas valide."
 
@@ -17869,7 +17925,7 @@ msgstr "Le nom fourni n'est pas valide ;"
 msgid "There are active warnings concerning sliced models:"
 msgstr "Il existe des avertissements actifs concernant les modèles découpés :"
 
-#: src/slic3r/GUI/GUI_App.cpp:3670
+#: src/slic3r/GUI/GUI_App.cpp:3662
 #, boost-format
 msgid ""
 "There are no new released versions online. The latest release version is %1%."
@@ -17877,11 +17933,11 @@ msgstr ""
 "Il n'y a pas de nouvelles versions publiées en ligne. La dernière version "
 "est %1%."
 
-#: src/slic3r/GUI/Plater.cpp:4446
+#: src/slic3r/GUI/Plater.cpp:4454
 msgid "There are several files being loaded."
 msgstr "Plusieurs fichiers sont en cours de chargement."
 
-#: src/slic3r/GUI/Plater.cpp:4443
+#: src/slic3r/GUI/Plater.cpp:4451
 msgid "There are several files being loaded, including Project files."
 msgstr ""
 "Plusieurs fichiers sont en cours de chargement, y compris des fichiers de "
@@ -17904,7 +17960,7 @@ msgstr ""
 "Il y a des objets non imprimables. Essayez d'ajuster les paramètres de "
 "support pour rendre les objets imprimables."
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1198
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1197
 msgid ""
 "There is a color change for extruder that has not been used before.\n"
 "Check your settings to avoid redundant color changes."
@@ -17913,7 +17969,7 @@ msgstr ""
 "auparavant.\n"
 "Vérifiez vos paramètres pour éviter les changements de couleur redondants."
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1192
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1191
 msgid ""
 "There is a color change for extruder that won't be used till the end of "
 "print job.\n"
@@ -17923,7 +17979,7 @@ msgstr ""
 "avant la fin du travail d'impression.\n"
 "Ce code ne sera pas traité lors de la génération du G-code."
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1195
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1194
 msgid ""
 "There is an extruder change set to the same extruder.\n"
 "This code won't be processed during G-code generation."
@@ -18008,7 +18064,7 @@ msgstr ""
 "Le fichier amf sélectionné a été enregistré avec une version plus récente de "
 "%1% et n'est pas compatible."
 
-#: src/slic3r/GUI/MainFrame.cpp:1840
+#: src/slic3r/GUI/MainFrame.cpp:1850
 msgid ""
 "The selected config file contains a post-processing script.\n"
 "Please review the script carefully before exporting G-code."
@@ -18017,8 +18073,8 @@ msgstr ""
 "traitement.\n"
 "Veuillez relire attentivement le script avant d'exporter le G-code."
 
-#: src/slic3r/GUI/Plater.cpp:2545 src/slic3r/GUI/Plater.cpp:4171
-#: src/slic3r/GUI/Plater.cpp:4181
+#: src/slic3r/GUI/Plater.cpp:2545 src/slic3r/GUI/Plater.cpp:4179
+#: src/slic3r/GUI/Plater.cpp:4189
 msgid "The selected file"
 msgstr "Le fichier sélectionné"
 
@@ -18033,11 +18089,11 @@ msgstr ""
 "Le fichier sélectionné contient plusieurs zones disjointes. Cela n'est pas "
 "utilisable."
 
-#: src/slic3r/GUI/Plater.cpp:4248
+#: src/slic3r/GUI/Plater.cpp:4256
 msgid "The selected file is already in ASCII format."
 msgstr "Le fichier sélectionné est déjà au format ASCII."
 
-#: src/slic3r/GUI/Plater.cpp:4326
+#: src/slic3r/GUI/Plater.cpp:4334
 msgid "The selected file is already in binary format."
 msgstr "Le fichier sélectionné est déjà au format binaire."
 
@@ -18065,7 +18121,7 @@ msgstr ""
 "L'objet sélectionné n'a pas pu être divisé car il ne contient qu'une seule "
 "partie solide."
 
-#: src/slic3r/GUI/MainFrame.cpp:1340
+#: src/slic3r/GUI/MainFrame.cpp:1350
 msgid ""
 "The selected project is no longer available.\n"
 "Do you want to remove it from the recent projects list?"
@@ -18074,7 +18130,7 @@ msgstr ""
 "Voulez-vous le retirer de la liste des projets récents?"
 
 #: src/slic3r/GUI/DoubleSliderForLayers.cpp:955
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1115
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1114
 msgid ""
 "The sequential print is on.\n"
 "It's impossible to apply any custom G-code for objects printing sequentually."
@@ -18083,7 +18139,7 @@ msgstr ""
 "Il est impossible d'appliquer un G-code personnalisé pour l'impression "
 "séquentielle d'objets."
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1147
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1146
 msgid ""
 "The sequential print is on.\n"
 "It's impossible to apply any custom G-code for objects printing "
@@ -18174,7 +18230,7 @@ msgstr ""
 msgid "The thickness of the pad and its optional cavity walls."
 msgstr "L'épaisseur du socle et de ses parois de cavité optionnelles."
 
-#: src/slic3r/GUI/GUI_App.cpp:2987
+#: src/slic3r/GUI/GUI_App.cpp:2985
 msgid "The uploads are still ongoing"
 msgstr "Les téléchargements sont toujours en cours"
 
@@ -18828,7 +18884,7 @@ msgstr ""
 "et elle limite la résolution pour la hauteur de couche variable. Les valeurs "
 "type se situent entre 0.05 mm et 0.1 mm."
 
-#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1105
+#: src/slic3r/GUI/DoubleSliderForLayers.cpp:1104
 msgid "This is wipe tower layer"
 msgstr "C'est la couche de tour d'essuyage"
 
@@ -19036,9 +19092,9 @@ msgid "This %s version: %s"
 msgstr "Version de ce %s : %s"
 
 #: src/slic3r/GUI/PhysicalPrinterDialog.cpp:183
-#: src/slic3r/GUI/PhysicalPrinterDialog.cpp:209 src/slic3r/GUI/Plater.cpp:5957
-#: src/slic3r/GUI/UserAccountCommunication.cpp:87
-#: src/slic3r/GUI/UserAccountCommunication.cpp:113
+#: src/slic3r/GUI/PhysicalPrinterDialog.cpp:209 src/slic3r/GUI/Plater.cpp:5965
+#: src/slic3r/GUI/UserAccountCommunication.cpp:91
+#: src/slic3r/GUI/UserAccountCommunication.cpp:117
 msgid "This system doesn't support storing passwords securely"
 msgstr ""
 "Ce système ne prend pas en charge le stockage sécurisé des mots de passe"
@@ -19223,7 +19279,7 @@ msgstr "Durée de l'inclinaison lente"
 msgid "Time of the super slow tilt"
 msgstr "Temps de l'inclinaison super lente"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:6283
+#: src/slic3r/GUI/GLCanvas3D.cpp:6268
 #, boost-format
 msgid "Time since start: %1%"
 msgstr "Temps depuis le début : %1%"
@@ -19337,7 +19393,7 @@ msgid "Too tall, diminished font height inside text input."
 msgstr "Trop grand, taille de police réduite dans la saisie de texte."
 
 #. TRN Main menu: View->Top
-#: src/slic3r/GUI/MainFrame.cpp:1296
+#: src/slic3r/GUI/MainFrame.cpp:1306
 msgid "Top"
 msgstr "Dessus"
 
@@ -19401,7 +19457,7 @@ msgstr "Remplissage solide supérieur"
 msgid "Top solid layers"
 msgstr "Couches supérieures solides"
 
-#: src/slic3r/GUI/MainFrame.cpp:1296
+#: src/slic3r/GUI/MainFrame.cpp:1306
 msgid "Top View"
 msgstr "Vue du Dessus"
 
@@ -19643,15 +19699,15 @@ msgstr ""
 "Impossible de charger les shaders suivants :\n"
 "%s"
 
-#: src/slic3r/GUI/Plater.cpp:4272 src/slic3r/GUI/Plater.cpp:4350
+#: src/slic3r/GUI/Plater.cpp:4280 src/slic3r/GUI/Plater.cpp:4358
 msgid "Unable to open output file."
 msgstr "Impossible d'ouvrir le fichier de sortie."
 
-#: src/slic3r/GUI/Plater.cpp:4234 src/slic3r/GUI/Plater.cpp:4312
+#: src/slic3r/GUI/Plater.cpp:4242 src/slic3r/GUI/Plater.cpp:4320
 msgid "Unable to open the selected file."
 msgstr "Impossible d'ouvrir le fichier sélectionné."
 
-#: src/slic3r/GUI/Plater.cpp:5533
+#: src/slic3r/GUI/Plater.cpp:5541
 msgid ""
 "Unable to perform boolean operation on model meshes. Only positive parts "
 "will be exported."
@@ -19667,7 +19723,7 @@ msgstr "Impossible de recharger :"
 msgid "Unable to replace with more than one volume"
 msgstr "Impossible de remplacer par plus d'un volume"
 
-#: src/slic3r/GUI/Plater.cpp:5814
+#: src/slic3r/GUI/Plater.cpp:5822
 msgid "Unable to save file"
 msgstr "Impossible d'enregistrer le fichier"
 
@@ -19716,13 +19772,13 @@ msgstr "Type de trait non défini"
 msgid "Underflow"
 msgstr "Soupassement"
 
-#: src/slic3r/GUI/MainFrame.cpp:1502
+#: src/slic3r/GUI/MainFrame.cpp:1512
 msgid "&Undo"
 msgstr "Ann&uler"
 
 #: src/slic3r/GUI/DesktopIntegrationDialog.cpp:659
-#: src/slic3r/GUI/GLCanvas3D.cpp:5222 src/slic3r/GUI/KBShortcutsDialog.cpp:111
-#: src/slic3r/GUI/MainFrame.cpp:1503
+#: src/slic3r/GUI/GLCanvas3D.cpp:5193 src/slic3r/GUI/KBShortcutsDialog.cpp:111
+#: src/slic3r/GUI/MainFrame.cpp:1513
 msgid "Undo"
 msgstr "Annuler"
 
@@ -19766,7 +19822,7 @@ msgstr ""
 "annuler/rétablir</a> pour voir l'historique des modifications et pour "
 "annuler ou rétablir plusieurs actions à la fois ?"
 
-#: src/slic3r/GUI/Plater.cpp:3801
+#: src/slic3r/GUI/Plater.cpp:3809
 msgid "Undo / Redo is processing"
 msgstr "Annuler / Rétablir est en cours de traitement"
 
@@ -19932,7 +19988,7 @@ msgstr "Version d'OpenGL non supportée"
 msgid "Unsupported selection"
 msgstr "Sélection non supportée"
 
-#: src/slic3r/GUI/MainFrame.cpp:563 src/slic3r/GUI/Plater.cpp:323
+#: src/slic3r/GUI/MainFrame.cpp:573 src/slic3r/GUI/Plater.cpp:323
 #: src/slic3r/GUI/Plater.cpp:1672
 msgid "Untitled"
 msgstr "Sans titre"
@@ -19969,11 +20025,11 @@ msgstr "Mise à jour"
 msgid "Upload"
 msgstr "Télécharger"
 
-#: src/slic3r/GUI/GUI_App.cpp:2634
+#: src/slic3r/GUI/GUI_App.cpp:2632
 msgid "Upload a firmware image into an Arduino based printer"
 msgstr "Charger un firmware dans une imprimante basée sur un Arduino"
 
-#: src/slic3r/GUI/Plater.cpp:6169 src/slic3r/GUI/PrintHostDialogs.cpp:136
+#: src/slic3r/GUI/Plater.cpp:6177 src/slic3r/GUI/PrintHostDialogs.cpp:136
 msgid "Upload and Print"
 msgstr "Télécharger et Imprimer"
 
@@ -20263,7 +20319,7 @@ msgstr ""
 "La valeur a été changée et n'est pas égale à la valeur du système ou au "
 "dernier préréglage sauvegardé"
 
-#: src/slic3r/GUI/GLCanvas3D.cpp:185 src/slic3r/GUI/GLCanvas3D.cpp:5165
+#: src/slic3r/GUI/GLCanvas3D.cpp:185 src/slic3r/GUI/GLCanvas3D.cpp:5133
 #: src/slic3r/GUI/ObjectDataViewModel.cpp:76
 msgid "Variable layer height"
 msgstr "Hauteur de couche variable"
@@ -20372,8 +20428,8 @@ msgstr "Barre de défilement verticale - Déplacer le curseur actif vers le Bas"
 msgid "Vertical slider - Move active thumb Up"
 msgstr "Barre de défilement verticale - Déplacer le curseur actif vers le Haut"
 
-#: src/slic3r/GUI/MainFrame.cpp:1627 src/slic3r/GUI/MainFrame.cpp:1645
-#: src/slic3r/GUI/MainFrame.cpp:1738
+#: src/slic3r/GUI/MainFrame.cpp:1637 src/slic3r/GUI/MainFrame.cpp:1655
+#: src/slic3r/GUI/MainFrame.cpp:1748
 msgid "&View"
 msgstr "&Vue"
 
@@ -20390,7 +20446,7 @@ msgstr ""
 "Accédez aux \"Préférences\" et cochez \"%1%\"\n"
 "pour être à nouveau interrogé sur les modifications non enregistrées."
 
-#: src/slic3r/GUI/GUI_App.cpp:3573 src/slic3r/GUI/MainFrame.cpp:631
+#: src/slic3r/GUI/GUI_App.cpp:3565 src/slic3r/GUI/MainFrame.cpp:641
 #: src/slic3r/GUI/Plater.cpp:341
 #, boost-format
 msgid ""
@@ -20450,12 +20506,12 @@ msgstr "Épaisseur de la paroi"
 #: src/slic3r/GUI/Gizmos/GLGizmoFdmSupports.cpp:531
 #: src/slic3r/GUI/Gizmos/GLGizmoFdmSupports.cpp:543
 #: src/slic3r/GUI/Gizmos/GLGizmoSlaSupports.cpp:1131 src/slic3r/GUI/GUI.cpp:144
-#: src/slic3r/GUI/GUI_Preview.cpp:502
+#: src/slic3r/GUI/GUI_Preview.cpp:508
 #: src/slic3r/GUI/PhysicalPrinterDialog.cpp:892
 #: src/slic3r/GUI/PhysicalPrinterDialog.cpp:908
-#: src/slic3r/GUI/PhysicalPrinterDialog.cpp:938 src/slic3r/GUI/Plater.cpp:4248
-#: src/slic3r/GUI/Plater.cpp:4256 src/slic3r/GUI/Plater.cpp:4326
-#: src/slic3r/GUI/Plater.cpp:4334 src/slic3r/GUI/Plater.cpp:5385
+#: src/slic3r/GUI/PhysicalPrinterDialog.cpp:938 src/slic3r/GUI/Plater.cpp:4256
+#: src/slic3r/GUI/Plater.cpp:4264 src/slic3r/GUI/Plater.cpp:4334
+#: src/slic3r/GUI/Plater.cpp:4342 src/slic3r/GUI/Plater.cpp:5393
 #: src/slic3r/GUI/WifiConfigDialog.cpp:255
 #: src/slic3r/GUI/WipeTowerDialog.cpp:70
 msgid "Warning"
@@ -20507,7 +20563,7 @@ msgstr ""
 msgid "Welcome"
 msgstr "Bienvenue"
 
-#: src/slic3r/GUI/GUI_App.cpp:3333
+#: src/slic3r/GUI/GUI_App.cpp:3331
 #, boost-format
 msgid "Welcome to %1% version %2%."
 msgstr "Bienvenue dans %1% version %2%."
@@ -20799,7 +20855,7 @@ msgstr ""
 "épais que l'élément lui-même. Si elle est exprimée en pourcentage (par "
 "exemple 85%), elle sera calculée en fonction du diamètre de la buse."
 
-#: src/slic3r/GUI/GUI_App.cpp:2638
+#: src/slic3r/GUI/GUI_App.cpp:2636
 msgid "Wi-Fi Configuration File"
 msgstr "Fichier de Configuration Wi-Fi"
 
@@ -20816,7 +20872,7 @@ msgstr ""
 "Va augmenter ou diminuer les polygones 2D découpés en fonction du signe de "
 "la correction."
 
-#: src/slic3r/GUI/MainFrame.cpp:1625 src/slic3r/GUI/MainFrame.cpp:1644
+#: src/slic3r/GUI/MainFrame.cpp:1635 src/slic3r/GUI/MainFrame.cpp:1654
 msgid "&Window"
 msgstr "Fenê&tre"
 
@@ -20962,7 +21018,7 @@ msgid "Write this file on the USB flash drive. Its name will be %1%."
 msgstr "Écrire ce fichier sur la clé USB. Son nom sera %1%."
 
 #. TRN Text of hypertext of notification when Slicer starts and usb stick with printer settings ini file is present
-#: src/slic3r/GUI/GUI_App.cpp:3793 src/slic3r/GUI/Plater.cpp:824
+#: src/slic3r/GUI/GUI_App.cpp:3785 src/slic3r/GUI/Plater.cpp:824
 msgid "Write Wi-Fi credentials."
 msgstr "Entrez les informations d'identification du Wi-Fi."
 
@@ -21007,12 +21063,12 @@ msgstr ""
 "Vous êtes en train de modifier des points de support SLA. Veuillez d'abord "
 "appliquer ou supprimer vos modifications."
 
-#: src/slic3r/GUI/GUI_App.cpp:3667
+#: src/slic3r/GUI/GUI_App.cpp:3659
 #, boost-format
 msgid "You are currently running the latest released version %1%."
 msgstr "Vous utilisez actuellement la dernière version publiée %1%."
 
-#: src/slic3r/GUI/Plater.cpp:5380
+#: src/slic3r/GUI/Plater.cpp:5388
 #, boost-format
 msgid ""
 "You are exporting binary G-code for a Prusa printer. Binary G-code enables "
@@ -21027,6 +21083,13 @@ msgstr ""
 "anciennes versions ne prennent pas en charge les G-codes binaires.\n"
 "\n"
 "Pour en savoir plus sur le G-code binaire, visitez <a href=%1%>%1%</a>."
+
+#. TRN Config wizard page with a log in web.
+#: src/slic3r/GUI/ConfigWizardWebViewPage.cpp:35
+#: src/slic3r/GUI/ConfigWizardWebViewPage.cpp:60
+#, boost-format
+msgid "You are logged as %1%."
+msgstr "Vous êtes connecté en tant que %1%."
 
 #: src/slic3r/GUI/GUI_App.cpp:1098
 #, boost-format
@@ -21056,7 +21119,7 @@ msgstr[0] "Vous utilisez un modèle de préréglage de filament."
 msgstr[1] "Vous utilisez des modèles de préréglage de filament."
 msgstr[2] ""
 
-#: src/slic3r/GUI/Plater.cpp:4000
+#: src/slic3r/GUI/Plater.cpp:4008
 msgid ""
 "You can keep presets modifications to the new project, discard them or save "
 "changes as new presets.\n"
@@ -21068,7 +21131,7 @@ msgstr ""
 "Notez que si les modifications sont enregistrées, le nouveau projet ne les "
 "conservera pas"
 
-#: src/slic3r/GUI/Plater.cpp:3999
+#: src/slic3r/GUI/Plater.cpp:4007
 msgid "You can keep presets modifications to the new project or discard them"
 msgstr ""
 "Vous pouvez conserver les modifications des préréglages dans le nouveau "
@@ -21080,7 +21143,7 @@ msgstr ""
 "Vous ne pouvez pas charger un projet SLA avec un objet en plusieurs parties "
 "sur le plateau"
 
-#: src/slic3r/GUI/Plater.cpp:4902
+#: src/slic3r/GUI/Plater.cpp:4910
 msgid "You can open only one .gcode file at a time."
 msgstr "Vous ne pouvez ouvrir qu'un seul fichier .gcode à la fois."
 
@@ -21168,7 +21231,7 @@ msgstr ""
 "filament soit sélectionné ?\n"
 "(Ce message ne s'affichera plus.)"
 
-#: src/slic3r/GUI/GUI_App.cpp:2006
+#: src/slic3r/GUI/GUI_App.cpp:2005
 msgid ""
 "You have the following presets with saved options for \"Print Host upload\""
 msgstr ""
@@ -21215,7 +21278,7 @@ msgstr ""
 "Vos changements actuels supprimeront toutes les changement enregistrés de "
 "l'extrudeur (outil)."
 
-#: src/slic3r/GUI/MainFrame.cpp:1797
+#: src/slic3r/GUI/MainFrame.cpp:1807
 msgid "Your file was repaired."
 msgstr "Votre fichier a été réparé."
 
@@ -21269,7 +21332,7 @@ msgstr ""
 "suivante : Tous = version régulière et versions alpha / bêta. Version "
 "officielle uniquement = version régulière."
 
-#: src/slic3r/GUI/GUI_App.cpp:3572
+#: src/slic3r/GUI/GUI_App.cpp:3564
 msgid "You will not be asked about it again on hyperlinks hovering."
 msgstr ""
 "Vous ne serez plus questionné à ce sujet au survol des liens hypertextes."

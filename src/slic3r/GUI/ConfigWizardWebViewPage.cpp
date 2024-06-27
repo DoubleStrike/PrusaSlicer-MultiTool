@@ -15,7 +15,7 @@ wxDEFINE_EVENT(EVT_LOGIN_VIA_WIZARD, Event<std::string>);
 
 ConfigWizardWebViewPage::ConfigWizardWebViewPage(ConfigWizard *parent)
     // TRN Config wizard page headline.
-    : ConfigWizardPage(parent, _L("Log into the Prusa Account (optional)"), _L("Log in (optional)"))
+    : ConfigWizardPage(parent, _L("Log in with Your Prusa Account (optional)"), _L("Log in (optional)"))
 {
     p_user_account = wxGetApp().plater()->get_user_account();
     assert(p_user_account);
@@ -32,10 +32,10 @@ ConfigWizardWebViewPage::ConfigWizardWebViewPage(ConfigWizard *parent)
     }
     if (logged) {
         // TRN Config wizard page with a log in web.
-        m_text = new wxStaticText(this, wxID_ANY, format_wxstr("You are logged as %1%.", p_user_account->get_username()));       
+        m_text = new wxStaticText(this, wxID_ANY, format_wxstr(_L("You are logged as %1%."), p_user_account->get_username()));       
     } else {
         // TRN Config wizard page with a log in web. first line of text.
-        m_text = new wxStaticText(this, wxID_ANY, _L("Please log into your Prusa Account."));
+        m_text = new wxStaticText(this, wxID_ANY, _L("Log in to control your printers remotely through the built-in Connect in PrusaSlicer."));
         // TRN Config wizard page with a log in web. second line of text.
     }
     append(m_text);
@@ -47,7 +47,7 @@ ConfigWizardWebViewPage::ConfigWizardWebViewPage(ConfigWizard *parent)
     // Connect the webview events
     Bind(wxEVT_WEBVIEW_ERROR, &ConfigWizardWebViewPage::on_error, this, m_browser->GetId());
     Bind(wxEVT_WEBVIEW_NAVIGATING, &ConfigWizardWebViewPage::on_navigation_request, this, m_browser->GetId());
-
+    Bind(wxEVT_IDLE, &ConfigWizardWebViewPage::on_idle, this);
 }
 
 bool ConfigWizardWebViewPage::login_changed()
@@ -57,10 +57,10 @@ bool ConfigWizardWebViewPage::login_changed()
     m_browser_sizer->Show(!logged);
     if (logged) {
         // TRN Config wizard page with a log in web.
-        m_text->SetLabel(format_wxstr("You are logged as %1%.", p_user_account->get_username()));
+        m_text->SetLabel(format_wxstr(_L("You are logged as %1%."), p_user_account->get_username()));
     } else {
         // TRN Config wizard page with a log in web. first line of text.
-        m_text->SetLabel(_L("Please log into your Prusa Account."));
+        m_text->SetLabel(_L("Log in to control your printers remotely through the built-in Connect in PrusaSlicer."));
     }
     return logged;
 }
@@ -85,14 +85,44 @@ case type: \
         WX_ERROR_CASE(wxWEBVIEW_NAV_ERR_OTHER);
     }
 
-    BOOST_LOG_TRIVIAL(error) << "WebViewPanel error: " << category;
+    BOOST_LOG_TRIVIAL(error) << "ConfigWizardWebViewPage error: " << category;
+    load_error_page();
 }
+
+void ConfigWizardWebViewPage::load_error_page() {
+    if (!m_browser)
+        return;
+    if (m_vetoed)
+        return;
+    m_browser->Stop();
+    m_load_error_page = true;
+}
+
+void ConfigWizardWebViewPage::on_idle(wxIdleEvent &WXUNUSED(evt)) {
+    if (!m_browser)
+        return;
+    if (m_browser->IsBusy()) {
+        wxSetCursor(wxCURSOR_ARROWWAIT);
+    } else {
+        wxSetCursor(wxNullCursor);
+
+        if (!m_vetoed && m_load_error_page) {
+            m_load_error_page = false;
+            m_browser->LoadURL(GUI::format_wxstr(
+                "file://%1%/web/connection_failed.html",
+                boost::filesystem::path(resources_dir()).generic_string()
+            ));
+        }
+    }
+}
+
 
 void ConfigWizardWebViewPage::on_navigation_request(wxWebViewEvent &evt) 
 {
     wxString url = evt.GetURL();
     if (url.starts_with(L"prusaslicer")) {
         evt.Veto();
+        m_vetoed = true;
         wxPostEvent(wxGetApp().plater(), Event<std::string>(EVT_LOGIN_VIA_WIZARD, into_u8(url)));	
     }
 }

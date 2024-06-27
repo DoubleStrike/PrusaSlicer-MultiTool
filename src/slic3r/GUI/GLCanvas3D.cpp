@@ -6007,7 +6007,7 @@ bool GLCanvas3D::check_toolbar_icon_size(float init_scale, float& new_scale_to_s
     new_scale_to_save = std::min(new_scale / max_scale, 1.f);
 
     if (is_custom && new_scale_to_save > init_scale)
-        return false;
+        return true; // we need to save new value, so return true
 
     if (is_approx(init_scale, new_scale_to_save, 0.015f) || counter == 0)
         return true;
@@ -6015,7 +6015,7 @@ bool GLCanvas3D::check_toolbar_icon_size(float init_scale, float& new_scale_to_s
     // scale is changed by 1.5% and more
     init_scale = new_scale_to_save;
     counter--;
-    return check_toolbar_icon_size(init_scale, new_scale_to_save, counter);
+    return check_toolbar_icon_size(init_scale, new_scale_to_save, is_custom, counter);
 }
 
 
