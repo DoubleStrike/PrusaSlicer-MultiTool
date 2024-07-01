@@ -18,3 +18,5 @@ PrusaSlicer is based on [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro
 
 See the [project homepage](https://www.prusa3d.com/slic3r-prusa-edition/) and
 the [documentation directory](doc/) for more information.
+
+### Final warning: this code is likely to destroy your print, melt your printer, set your house on fire, and make your wife or husband leave you. The world's end may be hastened, and cats and dogs will live together in an abomination of the natural order.  You have been warned.
