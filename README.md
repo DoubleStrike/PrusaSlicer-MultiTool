@@ -5,6 +5,10 @@
 
 **This is a fork of PrusaSlicer that removes various warnings related to multi-toolhead operation, such as blocking wipe towers with mismatching nozzle sizes, even if the layer height is a sane number.**  *This will likely cause tons of issues unless you are watching closely and have a specific use case in mind.  Caveat emptor!*
 
+Please note that when using dissimilar nozzle sizes, as per BaconFase on the Prusa forums, you will want to set your min and max layer heights **for all 5 extruders** to zero.  We are not 100% sure of what else this may affect, but we are doing additional testing to determine specifics. If code changes can help, I'll look into those.
+![e715e71f-untitled](https://github.com/user-attachments/assets/03b94596-dec7-42d9-adff-3e50207c7199)
+
+
 You may want to check the upstream [PrusaSlicer project page](https://www.prusa3d.com/prusaslicer/).
 Prebuilt Windows, OSX and Linux binaries are available through the [git releases page](https://github.com/prusa3d/PrusaSlicer/releases) or from the [Prusa3D downloads page](https://www.prusa3d.com/drivers/). There are also [3rd party Linux builds available](https://github.com/prusa3d/PrusaSlicer/wiki/PrusaSlicer-on-Linux---binary-distributions).
 
