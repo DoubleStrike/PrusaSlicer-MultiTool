@@ -3,6 +3,8 @@
 
 #include <random>
 
+#include <libslic3r/ExtrusionEntity.hpp>
+#include <libslic3r/GCode/SmoothPath.hpp>
 #include <libslic3r/Geometry/ArcWelder.hpp>
 #include <libslic3r/Geometry/Circle.hpp>
 #include <libslic3r/SVG.hpp>
@@ -396,6 +398,76 @@ TEST_CASE("arc wedge test", "[ArcWelder]") {
                 Vec2i64{ - s, - s }, true);
         }
     }
+}
+
+// Distilled a test case for failing assert(p != prev) inside GCodeGenerator::_extrude() that is caused
+// by performing simplification of each ExtrusionPath in ExtrusionMultiPath one by one and not
+// simplifying ExtrusionMultiPath as a whole.
+TEST_CASE("ExtrusionMultiPath simplification", "[ArcWelderMultiPathSimplify][!mayfail]")
+{
+    using namespace Slic3r::Geometry;
+    using namespace Slic3r::GCode;
+
+    ExtrusionMultiPath multi_path;
+
+    multi_path.paths.emplace_back(Polyline({Point(3615254, 8843476), Point(5301926, 8703627), Point(5503271, 8717959),
+                                            Point(5787717, 8834837), Point(7465587, 10084995), Point(7565376, 10117372)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0626713, 0.449999f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(7565376, 10117372), Point(7751661, 10097239)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0604367, 0.435101f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(7751661, 10097239), Point(11289346, 8638614), Point(11412324, 8600432)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0547566, 0.397234f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(11412324, 8600432), Point(11727623, 8578798)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.059829, 0.43105f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(11727623, 8578798), Point(12042923, 8557165)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0654324, 0.468406f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(12042923, 8557165), Point(12358223, 8535532), Point(12339460, 8545477)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0710358, 0.505762f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(12339460, 8545477), Point(12035789, 8689023)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0701369, 0.499769f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(12035789, 8689023), Point(11732119, 8832569)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0650101, 0.465591f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(11732119, 8832569), Point(11428449, 8976115)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0598834, 0.431413f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(11428449, 8976115), Point(7890375, 10433797)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0547566, 0.397234f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(7890375, 10433797), Point(7890196, 10433871)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0546036, 0.396214f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(7890196, 10433871), Point(7645162, 10520244)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0586375, 0.423107f, 0.15f), false));
+
+    multi_path.paths.emplace_back(Polyline({Point(7645162, 10520244), Point(7400129, 10606618), Point(6491466, 10980845),
+                                            Point(3782930, 8968079)}),
+                                  ExtrusionAttributes(ExtrusionRole::SolidInfill, ExtrusionFlow(0.0626713, 0.449999f, 0.15f), false));
+
+    const double    resolution = 8000.;
+    SmoothPathCache smooth_path_cache;
+    SmoothPath      smooth_path = smooth_path_cache.resolve_or_fit(multi_path, false, resolution);
+
+    double min_segment_length = std::numeric_limits<double>::max();
+    for (const SmoothPathElement &el : smooth_path) {
+        assert(el.path.size() > 1);
+        Point prev_pt = el.path.front().point;
+
+        for (auto segment_it = std::next(el.path.begin()); segment_it != el.path.end(); ++segment_it) {
+            if (const double length = (segment_it->point - prev_pt).cast<double>().norm(); length < min_segment_length) {
+                min_segment_length = length;
+            }
+        }
+    }
+
+    REQUIRE(min_segment_length >= resolution);
 }
 
 #if 0

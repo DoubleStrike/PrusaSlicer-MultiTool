@@ -64,6 +64,7 @@ struct Camera;
 class GLToolbar;
 class UserAccount;
 class PresetArchiveDatabase;
+enum class ArrangeSelectionMode;
 
 class Plater: public wxPanel
 {
@@ -92,10 +93,16 @@ public:
     Sidebar& sidebar();
     const Model& model() const;
     Model& model();
-    const Print& fff_print() const;
-    Print& fff_print();
-    const SLAPrint& sla_print() const;
-    SLAPrint& sla_print();
+    //const Print& fff_print() const;
+    //Print& fff_print();
+    //const SLAPrint& sla_print() const;
+    //SLAPrint& sla_print();
+    
+    Print& active_fff_print();
+    SLAPrint& active_sla_print();
+
+    std::vector<std::unique_ptr<Print>>& get_fff_prints();
+    const std::vector<GCodeProcessorResult>& get_gcode_results() const;
 
     void new_project();
     void load_project();
@@ -110,6 +117,7 @@ public:
     void convert_gcode_to_ascii();
     void convert_gcode_to_binary();
     void reload_print();
+    void object_list_changed();
 
     std::vector<size_t> load_files(const std::vector<boost::filesystem::path>& input_files, bool load_model = true, bool load_config = true, bool imperial_units = false);
     // To be called when providing a list of files to the GUI slic3r on command line.
@@ -229,6 +237,7 @@ public:
     void send_gcode_inner(DynamicPrintConfig* physical_printer_config);
 	void eject_drive();
     void connect_gcode();
+    void printables_to_connect_gcode(const std::string& url);
     std::string get_upload_filename();
 
     void take_snapshot(const std::string &snapshot_name);
@@ -279,9 +288,10 @@ public:
     GLCanvas3D* get_current_canvas3D();
 
     void render_sliders(GLCanvas3D& canvas);
-    
+
     void arrange();
-    void arrange(Worker &w, bool selected);
+    void arrange_current_bed();
+    void arrange(Worker &w, const ArrangeSelectionMode &selected);
 
     void set_current_canvas_as_dirty();
     void unbind_canvas_event_handlers();
@@ -359,9 +369,6 @@ public:
 
     NotificationManager* get_notification_manager();
     const NotificationManager* get_notification_manager() const;
-
-    PresetArchiveDatabase* get_preset_archive_database();
-    const PresetArchiveDatabase* get_preset_archive_database() const;
 
     UserAccount* get_user_account();
     const UserAccount* get_user_account() const;

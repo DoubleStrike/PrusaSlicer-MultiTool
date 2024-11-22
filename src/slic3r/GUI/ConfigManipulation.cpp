@@ -249,8 +249,9 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig* config)
                     "infill_speed", "bridge_speed" })
         toggle_field(el, have_infill || has_solid_infill);
 
-    toggle_field("top_solid_min_thickness", ! has_spiral_vase && has_top_solid_infill);
-    toggle_field("bottom_solid_min_thickness", ! has_spiral_vase && has_bottom_solid_infill);
+    const bool has_ensure_vertical_shell_thickness = config->opt_enum<EnsureVerticalShellThickness>("ensure_vertical_shell_thickness") != EnsureVerticalShellThickness::Disabled;
+    toggle_field("top_solid_min_thickness", !has_spiral_vase && has_top_solid_infill && has_ensure_vertical_shell_thickness);
+    toggle_field("bottom_solid_min_thickness", !has_spiral_vase && has_bottom_solid_infill && has_ensure_vertical_shell_thickness);
 
     // Gap fill is newly allowed in between perimeter lines even for empty infill (see GH #1476).
     toggle_field("gap_fill_speed", have_perimeters);
@@ -324,7 +325,7 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig* config)
     toggle_field("standby_temperature_delta", have_ooze_prevention);
 
     bool have_wipe_tower = config->opt_bool("wipe_tower");
-    for (auto el : { "wipe_tower_x", "wipe_tower_y", "wipe_tower_width", "wipe_tower_rotation_angle", "wipe_tower_brim_width", "wipe_tower_cone_angle",
+    for (auto el : { "wipe_tower_width",  "wipe_tower_brim_width", "wipe_tower_cone_angle",
                      "wipe_tower_extra_spacing", "wipe_tower_extra_flow", "wipe_tower_bridging", "wipe_tower_no_sparse_layers", "single_extruder_multi_material_priming" })
         toggle_field(el, have_wipe_tower);
 
@@ -345,6 +346,16 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig* config)
     toggle_field("min_feature_size", have_arachne);
     toggle_field("min_bead_width", have_arachne);
     toggle_field("thin_walls", !have_arachne);
+
+    toggle_field("scarf_seam_placement", !has_spiral_vase);
+    const auto scarf_seam_placement{config->opt_enum<ScarfSeamPlacement>("scarf_seam_placement")};
+    const bool uses_scarf_seam{!has_spiral_vase && scarf_seam_placement != ScarfSeamPlacement::nowhere};
+    toggle_field("scarf_seam_only_on_smooth", uses_scarf_seam);
+    toggle_field("scarf_seam_start_height", uses_scarf_seam);
+    toggle_field("scarf_seam_entire_loop", uses_scarf_seam);
+    toggle_field("scarf_seam_length", uses_scarf_seam);
+    toggle_field("scarf_seam_max_segment_length", uses_scarf_seam);
+    toggle_field("scarf_seam_on_inner_perimeters", uses_scarf_seam);
 }
 
 void ConfigManipulation::toggle_print_sla_options(DynamicPrintConfig* config)

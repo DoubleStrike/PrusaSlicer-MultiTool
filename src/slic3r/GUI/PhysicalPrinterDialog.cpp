@@ -710,6 +710,7 @@ void PhysicalPrinterDialog::update_host_type(bool printer_change)
                 || boost::starts_with(model, "MINI")
                 || boost::starts_with(model, "MK2.5")
                 || boost::starts_with(model, "XL")
+                || boost::starts_with(model, "CORE")
                 );
     };
     // allowed models are: all MK3/S and MK2.5/S. 
@@ -721,6 +722,7 @@ void PhysicalPrinterDialog::update_host_type(bool printer_change)
                 || boost::starts_with(model, "MINI")
                 || boost::starts_with(model, "MK2.5")
                 || boost::starts_with(model, "XL")
+                || boost::starts_with(model, "CORE")
                 );
     };
 

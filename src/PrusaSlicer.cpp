@@ -48,7 +48,7 @@
 #include "libslic3r/GCode/PostProcessor.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/CutUtils.hpp"
-#include "libslic3r/ModelArrange.hpp"
+#include <arrange-wrapper/ModelArrange.hpp>
 #include "libslic3r/Platform.hpp"
 #include "libslic3r/Print.hpp"
 #include "libslic3r/SLAPrint.hpp"
@@ -63,6 +63,7 @@
 #include "libslic3r/BlacklistedLibraryCheck.hpp"
 #include "libslic3r/ProfilesSharingUtils.hpp"
 #include "libslic3r/Utils/DirectoriesUtils.hpp"
+#include "libslic3r/MultipleBeds.hpp"
 
 #include "PrusaSlicer.hpp"
 
@@ -91,6 +92,10 @@ int CLI::run(int argc, char **argv)
     // startup if gtk3 is used. This env var has to be set explicitly to
     // instruct the window manager to fall back to X server mode.
     ::setenv("GDK_BACKEND", "x11", /* replace */ true);
+
+    // https://github.com/prusa3d/PrusaSlicer/issues/12969
+    ::setenv("WEBKIT_DISABLE_COMPOSITING_MODE", "1", /* replace */ false);
+    ::setenv("WEBKIT_DISABLE_DMABUF_RENDERER", "1", /* replace */ false);
 #endif
 
 	// Switch boost::filesystem to utf8.
@@ -384,7 +389,9 @@ int CLI::run(int argc, char **argv)
     
     // Loop through transform options.
     bool user_center_specified = false;
-    arr2::ArrangeBed bed = arr2::to_arrange_bed(get_bed_shape(m_print_config));
+
+    const Vec2crd gap{s_multiple_beds.get_bed_gap()};
+    arr2::ArrangeBed bed = arr2::to_arrange_bed(get_bed_shape(m_print_config), gap);
     arr2::ArrangeSettings arrange_cfg;
     arrange_cfg.set_distance_from_objects(min_object_distance(m_print_config));
 
@@ -606,9 +613,6 @@ int CLI::run(int argc, char **argv)
                 model.add_default_instances();
             if (! this->export_models(IO::OBJ))
                 return 1;
-        } else if (opt_key == "export_amf") {
-            if (! this->export_models(IO::AMF))
-                return 1;
         } else if (opt_key == "export_3mf") {
             if (! this->export_models(IO::TMF))
                 return 1;
@@ -751,6 +755,11 @@ int CLI::run(int argc, char **argv)
         params.load_configs = load_configs;
         params.extra_config = std::move(m_extra_config);
         params.input_files  = std::move(m_input_files);
+        if (has_config_from_profiles && params.input_files.empty()) {
+            params.selected_presets = Slic3r::GUI::CLISelectedProfiles{ m_config.opt_string("print-profile"),
+                                                                        m_config.opt_string("printer-profile") ,
+                                                                        m_config.option<ConfigOptionStrings>("material-profile")->values };
+        }
         params.start_as_gcodeviewer = start_as_gcodeviewer;
         params.start_downloader = start_downloader;
         params.download_url = download_url;
@@ -950,7 +959,6 @@ bool CLI::export_models(IO::ExportFormat format)
         const std::string path = this->output_filepath(model, format);
         bool success = false;
         switch (format) {
-            case IO::AMF: success = Slic3r::store_amf(path.c_str(), &model, nullptr, false); break;
             case IO::OBJ: success = Slic3r::store_obj(path.c_str(), &model);          break;
             case IO::STL: success = Slic3r::store_stl(path.c_str(), &model, true);    break;
             case IO::TMF: success = Slic3r::store_3mf(path.c_str(), &model, nullptr, false); break;
@@ -970,7 +978,6 @@ std::string CLI::output_filepath(const Model &model, IO::ExportFormat format) co
 {
     std::string ext;
     switch (format) {
-        case IO::AMF: ext = ".zip.amf"; break;
         case IO::OBJ: ext = ".obj"; break;
         case IO::STL: ext = ".stl"; break;
         case IO::TMF: ext = ".3mf"; break;

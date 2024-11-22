@@ -1448,6 +1448,7 @@ void TabPrint::build()
         optgroup = page->new_optgroup(L("Quality (slower slicing)"));
         optgroup->append_single_option_line("extra_perimeters", category_path + "extra-perimeters-if-needed");
         optgroup->append_single_option_line("extra_perimeters_on_overhangs", category_path + "extra-perimeters-on-overhangs");
+        optgroup->append_single_option_line("ensure_vertical_shell_thickness", category_path + "ensure-vertical-shell-thickness");
         optgroup->append_single_option_line("avoid_crossing_curled_overhangs", category_path + "avoid-crossing-curled-overhangs");
         optgroup->append_single_option_line("avoid_crossing_perimeters", category_path + "avoid-crossing-perimeters");
         optgroup->append_single_option_line("avoid_crossing_perimeters_max_detour", category_path + "avoid_crossing_perimeters_max_detour");
@@ -1457,7 +1458,17 @@ void TabPrint::build()
 
         optgroup = page->new_optgroup(L("Advanced"));
         optgroup->append_single_option_line("seam_position", category_path + "seam-position");
+        optgroup->append_single_option_line("seam_gap_distance", category_path + "seam-gap-distance");
         optgroup->append_single_option_line("staggered_inner_seams", category_path + "staggered-inner-seams");
+
+        optgroup->append_single_option_line("scarf_seam_placement", category_path + "scarf-seam-placement");
+        optgroup->append_single_option_line("scarf_seam_only_on_smooth", category_path + "scarf-seam-only-on-smooth");
+        optgroup->append_single_option_line("scarf_seam_start_height", category_path + "scarf-seam-start-height");
+        optgroup->append_single_option_line("scarf_seam_entire_loop", category_path + "scarf-seam-entire-loop");
+        optgroup->append_single_option_line("scarf_seam_length", category_path + "scarf-seam-length");
+        optgroup->append_single_option_line("scarf_seam_max_segment_length", category_path + "scarf-seam-max-segment-length");
+        optgroup->append_single_option_line("scarf_seam_on_inner_perimeters", category_path + "scarf-seam-on-inner-perimeters");
+
         optgroup->append_single_option_line("external_perimeters_first", category_path + "external-perimeters-first");
         optgroup->append_single_option_line("gap_fill_enabled", category_path + "fill-gaps");
         optgroup->append_single_option_line("perimeter_generator");
@@ -1626,10 +1637,7 @@ void TabPrint::build()
 
         optgroup = page->new_optgroup(L("Wipe tower"));
         optgroup->append_single_option_line("wipe_tower");
-        optgroup->append_single_option_line("wipe_tower_x");
-        optgroup->append_single_option_line("wipe_tower_y");
-        optgroup->append_single_option_line("wipe_tower_width");
-        optgroup->append_single_option_line("wipe_tower_rotation_angle");
+        optgroup->append_single_option_line("wipe_tower_width");        
         optgroup->append_single_option_line("wipe_tower_brim_width");
         optgroup->append_single_option_line("wipe_tower_bridging");
         optgroup->append_single_option_line("wipe_tower_cone_angle");
@@ -1961,6 +1969,9 @@ std::vector<std::pair<std::string, std::vector<std::string>>> filament_overrides
     {"Retraction when tool is disabled", {
         "filament_retract_length_toolchange",
         "filament_retract_restart_extra_toolchange"
+    }},
+    {"Seams", {
+        "filament_seam_gap_distance"
     }}
 };
 
@@ -4393,6 +4404,13 @@ void Tab::rename_preset()
 
     assert(old_name == edited_preset.name);
 
+    if (m_type == Preset::TYPE_FILAMENT) {
+        // Filaments will be sorted inside collection after remaning,
+        // so, cache preset names for each extruder to reset them after renaming
+        m_preset_bundle->cache_extruder_filaments_names();
+    }
+
+    bool was_renamed = true;
     using namespace boost;
     try {
         // rename selected and edited presets
@@ -4415,10 +4433,18 @@ void Tab::rename_preset()
     catch (const exception& ex) {
         const std::string exception = diagnostic_information(ex);
         printf("Can't rename a preset : %s", exception.c_str());
+        was_renamed = false;
     }
 
     // sort presets after renaming
     std::sort(m_presets->begin(), m_presets->end());
+
+    if (was_renamed && m_type == Preset::TYPE_FILAMENT) {
+        // Reset extruder_filaments only if preset was renamed
+        m_preset_bundle->reset_extruder_filaments();
+        // and update compatibility for extruders after reset
+        m_preset_bundle->update_filaments_compatible(PresetSelectCompatibleType::OnlyIfWasCompatible);
+    }
     // update selection
     select_preset_by_name(new_name, true);
 

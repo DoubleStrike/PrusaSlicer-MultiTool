@@ -127,7 +127,6 @@ public:
         TYPE_PHYSICAL_PRINTER,
         // This type is here to support search through the Preferences
         TYPE_PREFERENCES,
-        TYPE_WEBVIEW,
     };
 
     Type                type        = TYPE_INVALID;

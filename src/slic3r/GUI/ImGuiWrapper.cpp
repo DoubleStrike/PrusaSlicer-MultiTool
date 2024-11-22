@@ -57,6 +57,9 @@ bool              s_font_cjk;
 // a fallback glyph for c.
 void imgui_rendered_fallback_glyph(ImWchar c)
 {
+    if (c == 0)
+        return;
+
     if (ImGui::GetIO().Fonts->Fonts[0] == ImGui::GetFont()) {
         // Only do this when we are using the default ImGui font. Otherwise this would conflict with
         // EmbossStyleManager's font handling and we would load glyphs needlessly.
@@ -109,6 +112,7 @@ static const std::map<const wchar_t, std::string> font_icons = {
     {ImGui::SnapMarker            , "snap"                          },
     {ImGui::HorizontalHide        , "horizontal_hide"               },
     {ImGui::HorizontalShow        , "horizontal_show"               },
+    {ImGui::SliceAllBtnIcon       , "slice_all"                     },
 };
 
 static const std::map<const wchar_t, std::string> font_icons_large = {

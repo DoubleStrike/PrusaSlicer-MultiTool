@@ -29,6 +29,10 @@ set(SLIC3R_GUI_SOURCES
     GUI/UserAccount.hpp
     GUI/WebViewDialog.cpp
     GUI/WebViewDialog.hpp
+    GUI/WebViewPanel.cpp
+    GUI/WebViewPanel.hpp
+    GUI/ConnectRequestHandler.cpp
+    GUI/ConnectRequestHandler.hpp
     GUI/WebView.cpp
     GUI/WebView.hpp
     GUI/WebViewPlatformUtils.hpp
@@ -77,6 +81,8 @@ set(SLIC3R_GUI_SOURCES
     GUI/Gizmos/GLGizmoSlaSupports.hpp
     GUI/Gizmos/GLGizmoFdmSupports.cpp
     GUI/Gizmos/GLGizmoFdmSupports.hpp
+    GUI/Gizmos/GLGizmoFuzzySkin.cpp
+    GUI/Gizmos/GLGizmoFuzzySkin.hpp
     GUI/Gizmos/GLGizmoFlatten.cpp
     GUI/Gizmos/GLGizmoFlatten.hpp
     GUI/Gizmos/GLGizmoCut.cpp
@@ -356,6 +362,8 @@ set(SLIC3R_GUI_SOURCES
     Utils/Bonjour.hpp
     Utils/PresetUpdater.cpp
     Utils/PresetUpdater.hpp
+    Utils/PresetUpdaterWrapper.cpp
+    Utils/PresetUpdaterWrapper.hpp
     Utils/Process.cpp
     Utils/Process.hpp
     Utils/RaycastManager.cpp
@@ -425,6 +433,7 @@ target_link_libraries(
     libslic3r_gui
     PUBLIC
     libslic3r
+    slic3r-arrange-wrapper
     avrdude
     libcereal
     imgui

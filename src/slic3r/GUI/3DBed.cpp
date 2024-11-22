@@ -13,6 +13,7 @@
 #include "libslic3r/Geometry/Circle.hpp"
 #include "libslic3r/Tesselate.hpp"
 #include "libslic3r/PresetBundle.hpp"
+#include "libslic3r/MultipleBeds.hpp"
 
 #include "GUI_App.hpp"
 #include "GLCanvas3D.hpp"
@@ -25,11 +26,14 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/log/trivial.hpp>
 
+#include <numeric>
+
 static const float GROUND_Z = -0.02f;
 static const Slic3r::ColorRGBA DEFAULT_MODEL_COLOR             = Slic3r::ColorRGBA::DARK_GRAY();
 static const Slic3r::ColorRGBA PICKING_MODEL_COLOR             = Slic3r::ColorRGBA::BLACK();
 static const Slic3r::ColorRGBA DEFAULT_SOLID_GRID_COLOR        = { 0.9f, 0.9f, 0.9f, 1.0f };
 static const Slic3r::ColorRGBA DEFAULT_TRANSPARENT_GRID_COLOR  = { 0.9f, 0.9f, 0.9f, 0.6f };
+static const Slic3r::ColorRGBA DISABLED_MODEL_COLOR            = { 0.6f, 0.6f, 0.6f, 0.75f };
 
 namespace Slic3r {
 namespace GUI {
@@ -92,12 +96,28 @@ bool Bed3D::set_shape(const Pointfs& bed_shape, const double max_print_height, c
     m_texture.reset();
     m_model.reset();
 
+    // unregister from picking
+    wxGetApp().plater()->canvas3D()->remove_raycasters_for_picking(SceneRaycaster::EType::Bed);
+
+    init_internal_model_from_file();
+    init_triangles();
+
+    s_multiple_beds.update_build_volume(m_build_volume.bounding_volume2d());
+
+    m_models_overlap = false;
+    if (! m_model_filename.empty()) {
+        // Calculate bb of the bed model and figure out if the models would overlap when rendered next to each other.
+        const BoundingBoxf3& mdl_bb3 = m_model.model.get_bounding_box();
+        const BoundingBoxf model_bb(Vec2d(mdl_bb3.min.x(), mdl_bb3.min.y()), Vec2d(mdl_bb3.max.x(), mdl_bb3.max.y()));
+        BoundingBoxf bed_bb = m_build_volume.bounding_volume2d();
+        bed_bb.translate(-m_model_offset.x(), -m_model_offset.y());
+        Vec2d gap = unscale(s_multiple_beds.get_bed_gap());
+        m_models_overlap = (model_bb.size().x() - bed_bb.size().x() > 2 * gap.x() || model_bb.size().y() - bed_bb.size().y() > 2 * gap.y());
+    }
+
     // Set the origin and size for rendering the coordinate system axes.
     m_axes.set_origin({ 0.0, 0.0, static_cast<double>(GROUND_Z) });
     m_axes.set_stem_length(0.1f * static_cast<float>(m_build_volume.bounding_volume().max_size()));
-
-    // unregister from picking
-    wxGetApp().plater()->canvas3D()->remove_raycasters_for_picking(SceneRaycaster::EType::Bed);
 
     // Let the calee to update the UI.
     return true;
@@ -105,28 +125,52 @@ bool Bed3D::set_shape(const Pointfs& bed_shape, const double max_print_height, c
 
 void Bed3D::render(GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix, bool bottom, float scale_factor, bool show_texture)
 {
-    render_internal(canvas, view_matrix, projection_matrix, bottom, scale_factor, show_texture, false);
+    bool is_thumbnail = s_multiple_beds.get_thumbnail_bed_idx() != -1;
+    bool is_preview = wxGetApp().plater()->is_preview_shown();
+    int  bed_to_highlight = s_multiple_beds.get_active_bed();
+
+    static std::vector<int> beds_to_render;
+    beds_to_render.clear();
+    if (is_thumbnail)
+        beds_to_render.push_back(s_multiple_beds.get_thumbnail_bed_idx());
+    else if (is_preview)
+        beds_to_render.push_back(s_multiple_beds.get_active_bed());
+    else {
+        beds_to_render.resize(s_multiple_beds.get_number_of_beds() + int(s_multiple_beds.should_show_next_bed()));
+        std::iota(beds_to_render.begin(), beds_to_render.end(), 0);
+    }
+
+    for (int i : beds_to_render) {
+        Transform3d mat = view_matrix;
+        mat.translate(s_multiple_beds.get_bed_translation(i));
+        render_internal(canvas, mat, projection_matrix, bottom, scale_factor, show_texture, false, is_thumbnail || i == bed_to_highlight);
+    }
 }
 
 void Bed3D::render_for_picking(GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix, bool bottom, float scale_factor)
 {
-    render_internal(canvas, view_matrix, projection_matrix, bottom, scale_factor, false, true);
+    render_internal(canvas, view_matrix, projection_matrix, bottom, scale_factor, false, true, false);
 }
 
 void Bed3D::render_internal(GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix, bool bottom, float scale_factor,
-    bool show_texture, bool picking)
+    bool show_texture, bool picking, bool active)
 {
     m_scale_factor = scale_factor;
 
     glsafe(::glEnable(GL_DEPTH_TEST));
 
     m_model.model.set_color(picking ? PICKING_MODEL_COLOR : DEFAULT_MODEL_COLOR);
+    m_triangles.set_color(picking ? PICKING_MODEL_COLOR : DEFAULT_MODEL_COLOR);
+    if (!picking && !active) {
+        m_model.model.set_color(DISABLED_MODEL_COLOR);
+        m_triangles.set_color(DISABLED_MODEL_COLOR);
+    }
 
     switch (m_type)
     {
-    case Type::System: { render_system(canvas, view_matrix, projection_matrix, bottom, show_texture); break; }
+    case Type::System: { render_system(canvas, view_matrix, projection_matrix, bottom, show_texture, active); break; }
     default:
-    case Type::Custom: { render_custom(canvas, view_matrix, projection_matrix, bottom, show_texture, picking); break; }
+    case Type::Custom: { render_custom(canvas, view_matrix, projection_matrix, bottom, show_texture, picking, active); break; }
     }
 
     glsafe(::glDisable(GL_DEPTH_TEST));
@@ -203,7 +247,6 @@ void Bed3D::init_triangles()
         register_raycasters_for_picking(init_data, Transform3d::Identity());
 
     m_triangles.init_from(std::move(init_data));
-    m_triangles.set_color(DEFAULT_MODEL_COLOR);
 }
 
 void Bed3D::init_gridlines()
@@ -309,18 +352,23 @@ void Bed3D::render_axes()
         m_axes.render(Transform3d::Identity(), 0.25f);
 }
 
-void Bed3D::render_system(GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix, bool bottom, bool show_texture)
+void Bed3D::render_system(GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix, bool bottom, bool show_texture, bool is_active)
 {
+    if (m_models_overlap && s_multiple_beds.get_number_of_beds() + int(s_multiple_beds.should_show_next_bed()) > 1) {
+        render_default(bottom, false, show_texture, view_matrix, projection_matrix);
+        return;
+    }
+
     if (!bottom)
         render_model(view_matrix, projection_matrix);
 
     if (show_texture)
-        render_texture(bottom, canvas, view_matrix, projection_matrix);
+        render_texture(bottom, canvas, view_matrix, projection_matrix, is_active);
     else if (bottom)
         render_contour(view_matrix, projection_matrix);
 }
 
-void Bed3D::render_texture(bool bottom, GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix)
+void Bed3D::render_texture(bool bottom, GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix, bool is_active)
 {
     if (m_texture_filename.empty()) {
         m_texture.reset();
@@ -388,7 +436,7 @@ void Bed3D::render_texture(bool bottom, GLCanvas3D& canvas, const Transform3d& v
         shader->start_using();
         shader->set_uniform("view_model_matrix", view_matrix);
         shader->set_uniform("projection_matrix", projection_matrix);
-        shader->set_uniform("transparent_background", bottom);
+        shader->set_uniform("transparent_background", bottom || ! is_active);
         shader->set_uniform("svg_source", boost::algorithm::iends_with(m_texture.get_source(), ".svg"));
 
         glsafe(::glEnable(GL_DEPTH_TEST));
@@ -421,7 +469,7 @@ void Bed3D::render_texture(bool bottom, GLCanvas3D& canvas, const Transform3d& v
     }
 }
 
-void Bed3D::render_model(const Transform3d& view_matrix, const Transform3d& projection_matrix)
+void Bed3D::init_internal_model_from_file()
 {
     if (m_model_filename.empty())
         return;
@@ -446,6 +494,14 @@ void Bed3D::render_model(const Transform3d& view_matrix, const Transform3d& proj
         // update extended bounding box
         m_extended_bounding_box = this->calc_extended_bounding_box();
     }
+}
+
+void Bed3D::render_model(const Transform3d& view_matrix, const Transform3d& projection_matrix)
+{
+    if (m_model_filename.empty())
+        return;
+
+    init_internal_model_from_file();
 
     if (!m_model.model.get_filename().empty()) {
         GLShaderProgram* shader = wxGetApp().get_shader("gouraud_light");
@@ -463,9 +519,10 @@ void Bed3D::render_model(const Transform3d& view_matrix, const Transform3d& proj
     }
 }
 
-void Bed3D::render_custom(GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix, bool bottom, bool show_texture, bool picking)
+void Bed3D::render_custom(GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix, bool bottom, bool show_texture, bool picking, bool is_active)
 {
-    if (m_texture_filename.empty() && m_model_filename.empty()) {
+    if ((m_texture_filename.empty() && m_model_filename.empty())
+     || (m_models_overlap && s_multiple_beds.get_number_of_beds() + int(s_multiple_beds.should_show_next_bed()) > 1)) {
         render_default(bottom, picking, show_texture, view_matrix, projection_matrix);
         return;
     }
@@ -474,7 +531,7 @@ void Bed3D::render_custom(GLCanvas3D& canvas, const Transform3d& view_matrix, co
         render_model(view_matrix, projection_matrix);
 
     if (show_texture)
-        render_texture(bottom, canvas, view_matrix, projection_matrix);
+        render_texture(bottom, canvas, view_matrix, projection_matrix, is_active);
     else if (bottom)
         render_contour(view_matrix, projection_matrix);
 }
