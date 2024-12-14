@@ -1854,7 +1854,7 @@ std::vector<std::vector<ExPolygons>> multi_material_segmentation_by_painting(con
     const float  interlocking_depth = float(print_object.config().mmu_segmented_region_interlocking_depth.value);
 
     const auto extract_facets_info = [](const ModelVolume &mv) -> ModelVolumeFacetsInfo {
-        return {mv.mm_segmentation_facets, mv.is_mm_painted(), true};
+        return {mv.mm_segmentation_facets, mv.is_mm_painted(), false};
     };
 
     return segmentation_by_painting(print_object, extract_facets_info, num_facets_states, max_width, interlocking_depth, IncludeTopAndBottomLayers::Yes, throw_on_cancel_callback);

@@ -1618,7 +1618,7 @@ namespace Slic3r {
                     continue;
                 int bed_idx = 0;
                 try {
-                    bed_block.second.get<int>("<xmlattr>.bed_idx");
+                    bed_idx = bed_block.second.get<int>("<xmlattr>.bed_idx");
                 } catch (const boost::property_tree::ptree_bad_path&) {
                     // Probably an old project with no bed_idx info. Imagine that we saw 0.
                 }
@@ -3888,8 +3888,10 @@ bool _3MF_Exporter::_add_wipe_tower_information_file_to_archive( mz_zip_archive&
 }
 
 // Perform conversions based on the config values available.
-static void handle_legacy_project_loaded(unsigned int version_project_file, DynamicPrintConfig& config, const boost::optional<Semver>& prusaslicer_generator_version)
-{
+static void handle_legacy_project_loaded(
+    DynamicPrintConfig& config,
+    const boost::optional<Semver>& prusaslicer_generator_version
+) {
     if (! config.has("brim_separation")) {
         if (auto *opt_elephant_foot   = config.option<ConfigOptionFloat>("elefant_foot_compensation", false); opt_elephant_foot) {
             // Conversion from older PrusaSlicer which applied brim separation equal to elephant foot compensation.
@@ -3897,7 +3899,7 @@ static void handle_legacy_project_loaded(unsigned int version_project_file, Dyna
             opt_brim_separation->value = opt_elephant_foot->value;
         }
     }
-    
+
     // In PrusaSlicer 2.5.0-alpha2 and 2.5.0-alpha3, we introduce several parameters for Arachne that depend
     // on nozzle size . Later we decided to make default values for those parameters computed automatically
     // until the user changes them.
@@ -3946,7 +3948,14 @@ bool is_project_3mf(const std::string& filename)
     return config_found;
 }
 
-bool load_3mf(const char* path, DynamicPrintConfig& config, ConfigSubstitutionContext& config_substitutions, Model* model, bool check_version)
+bool load_3mf(
+    const char* path,
+    DynamicPrintConfig& config,
+    ConfigSubstitutionContext& config_substitutions,
+    Model* model,
+    bool check_version,
+    boost::optional<Semver> &prusaslicer_generator_version
+)
 {
     if (path == nullptr || model == nullptr)
         return false;
@@ -3956,7 +3965,8 @@ bool load_3mf(const char* path, DynamicPrintConfig& config, ConfigSubstitutionCo
     _3MF_Importer         importer;
     bool res = importer.load_model_from_file(path, *model, config, config_substitutions, check_version);
     importer.log_errors();
-    handle_legacy_project_loaded(importer.version(), config, importer.prusaslicer_generator_version());
+    handle_legacy_project_loaded(config, importer.prusaslicer_generator_version());
+    prusaslicer_generator_version = importer.prusaslicer_generator_version();
 
     return res;
 }

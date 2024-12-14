@@ -143,5 +143,4 @@ void load_request(wxWebView* web_view, const std::string& address, const std::st
     // Load the request in the WebView
     webkit_web_view_load_request(native_backend, request);
 }
-
 }

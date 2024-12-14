@@ -466,9 +466,11 @@ namespace DoExport {
     static void update_print_estimated_stats(const GCodeProcessor& processor, const std::vector<Extruder>& extruders, PrintStatistics& print_statistics)
     {
         const GCodeProcessorResult& result = processor.get_result();
-        print_statistics.estimated_normal_print_time = get_time_dhms(result.print_statistics.modes[static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Normal)].time);
+        print_statistics.normal_print_time_seconds = result.print_statistics.modes[static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Normal)].time;
+        print_statistics.silent_print_time_seconds = result.print_statistics.modes[static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Stealth)].time;
+        print_statistics.estimated_normal_print_time = get_time_dhms(print_statistics.normal_print_time_seconds);
         print_statistics.estimated_silent_print_time = processor.is_stealth_time_estimator_enabled() ?
-            get_time_dhms(result.print_statistics.modes[static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Stealth)].time) : "N/A";
+            get_time_dhms(print_statistics.silent_print_time_seconds) : "N/A";
 
         // update filament statictics
         double total_extruded_volume = 0.0;
@@ -2583,7 +2585,13 @@ LayerResult GCodeGenerator::process_layer(
             *layers[instance_to_print.object_layer_to_print_id].layer());
         this->set_origin(unscale(first_instance->shift));
 
-        m_avoid_crossing_perimeters.use_external_mp_once = true;
+        const GCode::PrintObjectInstance next_instance{
+            &instances_to_print.front().print_object,
+            int(instances_to_print.front().instance_id)
+        };
+        if (m_current_instance != next_instance) {
+            m_avoid_crossing_perimeters.use_external_mp_once = true;
+        }
     }
 
     gcode += this->change_layer(previous_layer_z, print_z, result.spiral_vase_enable, first_point.head<2>(), first_layer); // this will increase m_layer_index
@@ -2677,12 +2685,23 @@ LayerResult GCodeGenerator::process_layer(
         }
 
         if (!this->m_moved_to_first_layer_point) {
-            gcode += this->travel_to_first_position(first_point, print_z, ExtrusionRole::Mixed, [this]() {
+            const Point shift{first_instance->shift};
+            this->set_origin(unscale(shift));
+
+            const GCode::PrintObjectInstance next_instance{
+                &instances_to_print.front().print_object,
+                int(instances_to_print.front().instance_id)
+            };
+            if (m_current_instance != next_instance) {
+                m_avoid_crossing_perimeters.use_external_mp_once = true;
+            }
+            gcode += this->travel_to_first_position(first_point - to_3d(shift, 0), print_z, ExtrusionRole::Mixed, [this]() {
                 if (m_writer.multiple_extruders) {
                     return std::string{""};
                 }
                 return m_label_objects.maybe_change_instance(m_writer);
             });
+            this->set_origin({0, 0});
         }
 
         if (!extruder_extrusions.skirt.empty()) {

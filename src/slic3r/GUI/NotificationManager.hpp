@@ -140,6 +140,10 @@ enum class NotificationType
     BedTemperaturesDiffer,
     // Notification that shrinkage compensations for the used filaments differ.
     ShrinkageCompensationsDiffer,
+    // Notification about using wipe tower with different nozzle diameters.
+    WipeTowerNozzleDiameterDiffer,
+    // Notification about using supports with different nozzle diameters.
+    SupportNozzleDiameterDiffer,
 };
 
 class NotificationManager
@@ -179,7 +183,7 @@ public:
 	// Push a NotificationType::CustomNotification with provided notification level and 10s for RegularNotificationLevel.
 	// ErrorNotificationLevel are never faded out.
     void push_notification(NotificationType type, NotificationLevel level, const std::string& text, const std::string& hypertext = "",
-                           std::function<bool(wxEvtHandler*)> callback = std::function<bool(wxEvtHandler*)>(), const std::string& text_after = "", int timestamp = 0);
+                           std::function<bool(wxEvtHandler*)> callback = std::function<bool(wxEvtHandler*)>(), const std::string& text_after = "", int timestamp = 0, bool multiline = false);
 	// Pushes basic_notification with delay. See push_delayed_notification_data.
 	void push_delayed_notification(const NotificationType type, std::function<bool(void)> condition_callback, int64_t initial_delay, int64_t delay_interval);
 	// Removes all notifications of type from m_waiting_notifications
@@ -227,6 +231,7 @@ public:
 	void set_sla(bool b) { set_fff(!b); }
 	// Exporting finished, show this information with path, button to open containing folder and if ejectable - eject button
 	void push_exporting_finished_notification(const std::string& path, const std::string& dir_path, bool on_removable);
+    void push_bulk_exporting_finished_notification(const std::string& dir_path, bool on_removable);
 	// notifications with progress bar
 	// print host upload
 	void push_upload_job_notification(int id, float filesize, const std::string& filename, const std::string& host, float percentage = 0);
@@ -342,7 +347,7 @@ private:
 			Paused
 		};
 
-		PopNotification(const NotificationData &n, NotificationIDProvider &id_provider, wxEvtHandler* evt_handler);
+		PopNotification(const NotificationData &n, NotificationIDProvider &id_provider, wxEvtHandler* evt_handler, bool multiline = false);
 		virtual ~PopNotification() { if (m_id) m_id_provider.release_id(m_id); }
 		virtual void           render(GLCanvas3D& canvas, float initial_y, bool move_from_overlay, float overlay_width);
 		// close will dissapear notification on next render
@@ -779,10 +784,15 @@ private:
 	class ExportFinishedNotification : public PopNotification
 	{
 	public:
-		ExportFinishedNotification(const NotificationData& n, NotificationIDProvider& id_provider, wxEvtHandler* evt_handler, bool to_removable,const std::string& export_path,const std::string& export_dir_path)
-			: PopNotification(n, id_provider, evt_handler)
+		ExportFinishedNotification(
+            const NotificationData& n,
+            NotificationIDProvider& id_provider,
+            wxEvtHandler* evt_handler,
+            bool to_removable,
+            const std::string& export_dir_path
+        ):
+            PopNotification(n, id_provider, evt_handler)
 			, m_to_removable(to_removable)
-			, m_export_path(export_path)
 			, m_export_dir_path(export_dir_path)
 		    {
 				m_multiline = true;
@@ -853,7 +863,7 @@ private:
 
 	//pushes notification into the queue of notifications that are rendered
 	//can be used to create custom notification
-	bool push_notification_data(const NotificationData& notification_data, int timestamp);
+	bool push_notification_data(const NotificationData& notification_data, int timestamp, bool multiline = false);
 	bool push_notification_data(std::unique_ptr<NotificationManager::PopNotification> notification, int timestamp);
 	// Delayed notifications goes first to the m_waiting_notifications vector and only after remaining time is <= 0
 	// and condition callback is success, notification is regular pushed from update function.

@@ -206,7 +206,7 @@ void PresetUpdaterWrapper::cancel_worker_thread()
     if (m_worker_thread.joinable()) {
         if (m_ui_status) {
             m_ui_status->set_canceled(true);
-        } else assert(true);
+        } else assert(false);
 
 		m_worker_thread.join();
 
@@ -226,7 +226,7 @@ PresetUpdaterUIStatus::PresetUpdaterUIStatus(PresetUpdaterUIStatus::PresetUpdate
     if (auto it = policy_map.find(policy); it != policy_map.end()) {
         m_retry_policy = it->second;
     } else {
-        assert(true);
+        assert(false);
         m_retry_policy = {0ms};
     }
 }

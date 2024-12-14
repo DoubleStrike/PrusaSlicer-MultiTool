@@ -38,6 +38,64 @@ void ConfigManipulation::toggle_field(const std::string& opt_key, const bool tog
     cb_toggle_field(opt_key, toggle, opt_index);
 }
 
+std::optional<DynamicPrintConfig> handle_automatic_extrusion_widths(const DynamicPrintConfig &config, const bool is_global_config, wxWindow *msg_dlg_parent)
+{
+    const std::vector<std::string> extrusion_width_parameters = {"extrusion_width", "external_perimeter_extrusion_width", "first_layer_extrusion_width",
+                                                                 "infill_extrusion_width", "perimeter_extrusion_width", "solid_infill_extrusion_width",
+                                                                 "support_material_extrusion_width", "top_infill_extrusion_width"};
+
+    auto is_zero_width = [](const ConfigOptionFloatOrPercent &opt) -> bool {
+        return opt.value == 0. && !opt.percent;
+    };
+
+    auto is_parameters_adjustment_needed = [&is_zero_width, &config, &extrusion_width_parameters]() -> bool {
+        if (!config.opt_bool("automatic_extrusion_widths")) {
+            return false;
+        }
+
+        for (const std::string &extrusion_width_parameter : extrusion_width_parameters) {
+            if (!is_zero_width(*config.option<ConfigOptionFloatOrPercent>(extrusion_width_parameter))) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    if (is_parameters_adjustment_needed()) {
+        wxString msg_text = _(L("The automatic extrusion widths calculation requires:\n"
+                                "- Default extrusion width: 0\n"
+                                "- First layer extrusion width: 0\n"
+                                "- Perimeter extrusion width: 0\n"
+                                "- External perimeter extrusion width: 0\n"
+                                "- Infill extrusion width: 0\n"
+                                "- Solid infill extrusion width: 0\n"
+                                "- Top infill extrusion width: 0\n"
+                                "- Support material extrusion width: 0"));
+
+        if (is_global_config) {
+            msg_text += "\n\n" + _(L("Shall I adjust those settings in order to enable automatic extrusion widths calculation?"));
+        }
+
+        MessageDialog dialog(msg_dlg_parent, msg_text, _(L("Automatic extrusion widths calculation")),
+                                  wxICON_WARNING | (is_global_config ? wxYES | wxNO : wxOK));
+
+        const int          answer   = dialog.ShowModal();
+        DynamicPrintConfig new_conf = config;
+        if (!is_global_config || answer == wxID_YES) {
+            for (const std::string &extrusion_width_parameter : extrusion_width_parameters) {
+                new_conf.set_key_value(extrusion_width_parameter, new ConfigOptionFloatOrPercent(0., false));
+            }
+        } else {
+            new_conf.set_key_value("automatic_extrusion_widths", new ConfigOptionBool(false));
+        }
+
+        return new_conf;
+    }
+
+    return std::nullopt;
+}
+
 void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, const bool is_global_config)
 {
     // #ys_FIXME_to_delete
@@ -76,7 +134,7 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
     double fill_density = config->option<ConfigOptionPercent>("fill_density")->value;
 
     if (config->opt_bool("spiral_vase") &&
-        ! (config->opt_int("perimeters") == 1 && 
+        ! (config->opt_int("perimeters") == 1 &&
            config->opt_int("top_solid_layers") == 0 &&
            fill_density == 0 &&
            ! config->opt_bool("support_material") &&
@@ -102,7 +160,7 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
             new_conf.set_key_value("fill_density", new ConfigOptionPercent(0));
             new_conf.set_key_value("support_material", new ConfigOptionBool(false));
             new_conf.set_key_value("support_material_enforce_layers", new ConfigOptionInt(0));
-            new_conf.set_key_value("thin_walls", new ConfigOptionBool(false));            
+            new_conf.set_key_value("thin_walls", new ConfigOptionBool(false));
             fill_density = 0;
             support = false;
         }
@@ -213,6 +271,13 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
             }
         }
     }
+
+    if (config->opt_bool("automatic_extrusion_widths")) {
+        std::optional<DynamicPrintConfig> new_config = handle_automatic_extrusion_widths(*config, is_global_config, m_msg_dlg_parent);
+        if (new_config.has_value()) {
+            apply(config, &(*new_config));
+        }
+    }
 }
 
 void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig* config)
@@ -227,11 +292,17 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig* config)
         toggle_field("overhang_speed_" + std::to_string(i), config->opt_bool("enable_dynamic_overhang_speeds"));
     }
 
-    bool have_infill = config->option<ConfigOptionPercent>("fill_density")->value > 0;
+    const bool have_infill                      = config->option<ConfigOptionPercent>("fill_density")->value > 0;
+    const bool has_automatic_infill_combination = config->option<ConfigOptionBool>("automatic_infill_combination")->value;
     // infill_extruder uses the same logic as in Print::extruders()
-    for (auto el : { "fill_pattern", "infill_every_layers", "infill_only_where_needed",
-                    "solid_infill_every_layers", "solid_infill_below_area", "infill_extruder", "infill_anchor_max" })
+    for (auto el : { "fill_pattern","solid_infill_every_layers", "solid_infill_below_area", "infill_extruder",
+                    "infill_anchor_max", "automatic_infill_combination" }) {
         toggle_field(el, have_infill);
+    }
+
+    toggle_field("infill_every_layers", have_infill && !has_automatic_infill_combination);
+    toggle_field("automatic_infill_combination_max_layer_height", have_infill && has_automatic_infill_combination);
+
     // Only allow configuration of open anchors if the anchoring is enabled.
     bool has_infill_anchors = have_infill && config->option<ConfigOptionFloatOrPercent>("infill_anchor_max")->value > 0;
     toggle_field("infill_anchor", has_infill_anchors);

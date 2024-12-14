@@ -283,11 +283,6 @@ void Preview::set_drop_target(wxDropTarget* target)
         SetDropTarget(target);
 }
 
-void Preview::load_gcode_shells()
-{
-    m_canvas->load_gcode_shells();
-}
-
 void Preview::load_print(bool keep_z_range)
 {
     PrinterTechnology tech = m_process->current_printer_technology();
@@ -343,14 +338,14 @@ void Preview::render_sliders(GLCanvas3D& canvas)
 
 float Preview::get_moves_slider_height() const
 {
-    if (m_moves_slider && m_moves_slider->IsShown())
+    if (!s_multiple_beds.is_autoslicing() && m_moves_slider && m_moves_slider->IsShown())
         return m_moves_slider->GetHeight();
     return 0.0f;
 }
 
 float Preview::get_layers_slider_width(bool disregard_visibility) const
 {
-    if (m_layers_slider && (m_layers_slider->IsShown() || disregard_visibility))
+    if (!s_multiple_beds.is_autoslicing() && m_layers_slider && (m_layers_slider->IsShown() || disregard_visibility))
         return m_layers_slider->GetWidth();
     return 0.0f;
 }
@@ -943,7 +938,9 @@ void Preview::load_print_as_fff(bool keep_z_range)
     }
 
     if (wxGetApp().is_editor() && !has_layers) {
+        m_canvas->reset_gcode_toolpaths();
         m_canvas->reset_gcode_layers_times_cache();
+        m_canvas->load_gcode_shells();
         hide_layers_slider();
         m_moves_slider->Hide();
         m_canvas_widget->Refresh();
@@ -979,6 +976,7 @@ void Preview::load_print_as_fff(bool keep_z_range)
         else if (is_pregcode_preview) {
             // Load the initial preview based on slices, not the final G-code.
             m_canvas->load_preview(tool_colors, color_print_colors, color_print_values);
+            m_canvas->load_gcode_shells();
             // the view type has been changed by the call m_canvas->load_gcode_preview()
             if (gcode_view_type == libvgcode::EViewType::ColorPrint && !color_print_values.empty())
                 m_canvas->set_gcode_view_type(gcode_view_type);

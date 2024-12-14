@@ -808,6 +808,8 @@ bool PrintObject::invalidate_state_by_config_options(
                opt_key == "interface_shells"
             || opt_key == "infill_only_where_needed"
             || opt_key == "infill_every_layers"
+            || opt_key == "automatic_infill_combination"
+            || opt_key == "automatic_infill_combination_max_layer_height"
             || opt_key == "solid_infill_every_layers"
             || opt_key == "ensure_vertical_shell_thickness"
             || opt_key == "bottom_solid_min_thickness"
@@ -3053,16 +3055,24 @@ void PrintObject::discover_horizontal_shells()
 void PrintObject::combine_infill()
 {
     // Work on each region separately.
-    for (size_t region_id = 0; region_id < this->num_printing_regions(); ++ region_id) {
-        const PrintRegion &region = this->printing_region(region_id);
-        const size_t every = region.config().infill_every_layers.value;
-        if (every < 2 || region.config().fill_density == 0.)
+    for (size_t region_id = 0; region_id < this->num_printing_regions(); ++region_id) {
+        const PrintRegion &region                        = this->printing_region(region_id);
+        const size_t       combine_infill_every_n_layers = region.config().infill_every_layers.value;
+        const bool         automatic_infill_combination  = region.config().automatic_infill_combination;
+        const bool         enable_combine_infill         = automatic_infill_combination || combine_infill_every_n_layers >= 2;
+
+        if (!enable_combine_infill || region.config().fill_density == 0.) {
             continue;
+        }
+
         // Limit the number of combined layers to the maximum height allowed by this regions' nozzle.
         //FIXME limit the layer height to max_layer_height
-        double nozzle_diameter = std::min(
-            this->print()->config().nozzle_diameter.get_at(region.config().infill_extruder.value - 1),
-            this->print()->config().nozzle_diameter.get_at(region.config().solid_infill_extruder.value - 1));
+        const double nozzle_diameter = std::min(this->print()->config().nozzle_diameter.get_at(region.config().infill_extruder.value - 1),
+                                                this->print()->config().nozzle_diameter.get_at(region.config().solid_infill_extruder.value - 1));
+
+        const double automatic_infill_combination_max_layer_height = region.config().automatic_infill_combination_max_layer_height.get_abs_value(nozzle_diameter);
+        const double max_combine_layer_height                      = automatic_infill_combination ? std::min(automatic_infill_combination_max_layer_height, nozzle_diameter) : nozzle_diameter;
+
         // define the combinations
         std::vector<size_t> combine(m_layers.size(), 0);
         {
@@ -3070,19 +3080,21 @@ void PrintObject::combine_infill()
             size_t num_layers = 0;
             for (size_t layer_idx = 0; layer_idx < m_layers.size(); ++ layer_idx) {
                 m_print->throw_if_canceled();
-                const Layer *layer = m_layers[layer_idx];
-                if (layer->id() == 0)
+                const Layer &layer = *m_layers[layer_idx];
+                if (layer.id() == 0)
                     // Skip first print layer (which may not be first layer in array because of raft).
                     continue;
+
                 // Check whether the combination of this layer with the lower layers' buffer
                 // would exceed max layer height or max combined layer count.
-                if (current_height + layer->height >= nozzle_diameter + EPSILON || num_layers >= every) {
+                if (current_height + layer.height >= max_combine_layer_height + EPSILON || (!automatic_infill_combination && num_layers >= combine_infill_every_n_layers)) {
                     // Append combination to lower layer.
                     combine[layer_idx - 1] = num_layers;
                     current_height = 0.;
                     num_layers = 0;
                 }
-                current_height += layer->height;
+
+                current_height += layer.height;
                 ++ num_layers;
             }
             

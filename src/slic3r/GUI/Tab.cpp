@@ -25,6 +25,7 @@
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/Utils.hpp"
 #include "libslic3r/Model.hpp"
+#include "libslic3r/SLAPrint.hpp"
 #include "libslic3r/GCode/GCodeProcessor.hpp"
 #include "libslic3r/GCode/GCodeWriter.hpp"
 #include "libslic3r/GCode/Thumbnails.hpp"
@@ -1502,8 +1503,9 @@ void TabPrint::build()
 
         optgroup = page->new_optgroup(L("Reducing printing time"));
         category_path = "infill_42#";
+        optgroup->append_single_option_line("automatic_infill_combination");
+        optgroup->append_single_option_line("automatic_infill_combination_max_layer_height");
         optgroup->append_single_option_line("infill_every_layers", category_path + "combine-infill-every-x-layers");
-        // optgroup->append_single_option_line("infill_only_where_needed", category_path + "only-infill-where-needed");
 
         optgroup = page->new_optgroup(L("Advanced"));
         optgroup->append_single_option_line("solid_infill_every_layers", category_path + "solid-infill-every-x-layers");
@@ -1661,6 +1663,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("solid_infill_extrusion_width");
         optgroup->append_single_option_line("top_infill_extrusion_width");
         optgroup->append_single_option_line("support_material_extrusion_width");
+        optgroup->append_single_option_line("automatic_extrusion_widths");
 
         optgroup = page->new_optgroup(L("Overlap"));
         optgroup->append_single_option_line("infill_overlap");
@@ -3671,8 +3674,9 @@ void TabPrinter::update_fff()
 
 bool Tab::is_prusa_printer() const
 {
-    std::string printer_model = m_preset_bundle->printers.get_edited_preset().config.opt_string("printer_model");
-    return printer_model == "SL1" || printer_model == "SL1S" || printer_model == "M1";
+    const Preset& edited_preset = m_preset_bundle->printers.get_edited_preset();
+    std::string  printer_model = edited_preset.trim_vendor_repo_prefix(edited_preset.config.opt_string("printer_model"));
+    return SLAPrint::is_prusa_print(printer_model);
 }
 
 void TabPrinter::update_sla()

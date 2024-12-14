@@ -870,7 +870,7 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
         m_viewer.toggle_top_layer_only_view_range();
 
     // avoid processing if called with the same gcode_result
-    if (m_last_result_id == gcode_result.id && wxGetApp().is_editor() && ! s_reload_preview_after_switching_beds) {
+    if (m_last_result_id == gcode_result.id && ! s_beds_switched_since_last_gcode_load && wxGetApp().is_editor() && ! s_reload_preview_after_switching_beds) {
         // collect tool colors
         libvgcode::Palette tools_colors;
         tools_colors.reserve(str_tool_colors.size());
@@ -890,6 +890,7 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
     }
 
     m_last_result_id = gcode_result.id;
+    s_beds_switched_since_last_gcode_load = false;
 
     // release gpu memory, if used
     reset();
@@ -1022,8 +1023,12 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
         });
     m_paths_bounding_box = BoundingBoxf3(libvgcode::convert(bbox[0]).cast<double>(), libvgcode::convert(bbox[1]).cast<double>());
 
-    if (wxGetApp().is_editor())
+    if (wxGetApp().is_editor()) {
         m_contained_in_bed = wxGetApp().plater()->build_volume().all_paths_inside(gcode_result, m_paths_bounding_box);
+        if (!m_contained_in_bed) {
+            s_print_statuses[s_multiple_beds.get_active_bed()] = PrintStatus::toolpath_outside;
+        }
+    }
 
     m_extruders_count = gcode_result.extruders_count;
     m_sequential_view.gcode_window.load_gcode(gcode_result);
@@ -1115,6 +1120,9 @@ void GCodeViewer::load_as_preview(libvgcode::GCodeInputData&& data)
     const libvgcode::AABox bbox = m_viewer.get_extrusion_bounding_box();
     const BoundingBoxf3 paths_bounding_box(libvgcode::convert(bbox[0]).cast<double>(), libvgcode::convert(bbox[1]).cast<double>());
     m_contained_in_bed = wxGetApp().plater()->build_volume().all_paths_inside(GCodeProcessorResult(), paths_bounding_box);
+    if (!m_contained_in_bed) {
+        s_print_statuses[s_multiple_beds.get_active_bed()] = PrintStatus::toolpath_outside;
+    }
 }
 
 void GCodeViewer::update_shells_color_by_extruder(const DynamicPrintConfig* config)

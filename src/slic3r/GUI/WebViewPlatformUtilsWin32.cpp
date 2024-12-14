@@ -303,6 +303,5 @@ void load_request(wxWebView* web_view, const std::string& address, const std::st
         return;
     } 
 }
-
 } // namespace Slic3r::GUI
 #endif // WIN32

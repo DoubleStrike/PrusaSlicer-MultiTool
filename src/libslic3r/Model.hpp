@@ -1329,9 +1329,12 @@ public:
         DynamicPrintConfig* config = nullptr, ConfigSubstitutionContext* config_substitutions = nullptr,
         LoadAttributes options = LoadAttribute::AddDefaultInstances);
     static Model read_from_archive(
-        const std::string& input_file, 
-        DynamicPrintConfig* config, ConfigSubstitutionContext* config_substitutions,
-        LoadAttributes options = LoadAttribute::AddDefaultInstances);
+        const std::string& input_file,
+        DynamicPrintConfig* config,
+        ConfigSubstitutionContext* config_substitutions,
+        boost::optional<Semver> &prusaslicer_generator_version,
+        LoadAttributes options = LoadAttribute::AddDefaultInstances
+    );
 
     // Add a new ModelObject to this Model, generate a new ID for this ModelObject.
     ModelObject* add_object();

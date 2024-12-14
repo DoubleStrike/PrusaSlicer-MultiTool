@@ -112,7 +112,9 @@ static const std::map<const wchar_t, std::string> font_icons = {
     {ImGui::SnapMarker            , "snap"                          },
     {ImGui::HorizontalHide        , "horizontal_hide"               },
     {ImGui::HorizontalShow        , "horizontal_show"               },
-    {ImGui::SliceAllBtnIcon       , "slice_all"                     },
+    {ImGui::PrintIdle             , "print_idle"                    },
+    {ImGui::PrintRunning          , "print_running"                 },
+    {ImGui::PrintFinished         , "print_finished"                },
 };
 
 static const std::map<const wchar_t, std::string> font_icons_large = {
@@ -133,6 +135,7 @@ static const std::map<const wchar_t, std::string> font_icons_large = {
     {ImGui::EjectButton             , "notification_eject_sd"           },
     {ImGui::EjectHoverButton        , "notification_eject_sd_hover"     },
     {ImGui::WarningMarker           , "notification_warning"            },
+    {ImGui::WarningMarkerDisabled   , "notification_warning_grey"       },
     {ImGui::ErrorMarker             , "notification_error"              },
     {ImGui::CancelButton            , "notification_cancel"             },
     {ImGui::CancelHoverButton       , "notification_cancel_hover"       },
@@ -152,6 +155,7 @@ static const std::map<const wchar_t, std::string> font_icons_large = {
     {ImGui::OpenHoverButton         , "notification_open_hover"         },
     {ImGui::SlaViewOriginal         , "sla_view_original"               },
     {ImGui::SlaViewProcessed        , "sla_view_processed"              },
+    {ImGui::SliceAllBtnIcon         , "slice_all"                       },
 };
 
 static const std::map<const wchar_t, std::string> font_icons_medium = {

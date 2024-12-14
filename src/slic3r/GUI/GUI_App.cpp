@@ -1311,6 +1311,31 @@ static int get_app_font_pt_size(const AppConfig* app_config)
     return (font_pt_size > max_font_pt_size) ? max_font_pt_size : font_pt_size;
 }
 
+#if defined(__linux__) && !defined(SLIC3R_DESKTOP_INTEGRATION)  
+void GUI_App::remove_desktop_files_dialog()
+{
+    // Find all old existing desktop file
+    std::vector<boost::filesystem::path> found_desktop_files;
+    DesktopIntegrationDialog::find_all_desktop_files(found_desktop_files);
+    if(found_desktop_files.empty()) {
+        return;
+    }
+    // Delete files.
+    std::vector<boost::filesystem::path> fails;
+    DesktopIntegrationDialog::remove_desktop_file_list(found_desktop_files, fails);
+    if (fails.empty()) {
+        return;
+    }
+    // Inform about fails.
+    std::string text = "Failed to remove desktop files:"; 
+    text += "\n";
+    for (const boost::filesystem::path& entry : fails) { 
+        text += GUI::format("%1%\n",entry.string());
+    }
+    BOOST_LOG_TRIVIAL(error) << text;
+}
+#endif //(__linux__) && !defined(SLIC3R_DESKTOP_INTEGRATION)
+
 bool GUI_App::on_init_inner()
 {
     // TODO: remove this when all asserts are gone.
@@ -1568,6 +1593,10 @@ bool GUI_App::on_init_inner()
 
     // Call this check only after appconfig was loaded to mainframe, otherwise there will be duplicity error.
     legacy_app_config_vendor_check();
+
+#if defined(__linux__) && !defined(SLIC3R_DESKTOP_INTEGRATION) 
+    remove_desktop_files_dialog();
+#endif //(__linux__) && !defined(SLIC3R_DESKTOP_INTEGRATION) 
 
     sidebar().obj_list()->init_objects(); // propagate model objects to object list
     update_mode(); // mode sizer doesn't exist anymore, so we came update mode here, before load_current_presets
@@ -2723,7 +2752,7 @@ wxMenu* GUI_App::get_config_menu(MainFrame* main_frame)
 #ifdef __linux__
         case ConfigMenuDesktopIntegration:
             show_desktop_integration_dialog();
-            break;
+            break;   
 #endif
         case ConfigMenuTakeSnapshot:
             // Take a configuration snapshot.
@@ -3888,20 +3917,8 @@ const Preset* find_preset_by_nozzle_and_options(
     for (const Preset &preset : collection) {
         // trim repo prefix
         std::string printer_model = preset.config.opt_string("printer_model");
-        std::string vendor_repo_prefix;
-        if (preset.vendor) {
-            vendor_repo_prefix = preset.vendor->repo_prefix;
-        } else if (std::string inherits = preset.inherits(); !inherits.empty()) {
-            const Preset *parent = wxGetApp().preset_bundle->printers.find_preset(inherits);
-            if (parent && parent->vendor) {
-                vendor_repo_prefix = parent->vendor->repo_prefix;
-            }
-        }
-        if (printer_model.find(vendor_repo_prefix) == 0) {
-            printer_model = printer_model.substr(vendor_repo_prefix.size()
-            );
-            boost::trim_left(printer_model);
-        }
+        const PresetWithVendorProfile& printer_with_vendor = collection.get_preset_with_vendor_profile(preset);
+        printer_model = preset.trim_vendor_repo_prefix(printer_model, printer_with_vendor.vendor);
        
         if (!preset.is_system || printer_model != model_id)
             continue;
@@ -3924,7 +3941,7 @@ const Preset* find_preset_by_nozzle_and_options(
                 case coStrings:  opt_val = static_cast<const ConfigOptionStrings*>(preset.config.option(opt.first))->values[0]; break;
                 case coBools:    opt_val = static_cast<const ConfigOptionBools*>(preset.config.option(opt.first))->values[0] ? "1" : "0"; break;
                 default:
-                   assert(true);
+                   assert(false);
                    continue;
                 }
             }
@@ -4204,7 +4221,8 @@ void GUI_App::open_link_in_printables(const std::string& url)
 bool LogGui::ignorred_message(const wxString& msg)
 {    
     for(const wxString& err : std::initializer_list<wxString>{ wxString("cHRM chunk does not match sRGB"),
-                                                               wxString("known incorrect sRGB profile") }) {
+                                                               wxString("known incorrect sRGB profile"),
+                                                               wxString("Error running JavaScript")}) {
         if (msg.Contains(err))
             return true;
     }

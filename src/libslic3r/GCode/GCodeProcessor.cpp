@@ -407,7 +407,7 @@ void GCodeProcessor::TimeMachine::calculate_time(GCodeProcessorResult& result, P
         // update times for remaining time to printer stop placeholders
         auto it_stop_time = std::lower_bound(stop_times.begin(), stop_times.end(), block.g1_line_id,
             [](const StopTime& t, unsigned int value) { return t.g1_line_id < value; });
-        if (it_stop_time != stop_times.end() && it_stop_time->g1_line_id == block.g1_line_id)
+        if (it_stop_time != stop_times.end() && it_stop_time->g1_line_id >= block.g1_line_id)
             it_stop_time->elapsed_time = float(time);
     }
 
@@ -2844,12 +2844,13 @@ void GCodeProcessor::process_G1(const std::array<std::optional<double>, 4>& axes
             && m_extrusion_role != GCodeExtrusionRole::OverhangPerimeter
         )
     )) {
-        const Vec3f curr_pos(m_end_position[X], m_end_position[Y], m_end_position[Z]);
+        const AxisCoords curr_pos = m_end_position;
         const Vec3f new_pos = m_result.moves.back().position - m_extruder_offsets[m_extruder_id];
-
-        m_end_position = create_axis_coords(new_pos + m_z_offset * Vec3f::UnitZ());
+        for (unsigned char a = X; a < E; ++a) {
+            m_end_position[a] = double(new_pos[a]);
+        }
         store_move_vertex(EMoveType::Seam);
-        m_end_position = create_axis_coords(curr_pos);
+        m_end_position = curr_pos;
 
         m_seams_detector.activate(false);
     } else if (type == EMoveType::Extrude && m_extrusion_role == GCodeExtrusionRole::ExternalPerimeter) {

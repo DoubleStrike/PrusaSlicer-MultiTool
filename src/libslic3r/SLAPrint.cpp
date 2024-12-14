@@ -713,6 +713,16 @@ void SLAPrint::export_print(const std::string &fname, const ThumbnailsList &thum
     }
 }
 
+bool SLAPrint::is_prusa_print(const std::string& printer_model)
+{
+    static const std::vector<std::string> prusa_printer_models = { "SL1", "SL1S", "M1", "SLX" };
+    for (const std::string& model : prusa_printer_models)
+        if (model == printer_model)
+            return true;
+
+    return false;
+}
+
 bool SLAPrint::invalidate_step(SLAPrintStep step)
 {
     bool invalidated = Inherited::invalidate_step(step);

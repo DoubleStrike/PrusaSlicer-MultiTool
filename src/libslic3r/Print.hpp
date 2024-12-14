@@ -520,6 +520,8 @@ bool is_toolchange_required(
 struct PrintStatistics
 {
     PrintStatistics() { clear(); }
+    float                           normal_print_time_seconds;
+    float                           silent_print_time_seconds;
     std::string                     estimated_normal_print_time;
     std::string                     estimated_silent_print_time;
     double                          total_used_filament;
