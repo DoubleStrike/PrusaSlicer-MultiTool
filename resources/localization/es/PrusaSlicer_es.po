@@ -5520,11 +5520,11 @@ msgstr ""
 
 #: src/libslic3r/PrintConfig.cpp:3703
 msgid "Optimized"
-msgstr ""
+msgstr "Optimizado"
 
 #: src/libslic3r/PrintConfig.cpp:3704
 msgid "Cyclic"
-msgstr ""
+msgstr "Cíclico"
 
 #: src/libslic3r/PrintConfig.cpp:3711
 msgid ""
