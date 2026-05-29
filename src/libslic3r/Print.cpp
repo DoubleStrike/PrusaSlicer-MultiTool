@@ -39,6 +39,7 @@
 #include "format.hpp"
 #include "ArrangeHelper.hpp"
 #include "CustomParametersHandling.hpp"
+#include "Feature/FullSpectrum/VirtualExtruder.hpp"
 
 #include <float.h>
 
@@ -344,7 +345,9 @@ std::vector<unsigned int> Print::object_extruders() const
 		for (const PrintRegion &region : object->all_regions())
         	region.collect_object_printing_extruders(*this, extruders);
     sort_remove_duplicates(extruders);
-    return extruders;
+
+    // Expand virtual extruder IDs to their physical components.
+    return FullSpectrum::expand_virtual_extruders_0based(extruders, m_virtual_extruders);
 }
 
 // returns 0-based indices of used extruders
