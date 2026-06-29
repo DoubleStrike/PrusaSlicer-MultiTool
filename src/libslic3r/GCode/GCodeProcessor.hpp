@@ -39,6 +39,7 @@ namespace Slic3r {
         Travel,
         Wipe,
         Extrude,
+        Flush,
         Count
     };
 

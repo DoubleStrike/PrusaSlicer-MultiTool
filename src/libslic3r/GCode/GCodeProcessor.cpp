@@ -4607,9 +4607,13 @@ void GCodeProcessor::store_move_vertex(EMoveType type, bool internal_only)
         m_line_id + 1 :
         ((type == EMoveType::Seam) ? m_last_line_id : m_line_id);
 
+    // Extrusions between FLUSH_START/FLUSH_END are stored with a dedicated move type, so they can be
+    // hidden from the G-code preview.
+    const EMoveType stored_type = m_flushing ? EMoveType::Flush : type;
+
     m_result.moves.push_back({
         m_last_line_id,
-        type,
+        stored_type,
         m_extrusion_role,
         m_extruder_id,
         m_cp_color.current,

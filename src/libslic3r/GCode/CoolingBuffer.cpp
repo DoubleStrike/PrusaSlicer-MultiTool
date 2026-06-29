@@ -47,6 +47,11 @@ const constexpr float SEGMENT_SPLIT_EPSILON = 10. * GCodeFormatter::XYZ_EPSILON;
 const constexpr std::string_view TOOLCHANGE_TIME_TAG = ";_TOOLCHANGE_TIME";
 const constexpr std::string_view TOOLCHANGE_END_TAG  = ";_TOOLCHANGE_END";
 
+static inline std::string_view lstrip_view(std::string_view s)
+{
+    return s.substr(std::min(s.find_first_not_of(" \t"), s.size()));
+}
+
 CoolingBuffer::CoolingBuffer(GCodeGenerator &gcodegen) : m_config(gcodegen.config()), m_toolchange_prefix(gcodegen.writer().toolchange_prefix()), m_current_extruder(0)
 {
     this->reset(gcodegen.writer().get_position());
@@ -609,8 +614,11 @@ std::vector<PerExtruderAdjustments> CoolingBuffer::parse_layer_gcode(const std::
     {
         while (*line_end != '\n' && *line_end != 0)
             ++ line_end;
+
         // sline will not contain the trailing '\n'.
-        std::string_view sline(line_start, line_end - line_start);
+        const std::string_view sline(line_start, line_end - line_start);
+        const std::string_view stripped_sline = lstrip_view(sline);
+
         // CoolingLine will contain the trailing '\n'.
         if (*line_end == '\n')
             ++ line_end;
@@ -817,9 +825,9 @@ std::vector<PerExtruderAdjustments> CoolingBuffer::parse_layer_gcode(const std::
                 }
             }
             active_speed_modifier = size_t(-1);
-        } else if (boost::starts_with(sline, m_toolchange_prefix)) {
+        } else if (boost::starts_with(stripped_sline, m_toolchange_prefix)) {
             unsigned int new_extruder = 0;
-            auto res = std::from_chars(sline.data() + m_toolchange_prefix.size(), sline.data() + sline.size(), new_extruder);
+            auto res = std::from_chars(stripped_sline.data() + m_toolchange_prefix.size(), stripped_sline.data() + stripped_sline.size(), new_extruder);
             if (res.ec != std::errc::invalid_argument) {
                 // Only change extruder in case the number is meaningful. User could provide an out-of-range index through custom gcodes - those shall be ignored.
                 if (new_extruder < map_extruder_to_per_extruder_adjustment.size()) {
@@ -1273,8 +1281,10 @@ std::string CoolingBuffer::apply_layer_cooldown(
         }
 
         if (line->type & CoolingLine::TYPE_SET_TOOL) {
+            const std::string_view toolchange_line = lstrip_view(std::string_view(line_start, line_end - line_start));
+
             unsigned int new_extruder = 0;
-            auto res = std::from_chars(line_start + m_toolchange_prefix.size(), line_end, new_extruder);
+            auto res = std::from_chars(toolchange_line.data() + m_toolchange_prefix.size(), toolchange_line.data() + toolchange_line.size(), new_extruder);
             if (res.ec != std::errc::invalid_argument && new_extruder != m_current_extruder) {
                 m_current_extruder = new_extruder;
                 change_extruder_set_fan();
